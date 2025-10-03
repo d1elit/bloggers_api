@@ -4,6 +4,7 @@ import {HttpStatus} from "../../../core/types/http-statuses";
 import { Response} from "express";
 import { RequestWithParamsAndBody} from "../../../core/types/requestTypes";
 import {BlogInputModel} from "../../models/blogInputModel";
+import {errorsHandler} from "../../../core/errors/errors.handler";
 
 
 
@@ -13,16 +14,10 @@ export async function updateBlogHandler(
 ) {
     try {
         const id = req.params.id;
-        const blog = await blogsService.findById(id);
-        if (!blog) {
-            res
-                .status(HttpStatus.NotFound)
-                .send(createErrorMessages([{message:'Blog not found', field:'id' }]));
-        }
         await blogsService.update(id, req.body);
         res.sendStatus(HttpStatus.NoContent);
     } catch(e: unknown) {
-        res.sendStatus(HttpStatus.InternalServerError);
+        errorsHandler(e,res)
     }
 
 }

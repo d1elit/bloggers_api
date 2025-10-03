@@ -2,14 +2,14 @@ import {RequestWithParams} from "../../../core/types/requestTypes";
 import {HttpStatus} from "../../../core/types/http-statuses";
 import {createErrorMessages} from "../../../core/utils/error.utils";
 import {Response} from 'express'
-import {postsRepository} from "../../repositories/posts.db-repository";
+import {postsService} from "../../application/posts.service";
 
 export async function deletePostHandler(
     req: RequestWithParams<{ id:string }>,
     res: Response,
 ) {
     const id = req.params.id;
-    const post = await postsRepository.findById(id);
+    const post = await postsService.findByIdOrError(id);
 
     if(!post) {
         res
@@ -18,6 +18,6 @@ export async function deletePostHandler(
         return;
     }
 
-    await postsRepository.delete(id)
+    await postsService.delete(id)
     res.sendStatus(HttpStatus.NoContent);
 }

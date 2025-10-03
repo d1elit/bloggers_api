@@ -3,6 +3,7 @@ import {BlogInputModel} from "../models/blogInputModel";
 
 import {blogsRepository} from "../repositories/blogs.db-repository";
 import {WithId} from "mongodb";
+import {Post} from "../../posts/types/post";
 
 
 export const blogsService = {
@@ -10,19 +11,25 @@ export const blogsService = {
         return blogsRepository.findAll();
 
     },
-    async findById(id: string) : Promise<WithId<Blog> | null> {
-        return  blogsRepository.findById(id)
+    async findByIdOrError(id: string) : Promise<WithId<Blog>> {
+        return  blogsRepository.findByIdOrError(id)
     },
-    async create(newBlog: Blog): Promise<WithId<Blog>> {
-        const insertResult = await blogsCollection.insertOne(newBlog);
-        return {...newBlog, _id: insertResult.insertedId};
+    async create(dto: BlogInputModel): Promise<WithId<Blog>> {
+        const newBlog: Blog = {
+            name: dto.name,
+            description: dto.description,
+            websiteUrl: dto.websiteUrl,
+            createdAt: new Date().toISOString(),
+            isMembership: false,
+        }
+        return blogsRepository.create(newBlog);
     },
     async delete(id:string) : Promise<void> {
-        await blogsCollection.deleteOne({_id: new ObjectId(id)});
-        return;
+        await blogsRepository.delete(id)
     },
     async update(id:string, dto: BlogInputModel) : Promise<void>  {
-        await blogsCollection.updateOne({_id: new ObjectId(id)}, {$set: dto});
+
+        await blogsRepository.update(id,dto);
         return;
     }
 }

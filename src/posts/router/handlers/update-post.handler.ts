@@ -3,7 +3,7 @@ import {Response} from "express";
 import {HttpStatus} from "../../../core/types/http-statuses";
 import {createErrorMessages} from "../../../core/middlewares/validation/input-validtion-result.middleware";
 import {PostInputModel} from "../../models/postInputModel";
-import {postsRepository} from "../../repositories/posts.db-repository";
+import {postsService} from "../../application/posts.service";
 
 
 export async function updatePostHandler(
@@ -12,13 +12,13 @@ export async function updatePostHandler(
 ) {
 
     const id = req.params.id;
-    const post = await postsRepository.findById(id);
+    const post = await postsService.findByIdOrError(id);
     if (!post) {
         res
             .status(HttpStatus.NotFound)
             .send(createErrorMessages([{message:'post not found', field:'id'}]));
     }
 
-    await postsRepository.update(id, req.body);
+    await postsService.update(id, req.body);
     res.sendStatus(HttpStatus.NoContent);
 }

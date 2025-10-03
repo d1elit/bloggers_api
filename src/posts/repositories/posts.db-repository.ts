@@ -9,8 +9,12 @@ export const postsRepository = {
         return postsCollection.find({}).toArray();
 
     },
-    async findById(id: string) : Promise<WithId<Post> | null> {
-        return  postsCollection.findOne({ _id: new ObjectId(id)})
+    async findByIdOrError(id: string) : Promise<WithId<Post> | null> {
+        const res = await  postsCollection.findOne({ _id: new ObjectId(id)})
+        if(!res) {
+            throw new Error('Post not found');
+        }
+        return res
     },
     async create(newPost: Post, id:string): Promise<WithId<Post>> {
         const insertResult = await postsCollection.insertOne(newPost);

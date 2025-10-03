@@ -4,7 +4,7 @@ import {BlogViewModel} from "../../models/blogVIewModel";
 import {ErroreType} from "../../types/validationError";
 import  {blogsService} from "../../application/blogs.service";
 import {HttpStatus} from "../../../core/types/http-statuses";
-import {createErrorMessages} from "../../../core/utils/error.utils";
+import {errorsHandler} from "../../../core/errors/errors.handler";
 
 
 export async function deleteBlogHandler (
@@ -13,18 +13,10 @@ export async function deleteBlogHandler (
 
     try {
         const id = req.params.id;
-        const blog = await blogsService.findById(id)
-
-        if(!blog) {
-            res
-                .status(HttpStatus.NotFound)
-                .send(createErrorMessages([{ field: 'id', message: 'Blog not found' }]));
-            return;
-        }
         await blogsService.delete(id)
         res.sendStatus(HttpStatus.NoContent);
     } catch (e: unknown) {
-        res.sendStatus(HttpStatus.InternalServerError);
+        errorsHandler(e,res)
     }
 
 }

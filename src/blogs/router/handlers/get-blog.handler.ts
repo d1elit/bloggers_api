@@ -4,27 +4,20 @@ import {HttpStatus} from "../../../core/types/http-statuses";
 import {createErrorMessages} from "../../../core/utils/error.utils";
 import {RequestWithParams} from "../../../core/types/requestTypes";
 import {mapToBlogViewModel} from "../mappers/map-to-blog-view-model";
+import {errorsHandler} from "../../../core/errors/errors.handler";
 
 
 
 export async function getBlogHandler (
     req: RequestWithParams<{ id: string }>,
     res: Response) {
-
     try {
         const id = req.params.id;
-        const blog = await blogsService.findById(id)
-
-        if(!blog) {
-            res
-                .status(HttpStatus.NotFound)
-                .send(createErrorMessages([{ field: 'id', message: 'Blog not found' }]));
-            return;
-        }
+        const blog = await blogsService.findByIdOrError(id)
         const blogViewModel = mapToBlogViewModel(blog)
-        res.send(blogViewModel)
+        res.status(HttpStatus.Ok).send(blogViewModel)
     } catch(e: unknown) {
-        res.sendStatus(HttpStatus.InternalServerError);
+        errorsHandler(e, res)
     }
 
 }
