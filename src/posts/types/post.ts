@@ -5,4 +5,4 @@ export type Post = {
   blogId: string;
   blogName: string;
   createdAt: string;
-}
+};

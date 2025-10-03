@@ -1,11 +1,10 @@
 import { ValidationErrorType } from './validationError';
-import {HttpStatus} from "./http-statuses";
+import { HttpStatus } from './http-statuses';
 
 type ValidationError = {
-    field: string;
-    message: string;
-}
-
+  field: string;
+  message: string;
+};
 
 // type ValidationErrorOutput = {
 //     status: HttpStatus;
@@ -13,6 +12,5 @@ type ValidationError = {
 //     source: { pointer: string };
 //     code: string | null;
 // };
-
 
 export type ValidationErrorListOutput = { errors: ValidationError[] };
