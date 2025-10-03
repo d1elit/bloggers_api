@@ -1,8 +1,9 @@
 import { Blog } from '../types/blog';
 import { BlogInputModel } from '../models/blogInputModel';
 import { ObjectId, WithId } from 'mongodb';
-import { blogsCollection } from '../../db/mongo.db';
+import {blogsCollection, postsCollection} from '../../db/mongo.db';
 import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
+import {Post} from "../../posts/types/post";
 
 export const blogsRepository = {
   async findAll(): Promise<WithId<Blog>[]> {

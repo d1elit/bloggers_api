@@ -9,6 +9,9 @@ export const postsRepository = {
   async findAll(): Promise<WithId<Post>[]> {
     return postsCollection.find({}).toArray();
   },
+  async findByBlogId(id: string): Promise<WithId<Post>[]> {
+    return await postsCollection.find({'blogId' : id}).toArray()
+  },
   async findByIdOrError(id: string): Promise<WithId<Post>> {
     const res = await postsCollection.findOne({ _id: new ObjectId(id) });
     if (!res) {

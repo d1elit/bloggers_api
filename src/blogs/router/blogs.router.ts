@@ -8,12 +8,14 @@ import { blogInputDtoValidation } from '../validation/blog.input-dto.validation-
 import { deleteBlogHandler } from './handlers/delete-blog.handler';
 import { updateBlogHandler } from './handlers/update-blog.handler';
 import { superAdminGuardMiddleware } from '../../auth/middlewares/super-admin.guard-middleware';
+import {getBlogsPostList} from "./handlers/get-blogs-post-list";
 
 export const blogsRouter = Router({});
 
 blogsRouter
   .get('', getBlogsListHandler)
   .get('/:id', idValidation, inputValidationResultMiddleware, getBlogHandler)
+  .get('/:id/posts', idValidation, inputValidationResultMiddleware, getBlogsPostList)
   .put(
     '/:id',
     superAdminGuardMiddleware,
