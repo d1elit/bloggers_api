@@ -12,8 +12,6 @@ import {superAdminGuardMiddleware} from "../../auth/middlewares/super-admin.guar
 
 export const postsRouter =  Router({});
 
-// postsRouter.use(superAdminGuardMiddleware);
-
 postsRouter
     .get('', getPostListHandler)
     .get('/:id', idValidation,inputValidationResultMiddleware, getPostHandler)

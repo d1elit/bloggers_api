@@ -9,7 +9,7 @@ export const  postsService = {
         return   postsRepository.findAll();
 
     },
-    async findByIdOrError(id: string) : Promise<WithId<Post> | null> {
+    async findByIdOrError(id: string) : Promise<WithId<Post>> {
         return  postsRepository.findByIdOrError(id)
     },
     async create(dto: PostInputModel): Promise<WithId<Post>> {
