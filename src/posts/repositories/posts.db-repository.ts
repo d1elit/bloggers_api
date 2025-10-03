@@ -16,7 +16,7 @@ export const postsRepository = {
     }
     return res;
   },
-  async create(newPost: Post, id: string): Promise<WithId<Post>> {
+  async create(newPost: Post): Promise<WithId<Post>> {
     const insertResult = await postsCollection.insertOne(newPost);
     return { ...newPost, _id: insertResult.insertedId };
   },

@@ -1,8 +1,9 @@
 import { Post } from '../types/post';
 import { PostInputModel } from '../models/postInputModel';
-import { ObjectId, WithId } from 'mongodb';
-import { postsCollection, client, blogsCollection } from '../../db/mongo.db';
+import {  WithId } from 'mongodb';
 import { postsRepository } from '../repositories/posts.db-repository';
+import {RepositoryNotFoundError} from "../../core/errors/repostory-not-found.error";
+import {blogsRepository} from "../../blogs/repositories/blogs.db-repository";
 
 export const postsService = {
   async findAll(): Promise<WithId<Post>[]> {
@@ -12,15 +13,13 @@ export const postsService = {
     return postsRepository.findByIdOrError(id);
   },
   async create(dto: PostInputModel): Promise<WithId<Post>> {
-    const blog = await blogsCollection.findOne({
-      _id: new ObjectId(dto.blogId),
-    });
+    const blog = await blogsRepository.findByIdOrError(dto.blogId);
 
     if (!blog) {
-      throw new Error(`Blog with id ${dto.blogId} not found!`);
+      throw new RepositoryNotFoundError(`Blog with id ${dto.blogId} not found!`);
     }
 
-    const newPost: Post = {
+    const newPostDto: Post = {
       title: dto.title,
       shortDescription: dto.shortDescription,
       content: dto.content,
@@ -29,8 +28,8 @@ export const postsService = {
       createdAt: new Date().toISOString(),
     };
 
-    const insertResult = await postsCollection.insertOne(newPost);
-    return { ...newPost, _id: insertResult.insertedId };
+    return await postsRepository.create(newPostDto);
+
   },
   async delete(id: string): Promise<void> {
     await postsRepository.delete(id);
