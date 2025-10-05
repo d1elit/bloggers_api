@@ -3,11 +3,11 @@ import { createErrorMessages } from '../../../core/middlewares/validation/input-
 import { HttpStatus } from '../../../core/types/http-statuses';
 import { Response } from 'express';
 import { RequestWithParamsAndBody } from '../../../core/types/requestTypes';
-import { BlogInputModel } from '../../models/blogInputModel';
+import { BlogInput } from '../input/blog.input';
 import { errorsHandler } from '../../../core/errors/errors.handler';
 
 export async function updateBlogHandler(
-  req: RequestWithParamsAndBody<{ id: string }, BlogInputModel>,
+  req: RequestWithParamsAndBody<{ id: string }, BlogInput>,
   res: Response,
 ) {
   try {

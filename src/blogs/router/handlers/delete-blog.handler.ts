@@ -1,6 +1,6 @@
 import { RequestWithParams } from '../../../core/types/requestTypes';
 import { Response } from 'express';
-import { BlogViewModel } from '../../models/blogVIewModel';
+import { BlogOutput } from '../output/blog.output';
 import { ErroreType } from '../../types/validationError';
 import { blogsService } from '../../application/blogs.service';
 import { HttpStatus } from '../../../core/types/http-statuses';
@@ -8,7 +8,7 @@ import { errorsHandler } from '../../../core/errors/errors.handler';
 
 export async function deleteBlogHandler(
   req: RequestWithParams<{ id: string }>,
-  res: Response<BlogViewModel | ErroreType>,
+  res: Response<BlogOutput | ErroreType>,
 ) {
   try {
     const id = req.params.id;
