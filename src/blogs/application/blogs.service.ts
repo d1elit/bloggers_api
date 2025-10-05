@@ -5,6 +5,7 @@ import { blogsRepository } from '../repositories/blogs.db-repository';
 import { WithId } from 'mongodb';
 import { Post } from '../../posts/types/post';
 import {postsRepository} from "../../posts/repositories/posts.db-repository";
+import {PostInputModel} from "../../posts/models/postInputModel";
 
 export const blogsService = {
   async findAll(): Promise<WithId<Blog>[]> {
@@ -34,5 +35,18 @@ export const blogsService = {
   async findPosts(id: string): Promise<WithId<Post>[]> {
     await blogsRepository.findByIdOrError(id)
     return await postsRepository.findByBlogId(id);
+  },
+
+  async createPost(id: string, dto:PostInputModel): Promise<WithId<Post>> {
+    const blog = await blogsRepository.findByIdOrError(id)
+    const newPostDto: Post = {
+      title: dto.title,
+      shortDescription: dto.shortDescription,
+      content: dto.content,
+      blogId: id,
+      blogName: blog.name,
+      createdAt: new Date().toISOString(),
+    };
+    return postsRepository.create(newPostDto);
   }
 };

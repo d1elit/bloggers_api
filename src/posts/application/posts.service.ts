@@ -12,7 +12,7 @@ export const postsService = {
   async findByIdOrError(id: string): Promise<WithId<Post>> {
     return postsRepository.findByIdOrError(id);
   },
-  async create(dto: PostInputModel): Promise<WithId<Post>> {
+  async create(dto: PostInputModel, blogId?: string): Promise<WithId<Post>> {
     const blog = await blogsRepository.findByIdOrError(dto.blogId);
 
     if (!blog) {
@@ -23,7 +23,7 @@ export const postsService = {
       title: dto.title,
       shortDescription: dto.shortDescription,
       content: dto.content,
-      blogId: dto.blogId,
+      blogId: blogId ?? dto.blogId,
       blogName: blog.name,
       createdAt: new Date().toISOString(),
     };
