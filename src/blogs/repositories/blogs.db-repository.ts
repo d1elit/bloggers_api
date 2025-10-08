@@ -1,10 +1,8 @@
 import { Blog } from '../types/blog';
 import { BlogInput } from '../router/input/blog.input';
 import { ObjectId, WithId } from 'mongodb';
-import {blogsCollection, postsCollection} from '../../db/mongo.db';
+import {blogsCollection} from '../../db/mongo.db';
 import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
-import {Post} from "../../posts/types/post";
-import {PaginationAndSorting} from "../../core/types/pagination-and-sorting";
 import {BlogQueryInput} from "../router/input/blog-query.input";
 
 export const blogsRepository = {
@@ -17,18 +15,16 @@ export const blogsRepository = {
       pageSize,
       sortBy,
       sortDirection,
-      name,
-      description,
-      websiteUri
+      searchNameTerm,
+      searchDescriptionTerm,
     } = queryDto
     const skip = (+pageNumber -1) * +pageSize;
     const filter: any = {};
-    // console.log(searchBlogNameTerm);
-    if(name) {
-      filter.name = {$regex: name, $options: "i"};
+    if(searchNameTerm) {
+      filter.name = {$regex: searchNameTerm, $options: "i"};
     }
-    if(description) {
-      filter.description = {$regex: description, $options: "i"};
+    if(searchDescriptionTerm) {
+      filter.description = {$regex: searchDescriptionTerm, $options: "i"};
     }
 
 

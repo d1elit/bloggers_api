@@ -1,7 +1,6 @@
 import { Response } from 'express';
 import { blogsService } from '../../application/blogs.service';
 import { HttpStatus } from '../../../core/types/http-statuses';
-import { createErrorMessages } from '../../../core/utils/error.utils';
 import { RequestWithParams } from '../../../core/types/requestTypes';
 import { mapToBlogViewModel } from '../mappers/map-to-blog-view-model';
 import { errorsHandler } from '../../../core/errors/errors.handler';

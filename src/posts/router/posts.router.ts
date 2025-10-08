@@ -5,7 +5,7 @@ import { idValidation } from '../../core/middlewares/validation/params-id.valida
 import { inputValidationResultMiddleware } from '../../core/middlewares/validation/input-validtion-result.middleware';
 import { createPostHandler } from './handlers/create-post.handler';
 import { deletePostHandler } from './handlers/delete-post.handler';
-import { postInputDtoValidation } from '../validation/post.input-dto.validation-middlewares';
+import { postInputDtoValidation } from './post.input-dto.validation-middlewares';
 import { updatePostHandler } from './handlers/update-post.handler';
 import { superAdminGuardMiddleware } from '../../auth/middlewares/super-admin.guard-middleware';
 

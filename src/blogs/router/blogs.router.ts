@@ -10,7 +10,7 @@ import { updateBlogHandler } from './handlers/update-blog.handler';
 import { superAdminGuardMiddleware } from '../../auth/middlewares/super-admin.guard-middleware';
 import {getBlogsPostList} from "./handlers/get-blogs-post-list";
 import {createBlogsPostHandler} from "./handlers/create-post-in-blog.handler";
-import {  blogsPostInputDtoValidation} from "../../posts/validation/post.input-dto.validation-middlewares";
+import {  blogsPostInputDtoValidation} from "../../posts/router/post.input-dto.validation-middlewares";
 
 export const blogsRouter = Router({});
 

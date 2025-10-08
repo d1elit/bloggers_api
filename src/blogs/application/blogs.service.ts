@@ -5,8 +5,9 @@ import { blogsRepository } from '../repositories/blogs.db-repository';
 import { WithId } from 'mongodb';
 import { Post } from '../../posts/types/post';
 import {postsRepository} from "../../posts/repositories/posts.db-repository";
-import {PostInputModel} from "../../posts/models/postInputModel";
+import {PostInput} from "../../posts/router/input/post.input";
 import {BlogQueryInput} from "../router/input/blog-query.input";
+import {PostQueryInput} from "../../posts/router/input/post-query.input";
 
 export const blogsService = {
   async findAll(queryDto: BlogQueryInput): Promise<{items:WithId<Blog>[]; totalCount: number}> {
@@ -33,12 +34,16 @@ export const blogsService = {
     return;
   },
 
-  async findPosts(id: string): Promise<WithId<Post>[]> {
+  async findPosts(dto :PostQueryInput, id: string): Promise<{items:WithId<Post>[], totalCount: number}> {
     await blogsRepository.findByIdOrError(id)
-    return await postsRepository.findByBlogId(id);
+    const queryDto = {
+      ...dto,
+      blogId:id
+    }
+    return await postsRepository.findAll(queryDto);
   },
 
-  async createPost(id: string, dto:PostInputModel): Promise<WithId<Post>> {
+  async createPost(id: string, dto:PostInput): Promise<WithId<Post>> {
     const blog = await blogsRepository.findByIdOrError(id)
     const newPostDto: Post = {
       title: dto.title,

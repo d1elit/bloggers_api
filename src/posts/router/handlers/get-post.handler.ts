@@ -1,7 +1,7 @@
 import { RequestWithParams } from '../../../core/types/requestTypes';
 import { Response } from 'express';
 import { HttpStatus } from '../../../core/types/http-statuses';
-import { PostViewModel } from '../../models/postViewModel';
+import { PostOutput } from '../output/post.output';
 import { ErroreType } from '../../../blogs/types/validationError';
 import { mapToPostViewModel } from '../mappers/map-to-post-view-model';
 import { postsService } from '../../application/posts.service';
@@ -9,7 +9,7 @@ import { errorsHandler } from '../../../core/errors/errors.handler';
 
 export async function getPostHandler(
   req: RequestWithParams<{ id: string }>,
-  res: Response<PostViewModel | ErroreType>,
+  res: Response<PostOutput | ErroreType>,
 ): Promise<void> {
   try {
     let id = req.params.id;

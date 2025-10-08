@@ -1,9 +1,7 @@
-import { Request, Response } from 'express';
+import {  Response } from 'express';
 import { HttpStatus } from '../../../core/types/http-statuses';
 import { blogsService } from '../../application/blogs.service';
-import { BlogOutput } from '../output/blog.output';
 import { errorsHandler } from '../../../core/errors/errors.handler';
-import {query} from "express-validator";
 import {setDefaultSortAndPaginationIfNotExist} from "../../../core/helpers/set-default-query-params";
 import {mapToBlogViewModel} from "../mappers/map-to-blog-list-paginated.util";
 import {BlogListPaginatedOutput} from "../output/blog-list-paginated.output";
@@ -16,8 +14,6 @@ export async function getBlogsListHandler(
 ) {
   try {
     const queryInput = setDefaultSortAndPaginationIfNotExist(req.query)
-
-    console.log(queryInput)
 
     const {items, totalCount} = await blogsService.findAll(queryInput);
 

@@ -7,15 +7,13 @@ import {BlogListPaginatedOutput} from "../output/blog-list-paginated.output";
 export function mapToBlogViewModel(
     blogs: WithId<Blog>[], meta: { pageNumber: number; pageSize: number; totalCount: number },
 ) : BlogListPaginatedOutput {
-    pagesCount:
-
     return {
-        meta: {
-            page: meta.pageNumber,
-            pageSize: meta.pageSize,
-            pageCount: Math.ceil(meta.totalCount / meta.pageSize),
-            totalCount: meta.totalCount,
-        },
+
+        pagesCount: Math.ceil(meta.totalCount / meta.pageSize),
+        page: +meta.pageNumber,
+        pageSize: +meta.pageSize,
+        totalCount: meta.totalCount,
+
         items: blogs.map(
             (blog): BlogOutput => ({
                 id: blog._id.toString(),

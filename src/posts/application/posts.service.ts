@@ -1,18 +1,19 @@
 import { Post } from '../types/post';
-import { PostInputModel } from '../models/postInputModel';
+import { PostInput } from '../router/input/post.input';
 import {  WithId } from 'mongodb';
 import { postsRepository } from '../repositories/posts.db-repository';
 import {RepositoryNotFoundError} from "../../core/errors/repostory-not-found.error";
 import {blogsRepository} from "../../blogs/repositories/blogs.db-repository";
+import {PostQueryInput} from "../router/input/post-query.input";
 
 export const postsService = {
-  async findAll(): Promise<WithId<Post>[]> {
-    return postsRepository.findAll();
+  async findAll(dto: PostQueryInput): Promise<{items:WithId<Post>[], totalCount: number}> {
+    return postsRepository.findAll(dto);
   },
   async findByIdOrError(id: string): Promise<WithId<Post>> {
     return postsRepository.findByIdOrError(id);
   },
-  async create(dto: PostInputModel, blogId?: string): Promise<WithId<Post>> {
+  async create(dto: PostInput, blogId?: string): Promise<WithId<Post>> {
     const blog = await blogsRepository.findByIdOrError(dto.blogId);
 
     if (!blog) {
@@ -35,7 +36,7 @@ export const postsService = {
     await postsRepository.delete(id);
     return;
   },
-  async update(id: string, dto: PostInputModel): Promise<void> {
+  async update(id: string, dto: PostInput): Promise<void> {
     await postsRepository.update(id, dto);
     return;
   },

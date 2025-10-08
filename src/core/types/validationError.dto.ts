@@ -13,4 +13,4 @@ type ValidationError = {
 //     code: string | null;
 // };
 
-export type ValidationErrorListOutput = { errors: ValidationError[] };
+export type ValidationErrorListOutput = { errorsMessages: ValidationError[] };

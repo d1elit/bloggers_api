@@ -28,10 +28,15 @@ const blogCreatedAtValidation = body('createdAt')
   .optional() // если поле необязательное при создании
   .isISO8601()
   .withMessage('createdAt must be a valid ISO 8601 date-time string');
+// const isMembershipValid = body('isMembership')
+//     .isBoolean()
+//     .withMessage('isMembershipValid must be a boolean')
+//     .trim()
 
 export const blogInputDtoValidation = [
   blogNameValidation,
   blogDescriptionValidation,
   blogUrlValidation,
   blogCreatedAtValidation,
+  // isMembershipValid
 ];

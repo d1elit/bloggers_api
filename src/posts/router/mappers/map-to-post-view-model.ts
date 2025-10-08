@@ -1,8 +1,8 @@
 import { WithId } from 'mongodb';
 import { Post } from '../../types/post';
-import { PostViewModel } from '../../models/postViewModel';
+import { PostOutput } from '../output/post.output';
 
-export function mapToPostViewModel(post: WithId<Post>): PostViewModel {
+export function mapToPostViewModel(post: WithId<Post>): PostOutput {
   return {
     id: post._id.toString(),
     title: post.title,
