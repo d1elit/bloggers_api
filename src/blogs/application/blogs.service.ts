@@ -4,13 +4,15 @@ import { BlogInput } from '../router/input/blog.input';
 import { blogsRepository } from '../repositories/blogs.db-repository';
 import { WithId } from 'mongodb';
 import { Post } from '../../posts/types/post';
-import {postsRepository} from "../../posts/repositories/posts.db-repository";
-import {PostInput} from "../../posts/router/input/post.input";
-import {BlogQueryInput} from "../router/input/blog-query.input";
-import {PostQueryInput} from "../../posts/router/input/post-query.input";
+import { postsRepository } from '../../posts/repositories/posts.db-repository';
+import { PostInput } from '../../posts/router/input/post.input';
+import { BlogQueryInput } from '../router/input/blog-query.input';
+import { PostQueryInput } from '../../posts/router/input/post-query.input';
 
 export const blogsService = {
-  async findAll(queryDto: BlogQueryInput): Promise<{items:WithId<Blog>[]; totalCount: number}> {
+  async findAll(
+    queryDto: BlogQueryInput,
+  ): Promise<{ items: WithId<Blog>[]; totalCount: number }> {
     return blogsRepository.findAll(queryDto);
   },
   async findByIdOrError(id: string): Promise<WithId<Blog>> {
@@ -34,17 +36,20 @@ export const blogsService = {
     return;
   },
 
-  async findPosts(dto :PostQueryInput, id: string): Promise<{items:WithId<Post>[], totalCount: number}> {
-    await blogsRepository.findByIdOrError(id)
+  async findPosts(
+    dto: PostQueryInput,
+    id: string,
+  ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
+    await blogsRepository.findByIdOrError(id);
     const queryDto = {
       ...dto,
-      blogId:id
-    }
+      blogId: id,
+    };
     return await postsRepository.findAll(queryDto);
   },
 
-  async createPost(id: string, dto:PostInput): Promise<WithId<Post>> {
-    const blog = await blogsRepository.findByIdOrError(id)
+  async createPost(id: string, dto: PostInput): Promise<WithId<Post>> {
+    const blog = await blogsRepository.findByIdOrError(id);
     const newPostDto: Post = {
       title: dto.title,
       shortDescription: dto.shortDescription,
@@ -54,5 +59,5 @@ export const blogsService = {
       createdAt: new Date().toISOString(),
     };
     return postsRepository.create(newPostDto);
-  }
+  },
 };

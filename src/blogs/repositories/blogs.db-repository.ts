@@ -1,15 +1,14 @@
 import { Blog } from '../types/blog';
 import { BlogInput } from '../router/input/blog.input';
 import { ObjectId, WithId } from 'mongodb';
-import {blogsCollection} from '../../db/mongo.db';
+import { blogsCollection } from '../../db/mongo.db';
 import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
-import {BlogQueryInput} from "../router/input/blog-query.input";
+import { BlogQueryInput } from '../router/input/blog-query.input';
 
 export const blogsRepository = {
-  async findAll(queryDto: BlogQueryInput): Promise<{items:WithId<Blog>[]; totalCount: number}> {
-
-
-
+  async findAll(
+    queryDto: BlogQueryInput,
+  ): Promise<{ items: WithId<Blog>[]; totalCount: number }> {
     const {
       pageNumber,
       pageSize,
@@ -17,30 +16,26 @@ export const blogsRepository = {
       sortDirection,
       searchNameTerm,
       searchDescriptionTerm,
-    } = queryDto
-    const skip = (+pageNumber -1) * +pageSize;
+    } = queryDto;
+    const skip = (+pageNumber - 1) * +pageSize;
     const filter: any = {};
-    if(searchNameTerm) {
-      filter.name = {$regex: searchNameTerm, $options: "i"};
+    if (searchNameTerm) {
+      filter.name = { $regex: searchNameTerm, $options: 'i' };
     }
-    if(searchDescriptionTerm) {
-      filter.description = {$regex: searchDescriptionTerm, $options: "i"};
+    if (searchDescriptionTerm) {
+      filter.description = { $regex: searchDescriptionTerm, $options: 'i' };
     }
-
 
     const items = await blogsCollection
       .find(filter)
-        .sort({ [sortBy]: sortDirection })
-        .skip(skip)
-        .limit(+pageSize)
-        .toArray();
+      .sort({ [sortBy]: sortDirection })
+      .skip(skip)
+      .limit(+pageSize)
+      .toArray();
 
     const totalCount = await blogsCollection.countDocuments(filter);
 
-    return {items, totalCount};
-
-
-
+    return { items, totalCount };
 
     // return blogsCollection.find({}).toArray();
   },

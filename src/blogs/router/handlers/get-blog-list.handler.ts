@@ -1,31 +1,29 @@
-import {  Response } from 'express';
+import { Response } from 'express';
 import { HttpStatus } from '../../../core/types/http-statuses';
 import { blogsService } from '../../application/blogs.service';
 import { errorsHandler } from '../../../core/errors/errors.handler';
-import {setDefaultSortAndPaginationIfNotExist} from "../../../core/helpers/set-default-query-params";
-import {mapToBlogViewModel} from "../mappers/map-to-blog-list-paginated.util";
-import {BlogListPaginatedOutput} from "../output/blog-list-paginated.output";
-import {RequestWithQuery} from "../../../core/types/requestTypes";
-import {BlogQueryInput} from "../input/blog-query.input";
+import { setDefaultSortAndPaginationIfNotExist } from '../../../core/helpers/set-default-query-params';
+import { mapToBlogViewModel } from '../mappers/map-to-blog-list-paginated.util';
+import { BlogListPaginatedOutput } from '../output/blog-list-paginated.output';
+import { RequestWithQuery } from '../../../core/types/requestTypes';
+import { BlogQueryInput } from '../input/blog-query.input';
 
 export async function getBlogsListHandler(
   req: RequestWithQuery<BlogQueryInput>,
   res: Response<BlogListPaginatedOutput>,
 ) {
   try {
-    const queryInput = setDefaultSortAndPaginationIfNotExist(req.query)
+    const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
 
-    const {items, totalCount} = await blogsService.findAll(queryInput);
-
+    const { items, totalCount } = await blogsService.findAll(queryInput);
 
     const blogsViewModels = mapToBlogViewModel(items, {
       pageNumber: queryInput.pageNumber,
       pageSize: queryInput.pageSize,
       totalCount,
-    })
+    });
 
     res.status(HttpStatus.Ok).send(blogsViewModels);
-
   } catch (e: unknown) {
     errorsHandler(e, res);
   }

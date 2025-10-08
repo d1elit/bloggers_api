@@ -45,4 +45,4 @@ export const blogsPostInputDtoValidation = [
   postDescriptionValidation,
   postContentValidation,
   postCreatedAtValidation,
-]
+];
