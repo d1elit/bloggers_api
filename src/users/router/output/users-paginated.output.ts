@@ -1,9 +1,9 @@
-import {UserOutput} from "./user.output";
+import { UserOutput } from './user.output';
 
 export type UsersPaginatedOutput = {
-    page: number;
-    pageSize: number;
-    pagesCount: number;
-    totalCount: number;
-    items: UserOutput[];
-}
+  page: number;
+  pageSize: number;
+  pagesCount: number;
+  totalCount: number;
+  items: UserOutput[];
+};
