@@ -1,27 +1,18 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { RequestWithBody } from '../../../core/types/requestTypes';
 import { Login } from '../../types/login';
 import { HttpStatus } from '../../../core/types/http-statuses';
 import { errorsHandler } from '../../../core/errors/errors.handler';
+import {authService} from "../../application/auth.service";
 
-// export function authHandler (
-//     req: Request,
-//     res: Response,
-// ) {
-//     return  {hi:"Hello"}
-// }
 
-export async function authHandler(req: RequestWithBody<Login>, res: Response) {
+export async function authHandler(
+    req: RequestWithBody<Login>,
+    res: Response) {
   try {
-    // req.body = req.body;
-    let result = req.body;
-    // const createdBlog = await blogsService.create(req.body);
-    // const blogViewModel: BlogOutput = mapToBlogViewModel(createdBlog);
-    // res.status(HttpStatus.Created).send(blogViewModel);
-    res.status(HttpStatus.Created).send(result);
+    await authService.auth(req.body)
+    res.sendStatus(HttpStatus.NoContent);
   } catch (e: unknown) {
-    // res.status(HttpStatus.Created).send(blogViewModel);
-    // res.send(result)
     errorsHandler(e, res);
   }
 }

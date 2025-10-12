@@ -8,7 +8,7 @@ export const usersService = {
     await usersService.ensureIsUserUnique(userDto.login, userDto.email);
     const newUser = {
       login: userDto.login,
-      password: userDto.password,
+      password: await usersService.hashPassword(userDto.password),
       email: userDto.email,
       createdAt: new Date().toISOString(),
     };
@@ -20,10 +20,18 @@ export const usersService = {
   },
 
   async ensureIsUserUnique(login:string, email:string) {
-    let resLogin = await usersQueryRepository.findByField('login', login);
-    let resEmail = await usersQueryRepository.findByField('email', email);
+    let resLogin = await usersQueryRepository.findFieldWithValue('login', login);
+    let resEmail = await usersQueryRepository.findFieldWithValue('email', email);
     if (resLogin || resEmail) {
       throw new RepositoryNotFoundError('Login or email already exist');
     }
+  },
+
+  async hashPassword(password: string) {
+    const bcrypt = require('bcrypt');
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    return  bcrypt.hashSync(password, salt);
+
   }
 };
