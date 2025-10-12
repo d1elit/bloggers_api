@@ -10,5 +10,9 @@ export const usersService = {
             createdAt: new Date().toISOString(),
         }
         return await usersRepository.create(newUser)
+    },
+
+    async delete(id:string) {
+        return usersRepository.delete(id)
     }
 }
