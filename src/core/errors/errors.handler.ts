@@ -1,5 +1,8 @@
 import { Response } from 'express';
-import {LoginError, RepositoryNotFoundError} from './repostory-not-found.error';
+import {
+  LoginError,
+  RepositoryNotFoundError,
+} from './repostory-not-found.error';
 import { HttpStatus } from '../types/http-statuses';
 import { createErrorMessages } from '../middlewares/validation/input-validtion-result.middleware';
 import { DomainError } from './domain.error';
@@ -20,15 +23,15 @@ export function errorsHandler(error: unknown, res: Response): void {
 
     return;
   }
-  if(error instanceof LoginError ) {
-    const httpStatus = HttpStatus.Unauthorized
+  if (error instanceof LoginError) {
+    const httpStatus = HttpStatus.Unauthorized;
     res.status(httpStatus).send(
-        createErrorMessages([
-          {
-            status: httpStatus,
-            detail: error.message,
-          },
-        ]),
+      createErrorMessages([
+        {
+          status: httpStatus,
+          detail: error.message,
+        },
+      ]),
     );
   }
 

@@ -1,6 +1,10 @@
 import { Router, Request, Response } from 'express';
 import { HttpStatus } from '../../core/types/http-statuses';
-import {blogsCollection, postsCollection, usersCollection} from '../../db/mongo.db';
+import {
+  blogsCollection,
+  postsCollection,
+  usersCollection,
+} from '../../db/mongo.db';
 
 export const testingRouter = Router({});
 

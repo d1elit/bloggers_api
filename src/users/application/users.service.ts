@@ -1,7 +1,7 @@
 import { UserInput } from '../router/input/user.input';
 import { usersRepository } from '../repositories/users.repository';
-import {usersQueryRepository} from "../repositories/users.query-repository";
-import {RepositoryNotFoundError} from "../../core/errors/repostory-not-found.error";
+import { usersQueryRepository } from '../repositories/users.query-repository';
+import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
 
 export const usersService = {
   async create(userDto: UserInput) {
@@ -19,9 +19,15 @@ export const usersService = {
     return usersRepository.delete(id);
   },
 
-  async ensureIsUserUnique(login:string, email:string) {
-    let resLogin = await usersQueryRepository.findFieldWithValue('login', login);
-    let resEmail = await usersQueryRepository.findFieldWithValue('email', email);
+  async ensureIsUserUnique(login: string, email: string) {
+    let resLogin = await usersQueryRepository.findFieldWithValue(
+      'login',
+      login,
+    );
+    let resEmail = await usersQueryRepository.findFieldWithValue(
+      'email',
+      email,
+    );
     if (resLogin || resEmail) {
       throw new RepositoryNotFoundError('Login or email already exist');
     }
@@ -31,7 +37,6 @@ export const usersService = {
     const bcrypt = require('bcrypt');
     const saltRounds = 10;
     const salt = bcrypt.genSaltSync(saltRounds);
-    return  bcrypt.hashSync(password, salt);
-
-  }
+    return bcrypt.hashSync(password, salt);
+  },
 };
