@@ -4,8 +4,11 @@ const userLoginValidation = body('login')
     .isString()
     .withMessage('login must be a string')
     .trim()
-    .isLength({ min: 3, max: 15 })
-    .withMessage('Length of login is not correct');
+    .isLength({ min: 3, max: 10 })
+    .withMessage('Length of login is not correct')
+    .matches(
+    /^[a-zA-Z0-9_-]*$/,
+)
 
 const userEmailValidation = body('email')
     .isString()
@@ -20,8 +23,16 @@ const userCreatedAtValidation = body('createdAt')
     .isISO8601()
     .withMessage('createdAt must be a valid ISO 8601 date-time string');
 
+const passwordValidation = body('password')
+    .isString()
+    .withMessage('password must be a string')
+    .trim()
+    .isLength({ min: 6, max: 20 })
+    .withMessage('Length of password is not correct')
+
 export const userInputDtoValidation = [
     userLoginValidation,
     userEmailValidation,
-    userCreatedAtValidation
+    userCreatedAtValidation,
+    passwordValidation
 ];

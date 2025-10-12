@@ -3,6 +3,6 @@ import { UserSortFields } from '../../types/UserSortFields';
 
 export type UsersQueryInput = PaginationAndSorting<UserSortFields> &
   Partial<{
-    login: string;
-    email: string;
+      searchLoginTerm: string;
+      searchEmailTerm: string;
   }>;

@@ -10,7 +10,7 @@ export function mapToPostListPaginated(
     pagesCount: Math.ceil(meta.totalCount / meta.pageSize),
     page: +meta.pageNumber,
     pageSize: +meta.pageSize,
-    totalCount: +meta.totalCount,
+    totalCount: meta.totalCount,
     items: users.map((user) => {
       return {
         id: user._id.toString(),

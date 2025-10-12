@@ -5,7 +5,9 @@ import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.e
 
 export const usersRepository = {
   async create(newUser: User): Promise<WithId<User>> {
+
     const insertResult = await usersCollection.insertOne(newUser);
+    console.log('CREATE SUCCESS');
     return { ...newUser, _id: insertResult.insertedId };
   },
 
@@ -16,6 +18,7 @@ export const usersRepository = {
     if (deleteResult.deletedCount < 1) {
       throw new RepositoryNotFoundError('user not exist');
     }
+    console.log('DELETE SUCCESSFULLY')
     return;
   },
 };

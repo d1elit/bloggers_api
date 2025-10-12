@@ -13,6 +13,7 @@ export async function createUserHandler(
   try {
     let result = await usersService.create(req.body);
     let newUser = mapToUsers(result);
+    console.log(newUser);
     res.status(HttpStatus.Created).send(newUser);
   } catch (e: unknown) {
     errorsHandler(e, res);
