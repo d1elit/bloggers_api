@@ -24,7 +24,7 @@ export const usersQueryRepository = {
       .limit(pageSize)
       .toArray();
 
-    const totalCount = await postsCollection.countDocuments(filter);
+    const totalCount = await usersCollection.countDocuments(filter);
     return mapToPostListPaginated(users, { pageNumber, pageSize, totalCount });
   },
 };
