@@ -1,7 +1,7 @@
 import { Post } from '../types/post';
 import { PostInput } from '../router/input/post.input';
 import { ObjectId, WithId } from 'mongodb';
-import { postsCollection, client, blogsCollection } from '../../db/mongo.db';
+import { postsCollection } from '../../db/mongo.db';
 import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
 import { PostQueryInput } from '../router/input/post-query.input';
 
