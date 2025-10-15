@@ -3,21 +3,11 @@ import { PostInput } from '../router/input/post.input';
 import { WithId } from 'mongodb';
 import { postsRepository } from '../repositories/posts.repository';
 import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
-import { PostQueryInput } from '../router/input/post-query.input';
-import {postsQueryRepository} from "../repositories/posts.query-repository";
-import {blogsQueryRepository} from "../../blogs/repositories/blogs.query-repository";
+import {blogsRepository} from "../../blogs/repositories/blogs.repository";
 
 export const postsService = {
-  async findAll(
-    dto: PostQueryInput,
-  ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
-    return postsQueryRepository.findAll(dto);
-  },
-  async findByIdOrError(id: string): Promise<WithId<Post>> {
-    return postsQueryRepository.findByIdOrError(id);
-  },
   async create(dto: PostInput, blogId?: string): Promise<WithId<Post>> {
-    const blog = await blogsQueryRepository.findByIdOrError(dto.blogId);
+    const blog = await blogsRepository.findByIdOrError(dto.blogId);
 
     if (!blog) {
       throw new RepositoryNotFoundError(

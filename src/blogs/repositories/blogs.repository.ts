@@ -28,4 +28,11 @@ export const blogsRepository = {
     await blogsCollection.updateOne({ _id: new ObjectId(id) }, { $set: dto });
     return;
   },
+  async findByIdOrError(id: string): Promise<WithId<Blog>> {
+    const res = await blogsCollection.findOne({ _id: new ObjectId(id) });
+    if (!res) {
+      throw new RepositoryNotFoundError('blog not exist');
+    }
+    return res;
+  },
 };

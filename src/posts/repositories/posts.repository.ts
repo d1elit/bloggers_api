@@ -5,8 +5,8 @@ import { postsCollection } from '../../db/mongo.db';
 import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
 
 export const postsRepository = {
-
   async create(newPost: Post): Promise<WithId<Post>> {
+
     const insertResult = await postsCollection.insertOne(newPost);
     return { ...newPost, _id: insertResult.insertedId };
   },
