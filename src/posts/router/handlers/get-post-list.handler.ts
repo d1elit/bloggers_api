@@ -14,10 +14,7 @@ export async function getPostListHandler(
 ) {
   try {
     const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
-    console.log(queryInput);
     const { items, totalCount } = await postsQueryRepository.findAll(queryInput);
-
-    console.log(items);
     const postOutput = mapToPostListPaginated(items, {
       pageNumber: queryInput.pageNumber,
       pageSize: queryInput.pageSize,

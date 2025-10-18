@@ -30,5 +30,13 @@ export const usersRepository = {
     return usersCollection.findOne({
       $or: [{email: loginOrEmail},{login: loginOrEmail}],
     })
+  },
+  async findByIdOrError(userId: string): Promise<WithId<User>> {
+    const user = await usersCollection.findOne({_id: new ObjectId(userId)});
+    if (!user) {
+      throw new RepositoryNotFoundError('User not found');
+    }
+    return user;
   }
+
 };
