@@ -20,4 +20,15 @@ export const usersRepository = {
     console.log('DELETE SUCCESSFULLY');
     return;
   },
+  async findFieldWithValue(
+      fieldName: string,
+      fieldValue: string,
+  ): Promise<WithId<User> | null> {
+    return await usersCollection.findOne({ [fieldName]: fieldValue });
+  },
+  async findByLoginOrEmail(loginOrEmail: string): Promise<WithId<User> | null> {
+    return usersCollection.findOne({
+      $or: [{email: loginOrEmail},{login: loginOrEmail}],
+    })
+  }
 };

@@ -4,7 +4,7 @@ const authLoginValidation = body('loginOrEmail')
   .isString()
   .withMessage('Login must be a string')
   .trim()
-  .isLength({ min: 3, max: 15 })
+  .isLength({ min: 3, max: 25 })
   .withMessage('Length of login is not correct');
 
 const AuthPassword = body('password')

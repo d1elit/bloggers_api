@@ -26,4 +26,11 @@ export const postsRepository = {
     await postsCollection.updateOne({ _id: new ObjectId(id) }, { $set: dto });
     return;
   },
+  async findByIdOrError(id: string): Promise<WithId<Post>> {
+    const res = await postsCollection.findOne({ _id: new ObjectId(id) });
+    if (!res) {
+      throw new RepositoryNotFoundError('Post not found');
+    }
+    return res;
+  },
 };

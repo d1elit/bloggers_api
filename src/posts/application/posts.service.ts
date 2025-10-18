@@ -4,6 +4,7 @@ import { WithId } from 'mongodb';
 import { postsRepository } from '../repositories/posts.repository';
 import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
 import {blogsRepository} from "../../blogs/repositories/blogs.repository";
+import {CommentInput} from "../../comments/router/input/comment.input";
 
 export const postsService = {
   async create(dto: PostInput, blogId?: string): Promise<WithId<Post>> {
@@ -34,4 +35,8 @@ export const postsService = {
     await postsRepository.update(id, dto);
     return;
   },
+
+  // async createComment(postId:string , commentDto: CommentInput) {
+  //     const post = await postsRepository.
+  // }
 };

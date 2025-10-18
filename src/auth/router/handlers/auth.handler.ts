@@ -7,8 +7,11 @@ import { authService } from '../../application/auth.service';
 
 export async function authHandler(req: RequestWithBody<Login>, res: Response) {
   try {
-    await authService.auth(req.body);
-    res.sendStatus(HttpStatus.NoContent);
+    let token = await authService.auth(req.body);
+
+    req.headers.authorization = `Bearer ${token}`;
+
+    res.status(HttpStatus.Ok).send(token);
   } catch (e: unknown) {
     errorsHandler(e, res);
   }

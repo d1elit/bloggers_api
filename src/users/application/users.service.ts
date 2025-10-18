@@ -1,6 +1,5 @@
 import { UserInput } from '../router/input/user.input';
 import { usersRepository } from '../repositories/users.repository';
-import { usersQueryRepository } from '../repositories/users.query-repository';
 import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
 
 export const usersService = {
@@ -20,11 +19,11 @@ export const usersService = {
   },
 
   async ensureIsUserUnique(login: string, email: string) {
-    let resLogin = await usersQueryRepository.findFieldWithValue(
+    let resLogin = await usersRepository.findFieldWithValue(
       'login',
       login,
     );
-    let resEmail = await usersQueryRepository.findFieldWithValue(
+    let resEmail = await usersRepository.findFieldWithValue(
       'email',
       email,
     );

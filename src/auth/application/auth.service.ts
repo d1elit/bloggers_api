@@ -2,10 +2,28 @@ import { usersQueryRepository } from '../../users/repositories/users.query-repos
 import { Login } from '../types/login';
 import { LoginError } from '../../core/errors/repostory-not-found.error';
 import { User } from '../../users/types/user';
+import {usersRepository} from "../../users/repositories/users.repository";
+import {jwtService} from "../adapters/jwt.service";
+import {WithId} from "mongodb";
 
 export const authService = {
-  async auth(loginDto: Login) {
-    let user = await this.findUserByLoginOrEmail(loginDto.loginOrEmail);
+
+  async auth(loginDto: Login) : Promise<string>  {
+    let resultUser = await this.checkUserCredentials(loginDto);
+    // console.log(resultUser);
+    if(!resultUser) {
+      throw new LoginError('Login Failed');
+    }
+    let token = await jwtService.createToken(resultUser._id.toString());
+    console.log(`Token: ${token}`);
+    return token
+  },
+
+
+
+
+  async checkUserCredentials(loginDto: Login) : Promise<WithId<User>> {
+    let user = await this.verifyLoginOrEmail(loginDto.loginOrEmail);
     let isPasswordVerified = await this.verifyPasswords(
       loginDto.password,
       user.password,
@@ -14,11 +32,11 @@ export const authService = {
     if (!user || !isPasswordVerified) {
       throw new LoginError('Wrong login or password');
     }
-    return;
+    return user
   },
 
-  async findUserByLoginOrEmail(login: string): Promise<User> {
-    let user = await usersQueryRepository.findFieldWithValue('login', login);
+  async verifyLoginOrEmail(login: string): Promise<WithId<User>> {
+    let user = await usersRepository.findByLoginOrEmail(login);
     if (!user) throw new LoginError('Wrong login or password');
     return user;
   },

@@ -3,8 +3,9 @@ import { UsersQueryInput } from '../router/input/user-query.input';
 import { mapToPostListPaginated } from '../router/mappers/map-to-list-paginated';
 import { UsersPaginatedOutput } from '../router/output/users-paginated.output';
 
-import { WithId } from 'mongodb';
+import {ObjectId, WithId} from 'mongodb';
 import { User } from '../types/user';
+import {RepositoryNotFoundError} from "../../core/errors/repostory-not-found.error";
 
 export const usersQueryRepository = {
   async findAll(queryDto: UsersQueryInput): Promise<UsersPaginatedOutput> {
@@ -39,10 +40,13 @@ export const usersQueryRepository = {
     console.log(`totalCount ${totalCount} users`);
     return mapToPostListPaginated(users, { pageNumber, pageSize, totalCount });
   },
-  async findFieldWithValue(
-    fieldName: string,
-    fieldValue: string,
-  ): Promise<WithId<User> | null> {
-    return await usersCollection.findOne({ [fieldName]: fieldValue });
-  },
+
+  async findByIdOrError (id:string): Promise<WithId<User> | null> {
+    let user = usersCollection.findOne({ _id: new ObjectId(id) })
+    if (!user) {
+      throw new RepositoryNotFoundError("User not found");
+    }
+    return user
+  }
+
 };
