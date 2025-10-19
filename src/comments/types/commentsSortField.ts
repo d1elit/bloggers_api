@@ -1,4 +1,4 @@
 export enum CommentsSortField {
-    Content = 'content',
-    CreatedAt = 'createdAt',
+  Content = 'content',
+  CreatedAt = 'createdAt',
 }

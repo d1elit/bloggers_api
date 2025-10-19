@@ -19,14 +19,8 @@ export const usersService = {
   },
 
   async ensureIsUserUnique(login: string, email: string) {
-    let resLogin = await usersRepository.findFieldWithValue(
-      'login',
-      login,
-    );
-    let resEmail = await usersRepository.findFieldWithValue(
-      'email',
-      email,
-    );
+    let resLogin = await usersRepository.findFieldWithValue('login', login);
+    let resEmail = await usersRepository.findFieldWithValue('email', email);
     if (resLogin || resEmail) {
       throw new RepositoryNotFoundError('Login or email already exist');
     }

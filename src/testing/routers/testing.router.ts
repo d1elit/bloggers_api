@@ -1,7 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { HttpStatus } from '../../core/types/http-statuses';
 import {
-  blogsCollection, commentsCollection,
+  blogsCollection,
+  commentsCollection,
   postsCollection,
   usersCollection,
 } from '../../db/mongo.db';

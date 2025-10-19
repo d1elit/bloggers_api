@@ -1,4 +1,4 @@
-import {SettingsType} from "../types/settings";
+import { SettingsType } from '../types/settings';
 
 export const SETTINGS: SettingsType = {
   PORT: process.env.PORT || 5001,

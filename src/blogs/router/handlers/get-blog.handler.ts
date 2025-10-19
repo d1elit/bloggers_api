@@ -3,7 +3,7 @@ import { HttpStatus } from '../../../core/types/http-statuses';
 import { RequestWithParams } from '../../../core/types/requestTypes';
 import { mapToBlogViewModel } from '../mappers/map-to-blog-view-model';
 import { errorsHandler } from '../../../core/errors/errors.handler';
-import {blogsQueryRepository} from "../../repositories/blogs.query-repository";
+import { blogsQueryRepository } from '../../repositories/blogs.query-repository';
 
 export async function getBlogHandler(
   req: RequestWithParams<{ id: string }>,

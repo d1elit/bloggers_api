@@ -1,3 +1,3 @@
 export type CommentInput = {
-    content:string;
-}
+  content: string;
+};

@@ -3,10 +3,8 @@ import { BlogInput } from '../router/input/blog.input';
 import { ObjectId, WithId } from 'mongodb';
 import { blogsCollection } from '../../db/mongo.db';
 import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
-import { BlogQueryInput } from '../router/input/blog-query.input';
 
 export const blogsRepository = {
-
   async create(newBlog: Blog): Promise<WithId<Blog>> {
     const insertResult = await blogsCollection.insertOne(newBlog);
     return { ...newBlog, _id: insertResult.insertedId };

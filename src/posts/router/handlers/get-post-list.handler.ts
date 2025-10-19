@@ -6,7 +6,7 @@ import { mapToPostListPaginated } from '../mappers/map-to-post-list-paginated';
 import { PostQueryInput } from '../input/post-query.input';
 import { postListPaginatedOutput } from '../output/post-list-paginated.output';
 import { RequestWithQuery } from '../../../core/types/requestTypes';
-import {postsQueryRepository} from "../../repositories/posts.query-repository";
+import { postsQueryRepository } from '../../repositories/posts.query-repository';
 
 export async function getPostListHandler(
   req: RequestWithQuery<PostQueryInput>,
@@ -14,7 +14,8 @@ export async function getPostListHandler(
 ) {
   try {
     const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
-    const { items, totalCount } = await postsQueryRepository.findAll(queryInput);
+    const { items, totalCount } =
+      await postsQueryRepository.findAll(queryInput);
     const postOutput = mapToPostListPaginated(items, {
       pageNumber: queryInput.pageNumber,
       pageSize: queryInput.pageSize,

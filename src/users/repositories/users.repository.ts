@@ -21,22 +21,21 @@ export const usersRepository = {
     return;
   },
   async findFieldWithValue(
-      fieldName: string,
-      fieldValue: string,
+    fieldName: string,
+    fieldValue: string,
   ): Promise<WithId<User> | null> {
     return await usersCollection.findOne({ [fieldName]: fieldValue });
   },
   async findByLoginOrEmail(loginOrEmail: string): Promise<WithId<User> | null> {
     return usersCollection.findOne({
-      $or: [{email: loginOrEmail},{login: loginOrEmail}],
-    })
+      $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
+    });
   },
   async findByIdOrError(userId: string): Promise<WithId<User>> {
-    const user = await usersCollection.findOne({_id: new ObjectId(userId)});
+    const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
     if (!user) {
       throw new RepositoryNotFoundError('User not found');
     }
     return user;
-  }
-
+  },
 };

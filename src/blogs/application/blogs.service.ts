@@ -6,7 +6,7 @@ import { Post } from '../../posts/types/post';
 import { postsRepository } from '../../posts/repositories/posts.repository';
 import { PostInput } from '../../posts/router/input/post.input';
 import { PostQueryInput } from '../../posts/router/input/post-query.input';
-import {postsQueryRepository} from "../../posts/repositories/posts.query-repository";
+import { postsQueryRepository } from '../../posts/repositories/posts.query-repository';
 
 export const blogsService = {
   async create(dto: BlogInput): Promise<WithId<Blog>> {

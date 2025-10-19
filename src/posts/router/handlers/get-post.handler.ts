@@ -5,7 +5,7 @@ import { PostOutput } from '../output/post.output';
 import { ErroreType } from '../../../blogs/types/validationError';
 import { mapToPostViewModel } from '../mappers/map-to-post-view-model';
 import { errorsHandler } from '../../../core/errors/errors.handler';
-import {postsQueryRepository} from "../../repositories/posts.query-repository";
+import { postsQueryRepository } from '../../repositories/posts.query-repository';
 
 export async function getPostHandler(
   req: RequestWithParams<{ id: string }>,

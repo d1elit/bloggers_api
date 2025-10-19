@@ -8,10 +8,10 @@ import { deletePostHandler } from './handlers/delete-post.handler';
 import { postInputDtoValidation } from './post.input-dto.validation-middlewares';
 import { updatePostHandler } from './handlers/update-post.handler';
 import { superAdminGuardMiddleware } from '../../auth/middlewares/super-admin.guard-middleware';
-import {createPostsCommentHandler} from "./handlers/create-posts-comment.handler";
-import {AccsessTokenGuardMiddleware} from "../../auth/middlewares/accsess.token.guard-middleware";
-import {getPostsCommentListHandler} from "./handlers/get-posts-comment-list.handler";
-import {commentInputDtoValidation} from "../../comments/router/comment.input-dto.validation-middleware";
+import { createPostsCommentHandler } from './handlers/create-posts-comment.handler';
+import { AccsessTokenGuardMiddleware } from '../../auth/middlewares/accsess.token.guard-middleware';
+import { getPostsCommentListHandler } from './handlers/get-posts-comment-list.handler';
+import { commentInputDtoValidation } from '../../comments/router/comment.input-dto.validation-middleware';
 
 export const postsRouter = Router({});
 
@@ -40,13 +40,10 @@ postsRouter
     createPostHandler,
   )
   .post(
-      '/:id/comments',
-      AccsessTokenGuardMiddleware,
-      commentInputDtoValidation,
-      inputValidationResultMiddleware,
-      createPostsCommentHandler
+    '/:id/comments',
+    AccsessTokenGuardMiddleware,
+    commentInputDtoValidation,
+    inputValidationResultMiddleware,
+    createPostsCommentHandler,
   )
-    .get (
-        '/:id/comments',
-        getPostsCommentListHandler
-    )
+  .get('/:id/comments', getPostsCommentListHandler);

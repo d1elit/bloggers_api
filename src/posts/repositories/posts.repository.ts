@@ -6,7 +6,6 @@ import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.e
 
 export const postsRepository = {
   async create(newPost: Post): Promise<WithId<Post>> {
-
     const insertResult = await postsCollection.insertOne(newPost);
     return { ...newPost, _id: insertResult.insertedId };
   },

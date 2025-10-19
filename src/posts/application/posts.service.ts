@@ -1,13 +1,13 @@
 import { Post } from '../types/post';
 import { PostInput } from '../router/input/post.input';
-import {ObjectId, WithId} from 'mongodb';
+import { WithId } from 'mongodb';
 import { postsRepository } from '../repositories/posts.repository';
 import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
-import {blogsRepository} from "../../blogs/repositories/blogs.repository";
-import {CommentInput} from "../../comments/router/input/comment.input";
-import {commentsRepository} from "../../comments/repositories/comments.repository";
-import {Comment} from "../../comments/types/comment";
-import {usersRepository} from "../../users/repositories/users.repository";
+import { blogsRepository } from '../../blogs/repositories/blogs.repository';
+import { CommentInput } from '../../comments/router/input/comment.input';
+import { commentsRepository } from '../../comments/repositories/comments.repository';
+import { Comment } from '../../comments/types/comment';
+import { usersRepository } from '../../users/repositories/users.repository';
 
 export const postsService = {
   async create(dto: PostInput, blogId?: string): Promise<WithId<Post>> {
@@ -39,8 +39,12 @@ export const postsService = {
     return;
   },
 
-  async createComment(postId:string , commentDto: CommentInput, userId: string) :Promise<string> {
-    const post = await postsRepository.findByIdOrError(postId)
+  async createComment(
+    postId: string,
+    commentDto: CommentInput,
+    userId: string,
+  ): Promise<string> {
+    const post = await postsRepository.findByIdOrError(postId);
     const user = await usersRepository.findByIdOrError(userId);
     if (!post) {
       throw new RepositoryNotFoundError('Post not found');
@@ -52,8 +56,8 @@ export const postsService = {
         userLogin: user.login,
       },
       postId: post._id.toString(),
-      createdAt: new Date().toISOString()
-    }
+      createdAt: new Date().toISOString(),
+    };
     return await commentsRepository.create(newComment);
-  }
+  },
 };

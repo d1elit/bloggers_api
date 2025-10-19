@@ -2,7 +2,8 @@ import express, { Express } from 'express';
 import { testingRouter } from './testing/routers/testing.router';
 import {
   AUTH_PATH,
-  BLOGS_PATH, COMMENTS_PATH,
+  BLOGS_PATH,
+  COMMENTS_PATH,
   POSTS_PATH,
   TESTING_PATH,
   USERS_PATH,
@@ -11,7 +12,7 @@ import { blogsRouter } from './blogs/router/blogs.router';
 import { postsRouter } from './posts/router/posts.router';
 import { authRouter } from './auth/router/auth.router';
 import { usersRouter } from './users/router/users.router';
-import {commentsRouter} from "./comments/router/comment.router";
+import { commentsRouter } from './comments/router/comment.router';
 
 export const setupApp = (app: Express) => {
   app.use(express.json()); // middleware для парсинга JSON в теле запроса
