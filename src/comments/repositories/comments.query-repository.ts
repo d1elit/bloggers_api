@@ -1,21 +1,19 @@
-import {commentsCollection, postsCollection} from "../../db/mongo.db";
-import {ObjectId, WithId} from "mongodb";
+import {commentsCollection} from "../../db/mongo.db";
+import {ObjectId} from "mongodb";
 import {RepositoryNotFoundError} from "../../core/errors/repostory-not-found.error";
-import {Comment} from "../types/comment";
 import {mapToCommentViewModel} from "../router/mappers/map-to-comment-view-model";
-import {PostQueryInput} from "../../posts/router/input/post-query.input";
-import {Post} from "../../posts/types/post";
 import {CommentQueryInput} from "../router/input/comment-query.input";
 import {mapToCommentListPaginated} from "../router/mappers/map-to-comment-list-paginated";
 import {CommentListPaginatedOutput} from "../router/output/comment-list-paginated.output";
+import {CommentOutput} from "../router/output/comment.output";
 
 export const commentsQueryRepository = {
-    async findByIdOrError(id: string): Promise<Comment>  {
+    async findByIdOrError(id: string): Promise<CommentOutput>  {
         const result = await commentsCollection.findOne({_id: new ObjectId(id)})
         if(!result) {
             throw new RepositoryNotFoundError('Comment not found');
         }
-        return result
+        return mapToCommentViewModel(result._id, result)
     },
 
     async testFindAll () {

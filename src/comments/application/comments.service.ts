@@ -1,19 +1,22 @@
 import {CommentInput} from "../router/input/comment.input";
 import {commentsRepository} from "../repositories/comments.repository";
-import {Comment} from "../types/comment";
-import {commentsCollection} from "../../db/mongo.db";
+import {AccessError} from "../../core/errors/repostory-not-found.error";
 
 export const commentsService = {
-    async delete(id: string): Promise<void> {
-        return await commentsRepository.delete(id);
+    async delete(commentId: string, userId: string): Promise<void> {
+        await this.isUserOwner(commentId, userId);
+        return await commentsRepository.delete(commentId);
     },
-    async update(id:string, commentDto: CommentInput) {
-        // const updatedComment: Comment = {
-        //     content: commentDto.content,
-        //     createdAt
-        // }
-        await commentsRepository.update(id, commentDto)
+    async update(commentId:string,userId:string, commentDto: CommentInput) {
+        await this.isUserOwner(commentId, userId);
+        await commentsRepository.update(commentId, commentDto)
         return
     },
-
+    async isUserOwner(commentId:string, userID: string) {
+        let comment = await commentsRepository.findByIdOrError(commentId);
+        if(comment.commentatorInfo.userId !== userID) {
+            throw new AccessError("Access denied")
+        }
+        return
+    }
 }

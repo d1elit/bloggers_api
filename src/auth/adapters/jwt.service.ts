@@ -13,7 +13,7 @@ export const jwtService = {
     async verifyToken(token: string): Promise<{userId: string }| null> {
         try {
             return jwt.verify(token, SETTINGS.AC_SECRET) as { userId: string };
-        } catch(error) {
+        } catch(e: unknown) {
            throw new LoginError('Unauthorized in jwt')
         }
     }

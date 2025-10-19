@@ -11,7 +11,7 @@ export async function authHandler(req: RequestWithBody<Login>, res: Response) {
 
     req.headers.authorization = `Bearer ${token}`;
 
-    res.status(HttpStatus.Ok).send(token);
+    res.status(HttpStatus.Ok).send({"accessToken": token});
   } catch (e: unknown) {
     errorsHandler(e, res);
   }

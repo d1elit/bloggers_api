@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import {
+  AccessError,
   LoginError,
   RepositoryNotFoundError,
 } from './repostory-not-found.error';
@@ -22,6 +23,17 @@ export function errorsHandler(error: unknown, res: Response): void {
     );
 
     return;
+  }
+  if (error instanceof AccessError) {
+    const httpStatus = HttpStatus.Forbidden;
+    res.status(httpStatus).send(
+        createErrorMessages([
+          {
+            status: httpStatus,
+            detail: error.message,
+          },
+        ]),
+    );
   }
   if (error instanceof LoginError) {
     const httpStatus = HttpStatus.Unauthorized;

@@ -1,8 +1,6 @@
-import {blogsCollection, commentsCollection} from "../../db/mongo.db";
+import {commentsCollection} from "../../db/mongo.db";
 import {Comment} from "../types/comment";
-import {mapToCommentViewModel} from "../router/mappers/map-to-comment-view-model";
-import {CommentOutput} from "../router/output/comment.output";
-import {ObjectId, WithId} from "mongodb";
+import {ObjectId} from "mongodb";
 import {RepositoryNotFoundError} from "../../core/errors/repostory-not-found.error";
 import {CommentInput} from "../router/input/comment.input";
 
@@ -12,8 +10,8 @@ export const commentsRepository = {
         return  insertResult.insertedId.toString()
 
     },
-    async delete(id: string) : Promise<void> {
-        let deleteResult = await commentsCollection.deleteOne({_id: new ObjectId(id)});
+    async delete(commentId: string) : Promise<void> {
+        let deleteResult = await commentsCollection.deleteOne({_id: new ObjectId(commentId)});
         if (deleteResult.deletedCount < 1) {
             throw new RepositoryNotFoundError('Comment not exist');
         }

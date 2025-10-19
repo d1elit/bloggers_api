@@ -7,7 +7,9 @@ export async function updateCommentHandler(
     req: Request,
     res: Response, ) {
     try {
-        await commentsService.update(req.params.id, req.body)
+        const userId = req.user?.id as string;
+        const commentId = req.params.id;
+        await commentsService.update(commentId,userId, req.body)
         res.sendStatus(HttpStatus.NoContent);
     } catch (e: unknown) {
         errorsHandler(e,res)
