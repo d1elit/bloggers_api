@@ -14,4 +14,4 @@ const AuthPassword = body('password')
   .isLength({ min: 3, max: 100 })
   .withMessage('Length of password is not correct');
 
-export const authInputDtoValidation = [authLoginValidation, AuthPassword];
+export const loginInputDtoValidation = [authLoginValidation, AuthPassword];

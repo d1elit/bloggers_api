@@ -1,16 +1,26 @@
 import { Router } from 'express';
 import { authHandler } from './handlers/auth.handler';
-import { authInputDtoValidation } from './auth.input-dto.validation-middlware';
+import { loginInputDtoValidation} from './login.input-dto.validation-middlware';
 import { inputValidationResultMiddleware } from '../../core/middlewares/validation/input-validtion-result.middleware';
 import { getAuthMeHandler } from './handlers/get-auth-me.handler';
 import { AccsessTokenGuardMiddleware } from '../middlewares/accsess.token.guard-middleware';
+import {registrationHandler} from "./handlers/registration.handler";
+import {registrationInputDtoValidationMiddleware} from "./registration.input-dto.validation-middleware";
 
 export const authRouter = Router();
 
 authRouter.post(
   '/login',
-  authInputDtoValidation,
+  loginInputDtoValidation,
   inputValidationResultMiddleware,
   authHandler,
 );
+
+authRouter.post (
+    '/registration',
+    registrationInputDtoValidationMiddleware,
+    inputValidationResultMiddleware,
+    registrationHandler
+
+)
 authRouter.get('/me', AccsessTokenGuardMiddleware, getAuthMeHandler);

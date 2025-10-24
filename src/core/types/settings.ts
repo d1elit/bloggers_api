@@ -4,4 +4,6 @@ export type SettingsType = {
   DB_NAME: string;
   AC_SECRET: string;
   AC_TIME: string;
+  EMAIL: string;
+  EMAIL_PASS:string;
 };

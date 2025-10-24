@@ -4,3 +4,4 @@ dist
 /.idea
 src/videos
 __tests__
+src/core/settings/
