@@ -6,7 +6,7 @@ import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.e
 export const usersRepository = {
   async create(newUser: User): Promise<WithId<User>> {
     const insertResult = await usersCollection.insertOne(newUser);
-    console.log('CREATE SUCCESS');
+    console.log('USER CREATED SUCCESS');
     return { ...newUser, _id: insertResult.insertedId };
   },
 
@@ -38,4 +38,15 @@ export const usersRepository = {
     }
     return user;
   },
+
+  async updateConfirmation(_id: ObjectId) {
+    await usersCollection.updateOne({ _id }, {$set: { 'confirmationEmail.isConfirmed': true } });
+  },
+  async findByCode(code: string): Promise<WithId<User>> {
+    let resultUser = await usersCollection.findOne({ "confirmationEmail.confirmationCode": code });
+    if (!resultUser) {
+      throw new RepositoryNotFoundError('User not found');
+    }
+    return resultUser;
+  }
 };

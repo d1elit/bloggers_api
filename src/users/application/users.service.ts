@@ -2,14 +2,22 @@ import { UserInput } from '../router/input/user.input';
 import { usersRepository } from '../repositories/users.repository';
 import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
 
+import { v4 as uuidv4 } from 'uuid'
+import {User} from "../types/user";
+import {WithId} from "mongodb";
+
 export const usersService = {
-  async create(userDto: UserInput) {
+  async create(userDto: UserInput, confirmationCode?:string): Promise<WithId<User>> {
     await usersService.ensureIsUserUnique(userDto.login, userDto.email);
-    const newUser = {
+    const newUser: User = {
       login: userDto.login,
       password: await usersService.hashPassword(userDto.password),
       email: userDto.email,
       createdAt: new Date().toISOString(),
+      confirmationEmail: {
+        confirmationCode: confirmationCode || uuidv4() ,
+        isConfirmed: false,
+      }
     };
     return await usersRepository.create(newUser);
   },

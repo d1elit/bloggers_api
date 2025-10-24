@@ -1,5 +1,6 @@
 import {SETTINGS} from "../../core/settings/settings";
 import nodemailer from 'nodemailer'
+import {emailExamples} from "./emailExamples";
 
 export const template = `<h1>Thank for your registration</h1>
  <p>To finish registration please follow the link below:
@@ -10,7 +11,7 @@ export const template = `<h1>Thank for your registration</h1>
 export const nodemailerService = {
       async sendEmail(
         // email: string,
-        // code: string,
+        code: string,
         // template: string,
     ) {
 
@@ -26,9 +27,9 @@ export const nodemailerService = {
         try {
             let info = await transporter.sendMail({
                 from: '"Kek 👻"  <dr1pdef@gmail.com>',
-                to: "dropdox12@gmail.com",
-                subject: 'register',
-                html: template, // html body
+                to: "dr1pdef@gmail.com",
+                subject: 'Registration',
+                html: emailExamples.registrationEmail(code), // html body
             });
             return;
         } catch(e:unknown) {

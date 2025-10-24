@@ -6,6 +6,7 @@ import { getAuthMeHandler } from './handlers/get-auth-me.handler';
 import { AccsessTokenGuardMiddleware } from '../middlewares/accsess.token.guard-middleware';
 import {registrationHandler} from "./handlers/registration.handler";
 import {registrationInputDtoValidationMiddleware} from "./registration.input-dto.validation-middleware";
+import {registrationConfirmationHandler} from "./handlers/registration-confirmation.handler";
 
 export const authRouter = Router();
 
@@ -22,5 +23,10 @@ authRouter.post (
     inputValidationResultMiddleware,
     registrationHandler
 
+)
+
+authRouter.post(
+    '/registration-confirmation',
+    registrationConfirmationHandler
 )
 authRouter.get('/me', AccsessTokenGuardMiddleware, getAuthMeHandler);

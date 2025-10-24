@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import {
   AccessError,
-  LoginError,
+  LoginError, RegistrationConfirmationError,
   RepositoryNotFoundError,
 } from './repostory-not-found.error';
 import { HttpStatus } from '../types/http-statuses';
@@ -46,6 +46,19 @@ export function errorsHandler(error: unknown, res: Response): void {
       ]),
     );
   }
+
+  if(error instanceof RegistrationConfirmationError) {
+    const httpStatus = HttpStatus.BadRequest;
+    res.status(httpStatus).send(
+        createErrorMessages([
+          {
+            status: httpStatus,
+            detail: error.message,
+          },
+        ]),
+    )
+  }
+
 
   if (error instanceof DomainError) {
     const httpStatus = HttpStatus.UnprocessableEntity;
