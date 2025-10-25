@@ -24,3 +24,4 @@ const regEmail = body('email')
     .withMessage('This string is not Email')
 
 export const registrationInputDtoValidationMiddleware = [regLogin, regPassword, regEmail];
+export const emailResendingInputDtoValidationMiddleware = [regEmail];

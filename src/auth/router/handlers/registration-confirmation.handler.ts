@@ -10,7 +10,6 @@ export async function registrationConfirmationHandler(
     res: Response,
 ) {
     try {
-        console.log(req.body.code   );
         await authService.registrationConfirmation(req.body.code);
         res.sendStatus(HttpStatus.NoContent)
     } catch (e:unknown) {

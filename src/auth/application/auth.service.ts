@@ -54,9 +54,15 @@ export const authService = {
 
   async registrationConfirmation(code: string)  {
     let user = await usersRepository.findByCode(code);
+    if (user.confirmationEmail.isConfirmed) throw new RegistrationConfirmationError("Wrong code")
     if (code !== user.confirmationEmail.confirmationCode) throw new RegistrationConfirmationError("Wrong code")
     await usersRepository.updateConfirmation(user._id);
     return false
 
+  },
+
+  async emailResending(email: string)  {
+    let confirmationCode = uuidv4()
+    await nodemailerService.sendEmail(confirmationCode)
   }
 };

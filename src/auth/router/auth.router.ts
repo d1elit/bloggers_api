@@ -5,8 +5,12 @@ import { inputValidationResultMiddleware } from '../../core/middlewares/validati
 import { getAuthMeHandler } from './handlers/get-auth-me.handler';
 import { AccsessTokenGuardMiddleware } from '../middlewares/accsess.token.guard-middleware';
 import {registrationHandler} from "./handlers/registration.handler";
-import {registrationInputDtoValidationMiddleware} from "./registration.input-dto.validation-middleware";
+import {
+    emailResendingInputDtoValidationMiddleware,
+    registrationInputDtoValidationMiddleware
+} from "./registration.input-dto.validation-middleware";
 import {registrationConfirmationHandler} from "./handlers/registration-confirmation.handler";
+import {emailResendingHandler} from "./handlers/email-resending.handler";
 
 export const authRouter = Router();
 
@@ -28,5 +32,12 @@ authRouter.post (
 authRouter.post(
     '/registration-confirmation',
     registrationConfirmationHandler
+)
+
+authRouter.post(
+    '/registration-email-resending',
+    emailResendingInputDtoValidationMiddleware,
+    inputValidationResultMiddleware,
+    emailResendingHandler,
 )
 authRouter.get('/me', AccsessTokenGuardMiddleware, getAuthMeHandler);
