@@ -3,10 +3,10 @@ import {
   AccessError,
   LoginError, RegistrationConfirmationError,
   RepositoryNotFoundError,
-} from './repostory-not-found.error';
+  DomainError, UserCreationError
+} from './domain.errors';
 import { HttpStatus } from '../types/http-statuses';
 import { createErrorMessages } from '../middlewares/validation/input-validtion-result.middleware';
-import { DomainError } from './domain.error';
 
 export function errorsHandler(error: unknown, res: Response): void {
   console.error('[errorsHandler] called with:', error);
@@ -17,7 +17,9 @@ export function errorsHandler(error: unknown, res: Response): void {
       createErrorMessages([
         {
           status: httpStatus,
+          source: error.source,
           detail: error.message,
+          code: error.code,
         },
       ]),
     );
@@ -30,7 +32,9 @@ export function errorsHandler(error: unknown, res: Response): void {
       createErrorMessages([
         {
           status: httpStatus,
+          source: error.source,
           detail: error.message,
+          code: error.code,
         },
       ]),
     );
@@ -41,11 +45,27 @@ export function errorsHandler(error: unknown, res: Response): void {
       createErrorMessages([
         {
           status: httpStatus,
+          source: error.source,
           detail: error.message,
+          code: error.code,
         },
       ]),
     );
   }
+  if (error instanceof UserCreationError) {
+    const httpStatus = HttpStatus.BadRequest;
+    res.status(httpStatus).send(
+        createErrorMessages([
+          {
+            status: httpStatus,
+            source: error.source,
+            detail: error.message,
+            code: error.code,
+          },
+        ]),
+    );
+  }
+
 
   if(error instanceof RegistrationConfirmationError) {
     const httpStatus = HttpStatus.BadRequest;
@@ -53,7 +73,9 @@ export function errorsHandler(error: unknown, res: Response): void {
         createErrorMessages([
           {
             status: httpStatus,
+            source: error.source,
             detail: error.message,
+            code: error.code,
           },
         ]),
     )
