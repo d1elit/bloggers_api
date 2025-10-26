@@ -1,6 +1,6 @@
 import { SETTINGS } from '../../core/settings/settings';
 import jwt from 'jsonwebtoken';
-import { LoginError } from '../../core/errors/repostory-not-found.error';
+import { LoginError } from '../../core/errors/domain.errors';
 
 export const jwtService = {
   async createToken(userId: string): Promise<string> {

@@ -32,7 +32,7 @@ export const createErrorMessages = (
 //   };
 // };
 
-const formaValidationError = (error: ValidationError): ValidationErrorType => {
+const formatValidationError = (error: ValidationError): ValidationErrorType => {
   const expressError = error as unknown as FieldValidationError;
 
   return {
@@ -48,7 +48,7 @@ export const inputValidationResultMiddleware = (
   next: NextFunction,
 ) => {
   const errors = validationResult(req)
-    .formatWith(formaValidationError)
+    .formatWith(formatValidationError)
     .array({ onlyFirstError: true });
 
   if (errors.length > 0) {

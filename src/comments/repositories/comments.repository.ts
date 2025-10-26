@@ -1,7 +1,7 @@
 import { commentsCollection } from '../../db/mongo.db';
 import { Comment } from '../types/comment';
 import { ObjectId } from 'mongodb';
-import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
+import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { CommentInput } from '../router/input/comment.input';
 
 export const commentsRepository = {

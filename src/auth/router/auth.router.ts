@@ -6,6 +6,7 @@ import { getAuthMeHandler } from './handlers/get-auth-me.handler';
 import { AccsessTokenGuardMiddleware } from '../middlewares/accsess.token.guard-middleware';
 import {registrationHandler} from "./handlers/registration.handler";
 import {
+    confirmationInputDtoValidationMiddleware,
     emailResendingInputDtoValidationMiddleware,
     registrationInputDtoValidationMiddleware
 } from "./registration.input-dto.validation-middleware";
@@ -31,6 +32,8 @@ authRouter.post (
 
 authRouter.post(
     '/registration-confirmation',
+    confirmationInputDtoValidationMiddleware,
+    inputValidationResultMiddleware,
     registrationConfirmationHandler
 )
 

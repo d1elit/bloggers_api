@@ -1,6 +1,6 @@
 import { commentsCollection } from '../../db/mongo.db';
 import { ObjectId } from 'mongodb';
-import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
+import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { mapToCommentViewModel } from '../router/mappers/map-to-comment-view-model';
 import { CommentQueryInput } from '../router/input/comment-query.input';
 import { mapToCommentListPaginated } from '../router/mappers/map-to-comment-list-paginated';

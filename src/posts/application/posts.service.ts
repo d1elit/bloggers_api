@@ -2,7 +2,7 @@ import { Post } from '../types/post';
 import { PostInput } from '../router/input/post.input';
 import { WithId } from 'mongodb';
 import { postsRepository } from '../repositories/posts.repository';
-import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
+import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { blogsRepository } from '../../blogs/repositories/blogs.repository';
 import { CommentInput } from '../../comments/router/input/comment.input';
 import { commentsRepository } from '../../comments/repositories/comments.repository';

@@ -1,7 +1,7 @@
 import { Blog } from '../types/blog';
 import { ObjectId, WithId } from 'mongodb';
 import { blogsCollection } from '../../db/mongo.db';
-import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
+import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { BlogQueryInput } from '../router/input/blog-query.input';
 
 export const blogsQueryRepository = {

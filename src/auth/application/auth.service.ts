@@ -1,5 +1,5 @@
 import { Login } from '../types/login';
-import {LoginError, RegistrationConfirmationError} from '../../core/errors/repostory-not-found.error';
+import {LoginError, RegistrationConfirmationError} from '../../core/errors/domain.errors';
 import { User } from '../../users/types/user';
 import { usersRepository } from '../../users/repositories/users.repository';
 import { jwtService } from '../adapters/jwt.service';
@@ -47,22 +47,26 @@ export const authService = {
   async register(userDto: Registration) {
     let confirmationCode = uuidv4()
     await usersService.create(userDto,confirmationCode);
-    nodemailerService.sendEmail(confirmationCode).catch((error) => {
+    nodemailerService.sendEmail(userDto.email, confirmationCode).catch((error) => {
       console.log('Email sending failed', error);
     })
   },
 
   async registrationConfirmation(code: string)  {
     let user = await usersRepository.findByCode(code);
-    if (user.confirmationEmail.isConfirmed) throw new RegistrationConfirmationError("Wrong code")
-    if (code !== user.confirmationEmail.confirmationCode) throw new RegistrationConfirmationError("Wrong code")
-    await usersRepository.updateConfirmation(user._id);
+    if (user.confirmationEmail.isConfirmed) throw new RegistrationConfirmationError("Already used code", "code")
+    if (code !== user.confirmationEmail.confirmationCode) throw new RegistrationConfirmationError("Wrong code", "code")
+    await usersRepository.updateConfirmationStatus(user._id);
     return false
 
   },
 
   async emailResending(email: string)  {
+    let user = await usersRepository.findByLoginOrEmail(email);
+    if(!user) throw new RegistrationConfirmationError("Email not exist", 'email')
+    if(user.confirmationEmail.isConfirmed) throw new RegistrationConfirmationError("Already confirmed", 'email')
     let confirmationCode = uuidv4()
-    await nodemailerService.sendEmail(confirmationCode)
+    await usersRepository.updateConfirmationCode(user._id,confirmationCode);
+    await nodemailerService.sendEmail(email, confirmationCode)
   }
 };

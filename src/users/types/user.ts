@@ -6,5 +6,6 @@ export type User = {
   confirmationEmail: {
     confirmationCode: string;
     isConfirmed: boolean;
+    expirationDate: string;
   }
 };

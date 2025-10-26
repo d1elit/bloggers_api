@@ -4,7 +4,7 @@ import {emailExamples} from "./emailExamples";
 
 export const nodemailerService = {
       async sendEmail(
-        // email: string,
+        email: string,
         code: string,
         // template: string,
     ) {
@@ -17,11 +17,11 @@ export const nodemailerService = {
                 pass: SETTINGS.EMAIL_PASS,
             },
         });
-
+        console.log("email sending", email);
         try {
             let info = await transporter.sendMail({
-                from: '"Kek 👻"  <dr1pdef@gmail.com>',
-                to: "dr1pdef@gmail.com",
+                from: '"Kek 👻"  <dropdox12@gmail.com>',
+                to: email,
                 subject: 'Registration',
                 html: emailExamples.registrationEmail(code), // html body
             });

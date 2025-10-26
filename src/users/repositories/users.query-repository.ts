@@ -5,7 +5,7 @@ import { UsersPaginatedOutput } from '../router/output/users-paginated.output';
 
 import { ObjectId, WithId } from 'mongodb';
 import { User } from '../types/user';
-import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
+import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 
 export const usersQueryRepository = {
   async findAll(queryDto: UsersQueryInput): Promise<UsersPaginatedOutput> {

@@ -1,13 +1,18 @@
 import { UserInput } from '../router/input/user.input';
 import { usersRepository } from '../repositories/users.repository';
-import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
+import {
+  UserCreationError
+} from '../../core/errors/domain.errors';
 
 import { v4 as uuidv4 } from 'uuid'
 import {User} from "../types/user";
 import {WithId} from "mongodb";
+import {add} from 'date-fns'
+
 
 export const usersService = {
   async create(userDto: UserInput, confirmationCode?:string): Promise<WithId<User>> {
+    console.log('usersService confirmation code', confirmationCode);
     await usersService.ensureIsUserUnique(userDto.login, userDto.email);
     const newUser: User = {
       login: userDto.login,
@@ -17,6 +22,10 @@ export const usersService = {
       confirmationEmail: {
         confirmationCode: confirmationCode || uuidv4() ,
         isConfirmed: false,
+        expirationDate: add(new Date(), {
+          hours: 1,
+          minutes: 3
+        }).toISOString()
       }
     };
     return await usersRepository.create(newUser);
@@ -29,8 +38,11 @@ export const usersService = {
   async ensureIsUserUnique(login: string, email: string) {
     let resLogin = await usersRepository.findFieldWithValue('login', login);
     let resEmail = await usersRepository.findFieldWithValue('email', email);
-    if (resLogin || resEmail) {
-      throw new RepositoryNotFoundError('Login or email already exist');
+    if (resEmail) {
+      throw new UserCreationError('Login or email already exist', 'email');
+    }
+    if (resLogin) {
+      throw new UserCreationError('Login or email already exist', 'login');
     }
   },
 

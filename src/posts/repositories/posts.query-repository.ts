@@ -2,7 +2,7 @@ import { PostQueryInput } from '../router/input/post-query.input';
 import { ObjectId, WithId } from 'mongodb';
 import { Post } from '../types/post';
 import { postsCollection } from '../../db/mongo.db';
-import { RepositoryNotFoundError } from '../../core/errors/repostory-not-found.error';
+import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 
 export const postsQueryRepository = {
   async findAll(

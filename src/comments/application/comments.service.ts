@@ -1,6 +1,6 @@
 import { CommentInput } from '../router/input/comment.input';
 import { commentsRepository } from '../repositories/comments.repository';
-import { AccessError } from '../../core/errors/repostory-not-found.error';
+import { AccessError } from '../../core/errors/domain.errors';
 
 export const commentsService = {
   async delete(commentId: string, userId: string): Promise<void> {
