@@ -19,7 +19,7 @@ export const setupApp = (app: Express) => {
 
   // основной роут
   app.get('/', (req, res) => {
-    res.status(200).send('bloggers api email lesson');
+    res.status(200).send('bloggers api tests lesson');
   });
   app.use(POSTS_PATH, postsRouter);
   app.use(BLOGS_PATH, blogsRouter);

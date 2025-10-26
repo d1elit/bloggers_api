@@ -5,7 +5,6 @@ import { usersRepository } from '../../users/repositories/users.repository';
 import { jwtService } from '../adapters/jwt.service';
 import { WithId } from 'mongodb';
 import {Registration} from "../types/Registration";
-import {v4 as uuidv4} from "uuid";
 import {usersService} from "../../users/application/users.service";
 import {nodemailerService} from "../adapters/nodemailer.service";
 
@@ -45,7 +44,7 @@ export const authService = {
   },
 
   async register(userDto: Registration) {
-    let confirmationCode = uuidv4()
+    let confirmationCode = crypto.randomUUID()
     await usersService.create(userDto,confirmationCode);
     nodemailerService.sendEmail(userDto.email, confirmationCode).catch((error) => {
       console.log('Email sending failed', error);
@@ -65,7 +64,7 @@ export const authService = {
     let user = await usersRepository.findByLoginOrEmail(email);
     if(!user) throw new RegistrationConfirmationError("Email not exist", 'email')
     if(user.confirmationEmail.isConfirmed) throw new RegistrationConfirmationError("Already confirmed", 'email')
-    let confirmationCode = uuidv4()
+    let confirmationCode = crypto.randomUUID()
     await usersRepository.updateConfirmationCode(user._id,confirmationCode);
     await nodemailerService.sendEmail(email, confirmationCode)
   }

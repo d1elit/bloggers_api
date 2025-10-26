@@ -10,7 +10,6 @@ import {
 export const testingRouter = Router({});
 
 testingRouter.delete('/all-data', async (req: Request, res: Response) => {
-  console.log('DELETED ALL DATA')
   await Promise.all([
     blogsCollection.deleteMany(),
     postsCollection.deleteMany(),

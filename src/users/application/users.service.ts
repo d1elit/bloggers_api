@@ -3,8 +3,6 @@ import { usersRepository } from '../repositories/users.repository';
 import {
   UserCreationError
 } from '../../core/errors/domain.errors';
-
-import { v4 as uuidv4 } from 'uuid'
 import {User} from "../types/user";
 import {WithId} from "mongodb";
 import {add} from 'date-fns'
@@ -20,7 +18,7 @@ export const usersService = {
       email: userDto.email,
       createdAt: new Date().toISOString(),
       confirmationEmail: {
-        confirmationCode: confirmationCode || uuidv4() ,
+        confirmationCode: confirmationCode || crypto.randomUUID() ,
         isConfirmed: false,
         expirationDate: add(new Date(), {
           hours: 1,

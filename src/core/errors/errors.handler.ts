@@ -9,7 +9,7 @@ import { HttpStatus } from '../types/http-statuses';
 import { createErrorMessages } from '../middlewares/validation/input-validtion-result.middleware';
 
 export function errorsHandler(error: unknown, res: Response): void {
-  console.error('[errorsHandler] called with:', error);
+  // console.error('[errorsHandler] called with:', error);
   if (error instanceof RepositoryNotFoundError) {
     const httpStatus = HttpStatus.NotFound;
 
