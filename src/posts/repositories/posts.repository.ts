@@ -10,18 +10,10 @@ export const postsRepository = {
     return { ...newPost, _id: insertResult.insertedId };
   },
   async delete(id: string): Promise<void> {
-    const res = await postsCollection.findOne({ _id: new ObjectId(id) });
-    if (!res) {
-      throw new RepositoryNotFoundError('Post not found');
-    }
     await postsCollection.deleteOne({ _id: new ObjectId(id) });
     return;
   },
   async update(id: string, dto: PostInput): Promise<void> {
-    const res = await postsCollection.findOne({ _id: new ObjectId(id) });
-    if (!res) {
-      throw new RepositoryNotFoundError('Post not found');
-    }
     await postsCollection.updateOne({ _id: new ObjectId(id) }, { $set: dto });
     return;
   },

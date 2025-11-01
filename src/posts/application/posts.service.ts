@@ -31,10 +31,12 @@ export const postsService = {
     return await postsRepository.create(newPostDto);
   },
   async delete(id: string): Promise<void> {
+    await postsRepository.findByIdOrError(id);
     await postsRepository.delete(id);
     return;
   },
   async update(id: string, dto: PostInput): Promise<void> {
+    await postsRepository.findByIdOrError(id);
     await postsRepository.update(id, dto);
     return;
   },

@@ -12,13 +12,7 @@ export const usersRepository = {
   },
 
   async delete(id: string) {
-    const deleteResult = await usersCollection.deleteOne({
-      _id: new ObjectId(id),
-    });
-    if (deleteResult.deletedCount < 1) {
-      throw new RepositoryNotFoundError('user not exist', 'user');
-    }
-    console.log('DELETE SUCCESSFULLY');
+    await usersCollection.deleteOne({ _id: new ObjectId(id) });
     return;
   },
   async findFieldWithValue(
@@ -41,18 +35,26 @@ export const usersRepository = {
   },
 
   async updateConfirmationStatus(_id: ObjectId) {
-    await usersCollection.updateOne({ _id }, {$set: { 'confirmationEmail.isConfirmed': true } });
+    await usersCollection.updateOne(
+      { _id },
+      { $set: { 'confirmationEmail.isConfirmed': true } },
+    );
   },
 
   async updateConfirmationCode(_id: ObjectId, code: string) {
-    await usersCollection.updateOne({ _id }, {$set: { 'confirmationEmail.confirmationCode': code } });
+    await usersCollection.updateOne(
+      { _id },
+      { $set: { 'confirmationEmail.confirmationCode': code } },
+    );
   },
-  async findByCode(code: string): Promise<WithId<User>> {
+  async findByCodeOrError(code: string): Promise<WithId<User>> {
     console.log('findByCode: ', code);
-    let resultUser = await usersCollection.findOne({ "confirmationEmail.confirmationCode": code });
+    let resultUser = await usersCollection.findOne({
+      'confirmationEmail.confirmationCode': code,
+    });
     if (!resultUser) {
       throw new RepositoryNotFoundError('User not found', 'user');
     }
     return resultUser;
-  }
+  },
 };

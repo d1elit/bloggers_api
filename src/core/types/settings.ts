@@ -3,7 +3,9 @@ export type SettingsType = {
   MONGO_URL: string;
   DB_NAME: string;
   AC_SECRET: string;
-  AC_TIME: string;
+  AC_TIME: number;
+  RF_SECRET: string;
+  RF_TIME: number;
   EMAIL: string;
-  EMAIL_PASS:string;
+  EMAIL_PASS: string;
 };

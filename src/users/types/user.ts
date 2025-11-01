@@ -7,5 +7,5 @@ export type User = {
     confirmationCode: string;
     isConfirmed: boolean;
     expirationDate: string;
-  }
+  };
 };

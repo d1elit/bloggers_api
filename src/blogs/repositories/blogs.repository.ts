@@ -10,19 +10,10 @@ export const blogsRepository = {
     return { ...newBlog, _id: insertResult.insertedId };
   },
   async delete(id: string): Promise<void> {
-    const deleteResult = await blogsCollection.deleteOne({
-      _id: new ObjectId(id),
-    });
-    if (deleteResult.deletedCount < 1) {
-      throw new RepositoryNotFoundError('blog not exist');
-    }
+    await blogsCollection.deleteOne({ _id: new ObjectId(id) });
     return;
   },
   async update(id: string, dto: BlogInput): Promise<void> {
-    const res = await blogsCollection.findOne({ _id: new ObjectId(id) });
-    if (!res) {
-      throw new RepositoryNotFoundError('blog not exist');
-    }
     await blogsCollection.updateOne({ _id: new ObjectId(id) }, { $set: dto });
     return;
   },

@@ -3,11 +3,14 @@ import { ObjectId, WithId } from 'mongodb';
 import { Post } from '../types/post';
 import { postsCollection } from '../../db/mongo.db';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
+import { mapToPostListPaginated } from '../router/mappers/map-to-post-list-paginated';
+import { postListPaginatedOutput } from '../router/output/post-list-paginated.output';
 
 export const postsQueryRepository = {
   async findAll(
     queryDto: PostQueryInput,
-  ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
+    blogId?: string,
+  ): Promise<postListPaginatedOutput> {
     const {
       pageNumber,
       pageSize,
@@ -17,10 +20,12 @@ export const postsQueryRepository = {
       shortDescription,
       content,
       blogName,
-      blogId,
     } = queryDto;
     const skip = (+pageNumber - 1) * +pageSize;
     const filter: any = {};
+    if (blogId) {
+      filter.blogId = { $regex: blogId, $options: 'i' };
+    }
     if (title) {
       filter.title = { $regex: title, $options: 'i' };
     }
@@ -33,10 +38,6 @@ export const postsQueryRepository = {
     if (blogName) {
       filter.blogName = { $regex: blogName, $options: 'i' };
     }
-    if (blogId) {
-      filter.blogId = { $regex: blogId, $options: 'i' };
-    }
-
     const items = await postsCollection
       .find(filter)
       .sort({ [sortBy]: sortDirection })
@@ -46,7 +47,11 @@ export const postsQueryRepository = {
 
     const totalCount = await postsCollection.countDocuments(filter);
 
-    return { items, totalCount };
+    return mapToPostListPaginated(items, {
+      pageNumber: pageNumber,
+      pageSize: pageSize,
+      totalCount,
+    });
   },
   async findByIdOrError(id: string): Promise<WithId<Post>> {
     const res = await postsCollection.findOne({ _id: new ObjectId(id) });

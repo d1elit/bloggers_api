@@ -13,13 +13,15 @@ import { postsRouter } from './posts/router/posts.router';
 import { authRouter } from './auth/router/auth.router';
 import { usersRouter } from './users/router/users.router';
 import { commentsRouter } from './comments/router/comment.router';
+import cookieParser from 'cookie-parser';
 
 export const setupApp = (app: Express) => {
   app.use(express.json()); // middleware для парсинга JSON в теле запроса
+  app.use(cookieParser());
 
   // основной роут
   app.get('/', (req, res) => {
-    res.status(200).send('bloggers api tests lesson');
+    res.status(200).send('bloggers api refresh-token');
   });
   app.use(POSTS_PATH, postsRouter);
   app.use(BLOGS_PATH, blogsRouter);

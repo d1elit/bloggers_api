@@ -12,12 +12,10 @@ export async function getPostsCommentListHandler(
   res: Response,
 ) {
   try {
+    const postId = req.params.id;
+    await postsQueryRepository.findByIdOrError(postId);
     const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
-    const comment = await postsQueryRepository.findByIdOrError(req.params.id);
-    const comments = await commentsQueryRepository.findAll(
-      queryInput,
-      comment._id.toString(),
-    );
+    const comments = await commentsQueryRepository.findAll(queryInput, postId);
     res.status(HttpStatus.Ok).send(comments);
   } catch (e: unknown) {
     errorsHandler(e, res);

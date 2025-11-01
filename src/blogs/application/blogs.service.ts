@@ -5,8 +5,6 @@ import { WithId } from 'mongodb';
 import { Post } from '../../posts/types/post';
 import { postsRepository } from '../../posts/repositories/posts.repository';
 import { PostInput } from '../../posts/router/input/post.input';
-import { PostQueryInput } from '../../posts/router/input/post-query.input';
-import { postsQueryRepository } from '../../posts/repositories/posts.query-repository';
 
 export const blogsService = {
   async create(dto: BlogInput): Promise<WithId<Blog>> {
@@ -20,25 +18,14 @@ export const blogsService = {
     return blogsRepository.create(newBlog);
   },
   async delete(id: string): Promise<void> {
+    await blogsRepository.findByIdOrError(id);
     await blogsRepository.delete(id);
   },
   async update(id: string, dto: BlogInput): Promise<void> {
+    await blogsRepository.findByIdOrError(id);
     await blogsRepository.update(id, dto);
     return;
   },
-
-  async findPosts(
-    dto: PostQueryInput,
-    id: string,
-  ): Promise<{ items: WithId<Post>[]; totalCount: number }> {
-    await blogsRepository.findByIdOrError(id);
-    const queryDto = {
-      ...dto,
-      blogId: id,
-    };
-    return await postsQueryRepository.findAll(queryDto);
-  },
-
   async createPost(id: string, dto: PostInput): Promise<WithId<Post>> {
     const blog = await blogsRepository.findByIdOrError(id);
     const newPostDto: Post = {

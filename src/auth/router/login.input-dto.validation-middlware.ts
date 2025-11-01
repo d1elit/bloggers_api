@@ -2,7 +2,7 @@ import { body } from 'express-validator';
 
 const authLoginValidation = body('loginOrEmail')
   .isString()
-  .withMessage('Login must be a string')
+  .withMessage('LoginInput must be a string')
   .trim()
   .isLength({ min: 3, max: 25 })
   .withMessage('Length of login is not correct');

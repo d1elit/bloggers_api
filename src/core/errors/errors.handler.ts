@@ -1,9 +1,11 @@
 import { Response } from 'express';
 import {
   AccessError,
-  LoginError, RegistrationConfirmationError,
+  LoginError,
+  RegistrationConfirmationError,
   RepositoryNotFoundError,
-  DomainError, UserCreationError
+  DomainError,
+  UserCreationError,
 } from './domain.errors';
 import { HttpStatus } from '../types/http-statuses';
 import { createErrorMessages } from '../middlewares/validation/input-validtion-result.middleware';
@@ -55,32 +57,30 @@ export function errorsHandler(error: unknown, res: Response): void {
   if (error instanceof UserCreationError) {
     const httpStatus = HttpStatus.BadRequest;
     res.status(httpStatus).send(
-        createErrorMessages([
-          {
-            status: httpStatus,
-            source: error.source,
-            detail: error.message,
-            code: error.code,
-          },
-        ]),
+      createErrorMessages([
+        {
+          status: httpStatus,
+          source: error.source,
+          detail: error.message,
+          code: error.code,
+        },
+      ]),
     );
   }
 
-
-  if(error instanceof RegistrationConfirmationError) {
+  if (error instanceof RegistrationConfirmationError) {
     const httpStatus = HttpStatus.BadRequest;
     res.status(httpStatus).send(
-        createErrorMessages([
-          {
-            status: httpStatus,
-            source: error.source,
-            detail: error.message,
-            code: error.code,
-          },
-        ]),
-    )
+      createErrorMessages([
+        {
+          status: httpStatus,
+          source: error.source,
+          detail: error.message,
+          code: error.code,
+        },
+      ]),
+    );
   }
-
 
   if (error instanceof DomainError) {
     const httpStatus = HttpStatus.UnprocessableEntity;

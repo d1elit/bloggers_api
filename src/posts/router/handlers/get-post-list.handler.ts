@@ -2,7 +2,6 @@ import { Response } from 'express';
 import { HttpStatus } from '../../../core/types/http-statuses';
 import { errorsHandler } from '../../../core/errors/errors.handler';
 import { setDefaultSortAndPaginationIfNotExist } from '../../../core/helpers/set-default-query-params';
-import { mapToPostListPaginated } from '../mappers/map-to-post-list-paginated';
 import { PostQueryInput } from '../input/post-query.input';
 import { postListPaginatedOutput } from '../output/post-list-paginated.output';
 import { RequestWithQuery } from '../../../core/types/requestTypes';
@@ -14,15 +13,8 @@ export async function getPostListHandler(
 ) {
   try {
     const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
-    const { items, totalCount } =
-      await postsQueryRepository.findAll(queryInput);
-    const postOutput = mapToPostListPaginated(items, {
-      pageNumber: queryInput.pageNumber,
-      pageSize: queryInput.pageSize,
-      totalCount,
-    });
-
-    res.status(HttpStatus.Ok).send(postOutput);
+    const posts = await postsQueryRepository.findAll(queryInput);
+    res.status(HttpStatus.Ok).send(posts);
   } catch (e: unknown) {
     errorsHandler(e, res);
   }

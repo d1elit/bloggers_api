@@ -3,11 +3,11 @@ import { ObjectId, WithId } from 'mongodb';
 import { blogsCollection } from '../../db/mongo.db';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { BlogQueryInput } from '../router/input/blog-query.input';
+import { mapToBlogViewModel } from '../router/mappers/map-to-blog-list-paginated.util';
+import { BlogListPaginatedOutput } from '../router/output/blog-list-paginated.output';
 
 export const blogsQueryRepository = {
-  async findAll(
-    queryDto: BlogQueryInput,
-  ): Promise<{ items: WithId<Blog>[]; totalCount: number }> {
+  async findAll(queryDto: BlogQueryInput): Promise<BlogListPaginatedOutput> {
     const {
       pageNumber,
       pageSize,
@@ -34,12 +34,16 @@ export const blogsQueryRepository = {
 
     const totalCount = await blogsCollection.countDocuments(filter);
 
-    return { items, totalCount };
+    return mapToBlogViewModel(items, {
+      pageNumber: pageNumber,
+      pageSize: pageSize,
+      totalCount,
+    });
   },
   async findByIdOrError(id: string): Promise<WithId<Blog>> {
     const res = await blogsCollection.findOne({ _id: new ObjectId(id) });
     if (!res) {
-      throw new RepositoryNotFoundError('blog not exist', );
+      throw new RepositoryNotFoundError('blog not exist');
     }
     return res;
   },

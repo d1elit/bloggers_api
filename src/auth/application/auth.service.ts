@@ -1,27 +1,38 @@
-import { Login } from '../types/login';
-import {LoginError, RegistrationConfirmationError} from '../../core/errors/domain.errors';
+import { LoginInput } from '../router/input/login.input';
+import {
+  LoginError,
+  RegistrationConfirmationError,
+} from '../../core/errors/domain.errors';
 import { User } from '../../users/types/user';
 import { usersRepository } from '../../users/repositories/users.repository';
 import { jwtService } from '../adapters/jwt.service';
 import { WithId } from 'mongodb';
-import {Registration} from "../types/Registration";
-import {usersService} from "../../users/application/users.service";
-import {nodemailerService} from "../adapters/nodemailer.service";
+import { RegistrationInput } from '../router/input/registration.input';
+import { usersService } from '../../users/application/users.service';
+import { nodemailerService } from '../adapters/nodemailer.service';
+import { revokedTokensRepository } from '../repositories/revokedTokens.repository';
+import { bcryptService } from '../adapters/bcrypt.service';
 
 export const authService = {
-  async auth(loginDto: Login): Promise<string> {
-    let resultUser = await this.checkUserCredentials(loginDto);
+  async auth(loginDto: LoginInput): Promise<string[]> {
+    const resultUser = await this.checkUserCredentials(loginDto);
     if (!resultUser) {
-      throw new LoginError('Login Failed');
+      throw new LoginError('LoginInput Failed');
     }
-    let token = await jwtService.createToken(resultUser._id.toString());
-    console.log(`Token: ${token}`);
-    return token;
+    const accessToken = await jwtService.createAccessToken(
+      resultUser._id.toString(),
+    );
+    console.log(`Token: ${accessToken}`);
+    const refreshToken = await jwtService.createRefreshToken(
+      resultUser._id.toString(),
+    );
+
+    return [accessToken, refreshToken];
   },
 
-  async checkUserCredentials(loginDto: Login): Promise<WithId<User>> {
-    let user = await this.verifyLoginOrEmail(loginDto.loginOrEmail);
-    let isPasswordVerified = await this.verifyPasswords(
+  async checkUserCredentials(loginDto: LoginInput): Promise<WithId<User>> {
+    const user = await this.verifyLoginOrEmail(loginDto.loginOrEmail);
+    const isPasswordVerified = await bcryptService.verifyPasswords(
       loginDto.password,
       user.password,
     );
@@ -33,39 +44,61 @@ export const authService = {
   },
 
   async verifyLoginOrEmail(login: string): Promise<WithId<User>> {
-    let user = await usersRepository.findByLoginOrEmail(login);
+    const user = await usersRepository.findByLoginOrEmail(login);
     if (!user) throw new LoginError('Wrong login or password');
     return user;
   },
 
-  async verifyPasswords(dtoPassword: string, userPassword: string) {
-    const bcrypt = require('bcrypt');
-    return await bcrypt.compare(dtoPassword, userPassword);
+  async register(userDto: RegistrationInput) {
+    const confirmationCode = crypto.randomUUID();
+    await usersService.create(userDto, confirmationCode);
+    nodemailerService
+      .sendEmail(userDto.email, confirmationCode)
+      .catch((error) => {
+        console.log('Email sending failed', error);
+      });
   },
 
-  async register(userDto: Registration) {
-    let confirmationCode = crypto.randomUUID()
-    await usersService.create(userDto,confirmationCode);
-    nodemailerService.sendEmail(userDto.email, confirmationCode).catch((error) => {
-      console.log('Email sending failed', error);
-    })
-  },
-
-  async registrationConfirmation(code: string)  {
-    let user = await usersRepository.findByCode(code);
-    if (user.confirmationEmail.isConfirmed) throw new RegistrationConfirmationError("Already used code", "code")
-    if (code !== user.confirmationEmail.confirmationCode) throw new RegistrationConfirmationError("Wrong code", "code")
+  async registrationConfirmation(code: string) {
+    const user = await usersRepository.findByCodeOrError(code);
+    if (user.confirmationEmail.isConfirmed)
+      throw new RegistrationConfirmationError('Already used code', 'code');
+    if (code !== user.confirmationEmail.confirmationCode)
+      throw new RegistrationConfirmationError('Wrong code', 'code');
     await usersRepository.updateConfirmationStatus(user._id);
-    return false
-
+    return false;
   },
 
-  async emailResending(email: string)  {
-    let user = await usersRepository.findByLoginOrEmail(email);
-    if(!user) throw new RegistrationConfirmationError("Email not exist", 'email')
-    if(user.confirmationEmail.isConfirmed) throw new RegistrationConfirmationError("Already confirmed", 'email')
-    let confirmationCode = crypto.randomUUID()
-    await usersRepository.updateConfirmationCode(user._id,confirmationCode);
-    await nodemailerService.sendEmail(email, confirmationCode)
-  }
+  async emailResending(email: string) {
+    const user = await usersRepository.findByLoginOrEmail(email);
+    if (!user)
+      throw new RegistrationConfirmationError('Email not exist', 'email');
+    if (user.confirmationEmail.isConfirmed)
+      throw new RegistrationConfirmationError('Already confirmed', 'email');
+    const confirmationCode = crypto.randomUUID();
+    await usersRepository.updateConfirmationCode(user._id, confirmationCode);
+    await nodemailerService.sendEmail(email, confirmationCode);
+  },
+
+  async refreshToken(token: string, userId: string) {
+    await this.revokeToken(token);
+
+    const accessToken = await jwtService.createAccessToken(userId);
+    const refreshToken = await jwtService.createRefreshToken(userId);
+
+    return [accessToken, refreshToken];
+  },
+  async isTokenRevoked(refreshToken: string) {
+    const token = await revokedTokensRepository.find(refreshToken);
+    console.log(token);
+    if (token) throw new LoginError('Token in blacklist');
+    return false;
+  },
+  async revokeToken(token: string) {
+    await revokedTokensRepository.insert(token);
+  },
+
+  async logout(token: string) {
+    await this.revokeToken(token);
+  },
 };
