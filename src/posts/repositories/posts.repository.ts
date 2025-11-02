@@ -1,0 +1,27 @@
+import { Post } from '../types/post';
+import { PostInput } from '../router/input/post.input';
+import { ObjectId, WithId } from 'mongodb';
+import { postsCollection } from '../../db/mongo.db';
+import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
+
+export const postsRepository = {
+  async create(newPost: Post): Promise<WithId<Post>> {
+    const insertResult = await postsCollection.insertOne(newPost);
+    return { ...newPost, _id: insertResult.insertedId };
+  },
+  async delete(id: string): Promise<void> {
+    await postsCollection.deleteOne({ _id: new ObjectId(id) });
+    return;
+  },
+  async update(id: string, dto: PostInput): Promise<void> {
+    await postsCollection.updateOne({ _id: new ObjectId(id) }, { $set: dto });
+    return;
+  },
+  async findByIdOrError(id: string): Promise<WithId<Post>> {
+    const res = await postsCollection.findOne({ _id: new ObjectId(id) });
+    if (!res) {
+      throw new RepositoryNotFoundError('Post not found');
+    }
+    return res;
+  },
+};

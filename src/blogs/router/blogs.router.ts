@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { RequestHandler, Router } from 'express';
 import { getBlogsListHandler } from './handlers/get-blog-list.handler';
 import { getBlogHandler } from './handlers/get-blog.handler';
 import { idValidation } from '../../core/middlewares/validation/params-id.validation-middleware';
@@ -21,7 +21,7 @@ blogsRouter
     '/:id/posts',
     idValidation,
     inputValidationResultMiddleware,
-    getBlogsPostList,
+    getBlogsPostList as unknown as RequestHandler<{ id: string }>,
   )
   .put(
     '/:id',

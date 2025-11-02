@@ -1,11 +1,12 @@
-import { Request, Response } from 'express';
-import { blogsService } from '../../application/blogs.service';
+import { Response } from 'express';
 import { errorsHandler } from '../../../core/errors/errors.handler';
 import { setDefaultSortAndPaginationIfNotExist } from '../../../core/helpers/set-default-query-params';
 import { PostQueryInput } from '../../../posts/router/input/post-query.input';
 import { postListPaginatedOutput } from '../../../posts/router/output/post-list-paginated.output';
-import { mapToPostListPaginated } from '../../../posts/router/mappers/map-to-post-list-paginated';
 import { RequestWithParamsAndQuery } from '../../../core/types/requestTypes';
+import { blogsQueryRepository } from '../../repositories/blogs.query-repository';
+import { postsQueryRepository } from '../../../posts/repositories/posts.query-repository';
+import { HttpStatus } from '../../../core/types/http-statuses';
 
 export async function getBlogsPostList(
   req: RequestWithParamsAndQuery<{ id: string }, PostQueryInput>,
@@ -15,13 +16,11 @@ export async function getBlogsPostList(
     const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
 
     const id = req.params.id;
-    const { items, totalCount } = await blogsService.findPosts(queryInput, id);
-    const postOutput = mapToPostListPaginated(items, {
-      pageNumber: queryInput.pageNumber,
-      pageSize: queryInput.pageSize,
-      totalCount,
-    });
-    res.send(postOutput);
+
+    await blogsQueryRepository.findByIdOrError(id);
+    const posts = await postsQueryRepository.findAll(queryInput, id);
+
+    res.status(HttpStatus.Ok).send(posts);
   } catch (e: unknown) {
     errorsHandler(e, res);
   }
