@@ -45,7 +45,7 @@ describe('BLOGS_VALIDATION', () => {
         .expect(HttpStatus.BadRequest);
       expect(invalidDto1.body.errorsMessages).toHaveLength(3);
     });
-    it('POST /blog: Blogs DB should be empty', async () => {
+    it('POST /blog: Blogs DB should be empty if blogs not created', async () => {
       const driverListResponse = await request(app)
         .get(BLOGS_PATH)
         .set('Authorization', adminToken);
