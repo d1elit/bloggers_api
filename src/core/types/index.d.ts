@@ -1,9 +1,9 @@
-import { idType } from '../../auth/types/id';
+import { idType } from '../../auth/types/userIdType';
 
 declare global {
   namespace Express {
     export interface Request {
-      user: idType | null;
+      user: userIdType | null;
     }
   }
 }

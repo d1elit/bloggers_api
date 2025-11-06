@@ -6,6 +6,7 @@ export async function logoutHandler(req: Request, res: Response) {
   try {
     let token = req.cookies.refreshToken;
     await authService.logout(token);
+    // res.cookie('refreshToken', null, { httpOnly: true, secure: true });
     res.status(HttpStatus.NoContent).send();
   } catch (e: unknown) {
     errorsHandler(e, res);

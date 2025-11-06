@@ -1,6 +1,7 @@
 import { SETTINGS } from '../../core/settings/settings';
 import jwt from 'jsonwebtoken';
 import { LoginError } from '../../core/errors/domain.errors';
+import {refreshTokenPayload} from "../types/refreshTokenPayload";
 
 export const jwtService = {
   async createAccessToken(userId: string): Promise<string> {
@@ -8,8 +9,8 @@ export const jwtService = {
       expiresIn: `${SETTINGS.AC_TIME}s`,
     });
   },
-  async createRefreshToken(userId: string): Promise<string> {
-    return jwt.sign({ userId }, SETTINGS.RF_SECRET, {
+  async createRefreshToken(userId: string,deviceId:string): Promise<string> {
+    return jwt.sign({deviceId, userId }, SETTINGS.RF_SECRET, {
       expiresIn: `${SETTINGS.RF_TIME}s`,
     });
   },
@@ -23,9 +24,9 @@ export const jwtService = {
   },
   async verifyRefreshToken(
     refreshToken: string,
-  ): Promise<{ userId: string } | null> {
+  ): Promise<{ userId:string, deviceId:string, iat:number, exp:number } | null> {
     try {
-      return jwt.verify(refreshToken, SETTINGS.RF_SECRET) as { userId: string };
+      return jwt.verify(refreshToken, SETTINGS.RF_SECRET) as refreshTokenPayload;
     } catch (e: unknown) {
       throw new LoginError('Unauthorized refresh token');
     }

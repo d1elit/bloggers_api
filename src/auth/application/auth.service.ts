@@ -12,20 +12,39 @@ import { usersService } from '../../users/application/users.service';
 import { nodemailerService } from '../adapters/nodemailer.service';
 import { revokedTokensRepository } from '../repositories/revokedTokens.repository';
 import { bcryptService } from '../adapters/bcrypt.service';
+import {authInput} from "../router/input/auth.input";
+import {jwtDecode} from 'jwt-decode'
+import {sessionsRepository} from "../repositories/sessionsRepository";
+import {refreshTokenPayload} from "../types/refreshTokenPayload";
 
 export const authService = {
-  async auth(loginDto: LoginInput): Promise<string[]> {
+  async auth({loginDto, ip, deviceName} : authInput): Promise<string[]> {
     const resultUser = await this.checkUserCredentials(loginDto);
     if (!resultUser) {
-      throw new LoginError('LoginInput Failed');
+      throw new LoginError('Wrong login or password');
     }
+
+    const deviceId = crypto.randomUUID()
+
     const accessToken = await jwtService.createAccessToken(
       resultUser._id.toString(),
     );
-    console.log(`Token: ${accessToken}`);
     const refreshToken = await jwtService.createRefreshToken(
-      resultUser._id.toString(),
+      resultUser._id.toString(), deviceId
     );
+    const {exp, iat} = jwtDecode(refreshToken);
+
+    const session = {
+      deviceName: deviceName,
+      deviceId: deviceId,
+      userId:  resultUser._id.toString(),
+      ip: ip,
+      iat: iat!.toString(),
+      exp: exp!.toString(),
+    }
+    await sessionsRepository.create(session)
+    console.log(session);
+
 
     return [accessToken, refreshToken];
   },
@@ -62,9 +81,9 @@ export const authService = {
   async registrationConfirmation(code: string) {
     const user = await usersRepository.findByCodeOrError(code);
     if (user.confirmationEmail.isConfirmed)
-      throw new RegistrationConfirmationError('Already used code', 'code');
+      throw new RegistrationConfirmationError('Confirm code already used', 'code');
     if (code !== user.confirmationEmail.confirmationCode)
-      throw new RegistrationConfirmationError('Wrong code', 'code');
+      throw new RegistrationConfirmationError('Wrong confirmation code', 'code');
     await usersRepository.updateConfirmationStatus(user._id);
     return false;
   },
@@ -74,29 +93,46 @@ export const authService = {
     if (!user)
       throw new RegistrationConfirmationError('Email not exist', 'email');
     if (user.confirmationEmail.isConfirmed)
-      throw new RegistrationConfirmationError('Already confirmed', 'email');
+      throw new RegistrationConfirmationError('Email already confirmed', 'email');
     const confirmationCode = crypto.randomUUID();
     await usersRepository.updateConfirmationCode(user._id, confirmationCode);
     await nodemailerService.sendEmail(email, confirmationCode);
   },
 
-  async refreshToken(token: string, userId: string) {
-    await this.revokeToken(token);
+  async refreshToken(token: string, userId: string, deviceId: string) {
+    // await this.revokeToken(token) ;
+
+    const oldVersion = jwtDecode(token).iat;
 
     const accessToken = await jwtService.createAccessToken(userId);
-    const refreshToken = await jwtService.createRefreshToken(userId);
+    const refreshToken = await jwtService.createRefreshToken(userId, deviceId);
 
+    const {exp, iat} = jwtDecode(refreshToken);
+    await sessionsRepository.update(iat!.toString(), exp!.toString(), oldVersion!.toString())
     return [accessToken, refreshToken];
   },
-  async isTokenRevoked(refreshToken: string) {
+
+  async ensureRefreshTokenValid (payload : refreshTokenPayload  ) {
+    const session = await sessionsRepository.find(payload.iat.toString())
+    console.log('ENSURE : ' , session)
+    if(!session) throw new LoginError('Unauthorized (refresh)');
+  },
+
+  async ensureTokenNotRevoked(refreshToken: string) {
     const token = await revokedTokensRepository.find(refreshToken);
     console.log(token);
     if (token) throw new LoginError('Token in blacklist');
     return false;
   },
+
+  // async
   async revokeToken(token: string) {
-    await revokedTokensRepository.insert(token);
+    // await revokedTokensRepository.insert(token) ;
+    const {iat} = jwtDecode(token);
+    console.log('REVOCK IAT:',iat)
+    await sessionsRepository.delete(iat!.toString());
   },
+
 
   async logout(token: string) {
     await this.revokeToken(token);

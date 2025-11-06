@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { errorsHandler } from '../../core/errors/errors.handler';
 import { HttpStatus } from '../../core/types/http-statuses';
-import { idType } from '../types/id';
+import { userIdType} from '../types/userIdType';
 import { jwtService } from '../adapters/jwt.service';
 import { authService } from '../application/auth.service';
 
@@ -14,15 +14,20 @@ export const refreshTokenGuardMiddleware = async (
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) return res.sendStatus(HttpStatus.Unauthorized);
 
-    await authService.isTokenRevoked(refreshToken);
+    // const ip = req.ip || req.socket.remoteAddress || 'unknown';
+    // const deviceName = req.headers['user-agent'];
+
 
     const payload = await jwtService.verifyRefreshToken(refreshToken);
 
     if (!payload) return res.sendStatus(HttpStatus.Unauthorized);
 
-    const { userId } = payload;
+    // await authService.ensureTokenNotRevoked(refreshToken);
 
-    req.user = { id: userId } as idType;
+    await authService.ensureRefreshTokenValid(payload)
+    console.log(payload);
+
+    req.user = { userId: payload.userId, deviceId: payload.deviceId } as userIdType;
     next();
     return;
   } catch (e: unknown) {

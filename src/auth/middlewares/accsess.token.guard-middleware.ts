@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { jwtService } from '../adapters/jwt.service';
-import { idType } from '../types/id';
+import { userIdType} from '../types/userIdType';
 import { errorsHandler } from '../../core/errors/errors.handler';
 
 export const AccsessTokenGuardMiddleware = async (
@@ -19,7 +19,7 @@ export const AccsessTokenGuardMiddleware = async (
     if (payload) {
       const { userId } = payload;
 
-      req.user = { id: userId } as idType;
+      req.user = { userId: userId } as userIdType;
       next();
 
       return;

@@ -3,10 +3,13 @@ import { setupApp } from './setup-app';
 import { SETTINGS } from './core/settings/settings';
 import { runDB } from './db/mongo.db';
 
+// const app = express() //todo export for vercel deploy
+// export default app;
+
 const bootstrap = async () => {
   const app = express();
-  setupApp(app);
 
+  setupApp(app);
   const PORT = SETTINGS.PORT;
   await runDB(SETTINGS.MONGO_URL);
 
