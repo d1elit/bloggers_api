@@ -7,7 +7,7 @@ import { createBlogHandler } from './handlers/create-blog.handler';
 import { blogInputDtoValidation } from './blog.input-dto.validation-middlewares';
 import { deleteBlogHandler } from './handlers/delete-blog.handler';
 import { updateBlogHandler } from './handlers/update-blog.handler';
-import { superAdminGuardMiddleware } from '../../auth/middlewares/super-admin.guard-middleware';
+import { superAdminGuardMiddleware } from '../../auth/guards/super-admin.guard-middleware';
 import { getBlogsPostList } from './handlers/get-blogs-post-list';
 import { createBlogsPostHandler } from './handlers/create-post-in-blog.handler';
 import { blogsPostInputDtoValidation } from '../../posts/router/post.input-dto.validation-middlewares';

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { jwtService } from '../adapters/jwt.service';
-import { userIdType} from '../types/userIdType';
+import { userIdType } from '../types/userIdType';
 import { errorsHandler } from '../../core/errors/errors.handler';
 
 export const AccsessTokenGuardMiddleware = async (

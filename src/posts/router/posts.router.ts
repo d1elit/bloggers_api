@@ -7,9 +7,9 @@ import { createPostHandler } from './handlers/create-post.handler';
 import { deletePostHandler } from './handlers/delete-post.handler';
 import { postInputDtoValidation } from './post.input-dto.validation-middlewares';
 import { updatePostHandler } from './handlers/update-post.handler';
-import { superAdminGuardMiddleware } from '../../auth/middlewares/super-admin.guard-middleware';
+import { superAdminGuardMiddleware } from '../../auth/guards/super-admin.guard-middleware';
 import { createPostsCommentHandler } from './handlers/create-posts-comment.handler';
-import { AccsessTokenGuardMiddleware } from '../../auth/middlewares/accsess.token.guard-middleware';
+import { AccsessTokenGuardMiddleware } from '../../auth/guards/accsess.token.guard-middleware';
 import { getPostsCommentListHandler } from './handlers/get-posts-comment-list.handler';
 import { commentInputDtoValidation } from '../../comments/router/comment.input-dto.validation-middleware';
 

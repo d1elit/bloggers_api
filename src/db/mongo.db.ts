@@ -5,7 +5,7 @@ import { SETTINGS } from '../core/settings/settings';
 import { User } from '../users/types/user';
 import { Comment } from '../comments/types/comment';
 import { RevokedToken } from '../auth/types/revokedTokens';
-import {UserSession} from "../auth/types/userSession";
+import { UserSession } from '../auth/types/userSession';
 
 const BLOGS_COLLECTION_NAME = 'blogs';
 const POSTS_COLLECTION_NAME = 'posts';

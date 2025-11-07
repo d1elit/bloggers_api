@@ -12,39 +12,39 @@ import { usersService } from '../../users/application/users.service';
 import { nodemailerService } from '../adapters/nodemailer.service';
 import { revokedTokensRepository } from '../repositories/revokedTokens.repository';
 import { bcryptService } from '../adapters/bcrypt.service';
-import {authInput} from "../router/input/auth.input";
-import {jwtDecode} from 'jwt-decode'
-import {sessionsRepository} from "../repositories/sessionsRepository";
-import {refreshTokenPayload} from "../types/refreshTokenPayload";
+import { authInput } from '../router/input/auth.input';
+import { jwtDecode } from 'jwt-decode';
+import { sessionsRepository } from '../repositories/sessionsRepository';
+import { refreshTokenPayload } from '../types/refreshTokenPayload';
 
 export const authService = {
-  async auth({loginDto, ip, deviceName} : authInput): Promise<string[]> {
+  async auth({ loginDto, ip, deviceName }: authInput): Promise<string[]> {
     const resultUser = await this.checkUserCredentials(loginDto);
     if (!resultUser) {
       throw new LoginError('Wrong login or password');
     }
 
-    const deviceId = crypto.randomUUID()
+    const deviceId = crypto.randomUUID();
 
     const accessToken = await jwtService.createAccessToken(
       resultUser._id.toString(),
     );
     const refreshToken = await jwtService.createRefreshToken(
-      resultUser._id.toString(), deviceId
+      resultUser._id.toString(),
+      deviceId,
     );
-    const {exp, iat} = jwtDecode(refreshToken);
+    const { exp, iat } = jwtDecode(refreshToken);
 
     const session = {
       deviceName: deviceName,
       deviceId: deviceId,
-      userId:  resultUser._id.toString(),
+      userId: resultUser._id.toString(),
       ip: ip,
       iat: iat!.toString(),
       exp: exp!.toString(),
-    }
-    await sessionsRepository.create(session)
+    };
+    await sessionsRepository.create(session);
     console.log(session);
-
 
     return [accessToken, refreshToken];
   },
@@ -57,7 +57,7 @@ export const authService = {
     );
 
     if (!user || !isPasswordVerified) {
-      throw new LoginError('Wrong login or password');
+      throw new LoginError('Wrong login or password ');
     }
     return user;
   },
@@ -81,9 +81,15 @@ export const authService = {
   async registrationConfirmation(code: string) {
     const user = await usersRepository.findByCodeOrError(code);
     if (user.confirmationEmail.isConfirmed)
-      throw new RegistrationConfirmationError('Confirm code already used', 'code');
+      throw new RegistrationConfirmationError(
+        'Confirm code already used',
+        'code',
+      );
     if (code !== user.confirmationEmail.confirmationCode)
-      throw new RegistrationConfirmationError('Wrong confirmation code', 'code');
+      throw new RegistrationConfirmationError(
+        'Wrong confirmation code',
+        'code',
+      );
     await usersRepository.updateConfirmationStatus(user._id);
     return false;
   },
@@ -93,7 +99,10 @@ export const authService = {
     if (!user)
       throw new RegistrationConfirmationError('Email not exist', 'email');
     if (user.confirmationEmail.isConfirmed)
-      throw new RegistrationConfirmationError('Email already confirmed', 'email');
+      throw new RegistrationConfirmationError(
+        'Email already confirmed',
+        'email',
+      );
     const confirmationCode = crypto.randomUUID();
     await usersRepository.updateConfirmationCode(user._id, confirmationCode);
     await nodemailerService.sendEmail(email, confirmationCode);
@@ -107,15 +116,19 @@ export const authService = {
     const accessToken = await jwtService.createAccessToken(userId);
     const refreshToken = await jwtService.createRefreshToken(userId, deviceId);
 
-    const {exp, iat} = jwtDecode(refreshToken);
-    await sessionsRepository.update(iat!.toString(), exp!.toString(), oldVersion!.toString())
+    const { exp, iat } = jwtDecode(refreshToken);
+    await sessionsRepository.update(
+      iat!.toString(),
+      exp!.toString(),
+      oldVersion!.toString(),
+    );
     return [accessToken, refreshToken];
   },
 
-  async ensureRefreshTokenValid (payload : refreshTokenPayload  ) {
-    const session = await sessionsRepository.find(payload.iat.toString())
-    console.log('ENSURE : ' , session)
-    if(!session) throw new LoginError('Unauthorized (refresh)');
+  async ensureRefreshTokenValid(payload: refreshTokenPayload) {
+    const session = await sessionsRepository.find(payload.iat.toString());
+    console.log('ENSURE : ', session);
+    if (!session) throw new LoginError('Unauthorized (refresh)');
   },
 
   async ensureTokenNotRevoked(refreshToken: string) {
@@ -128,11 +141,10 @@ export const authService = {
   // async
   async revokeToken(token: string) {
     // await revokedTokensRepository.insert(token) ;
-    const {iat} = jwtDecode(token);
-    console.log('REVOCK IAT:',iat)
+    const { iat } = jwtDecode(token);
+    console.log('REVOCK IAT:', iat);
     await sessionsRepository.delete(iat!.toString());
   },
-
 
   async logout(token: string) {
     await this.revokeToken(token);
