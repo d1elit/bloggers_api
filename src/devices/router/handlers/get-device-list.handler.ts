@@ -1,14 +1,14 @@
-import { Response, Request } from 'express';
+import { Request, Response } from 'express';
 import { errorsHandler } from '../../../core/errors/errors.handler';
-import { sessionsQueryRepository } from '../../../auth/repositories/sessionsQueryRepository';
 import { HttpStatus } from '../../../core/types/http-statuses';
+import { devicesService } from '../../application/devices.service';
 
 export async function getDeviceListHandler(req: Request, res: Response) {
   try {
     const userId = req.user?.userId as string;
-    console.log('SCURE ID is :', userId);
-    const sessions = await sessionsQueryRepository.findAll(userId);
-    res.status(HttpStatus.Ok).send(sessions);
+    console.log('SCURE ID is:', userId);
+    const deviceList = await devicesService.getDeviceList(userId);
+    res.status(HttpStatus.Ok).send(deviceList);
   } catch (e: unknown) {
     errorsHandler(e, res);
   }

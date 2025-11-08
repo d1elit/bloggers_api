@@ -14,7 +14,7 @@ import { revokedTokensRepository } from '../repositories/revokedTokens.repositor
 import { bcryptService } from '../adapters/bcrypt.service';
 import { authInput } from '../router/input/auth.input';
 import { jwtDecode } from 'jwt-decode';
-import { sessionsRepository } from '../repositories/sessionsRepository';
+import { sessionsRepository } from '../../sessions/repositories/sessionsRepository';
 import { refreshTokenPayload } from '../types/refreshTokenPayload';
 
 export const authService = {
