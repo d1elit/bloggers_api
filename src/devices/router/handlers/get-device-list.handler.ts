@@ -6,7 +6,6 @@ import { devicesService } from '../../application/devices.service';
 export async function getDeviceListHandler(req: Request, res: Response) {
   try {
     const userId = req.user?.userId as string;
-    console.log('SCURE ID is:', userId);
     const deviceList = await devicesService.getDeviceList(userId);
     res.status(HttpStatus.Ok).send(deviceList);
   } catch (e: unknown) {

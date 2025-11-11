@@ -23,9 +23,8 @@ export const refreshTokenGuardMiddleware = async (
 
     // await authService.ensureTokenNotRevoked(refreshToken);
 
-    await authService.ensureRefreshTokenValid(payload);
-    console.log(payload);
-
+    await authService.ensureRefreshTokenValid(payload, refreshToken);
+    // console.log(payload);
     req.user = {
       userId: payload.userId,
       deviceId: payload.deviceId,

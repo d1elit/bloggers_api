@@ -3,6 +3,6 @@ export type UserSession = {
   deviceId: string;
   deviceName: string;
   ip: string;
-  iat: string;
-  exp: string;
+  iat: number;
+  exp: number;
 };

@@ -15,7 +15,6 @@ import { authRouter } from './auth/router/auth.router';
 import { usersRouter } from './users/router/users.router';
 import { commentsRouter } from './comments/router/comment.router';
 import cookieParser from 'cookie-parser';
-import { getBlogsListHandler } from './blogs/router/handlers/get-blog-list.handler';
 import { devicesRouter } from './devices/router/devices.router';
 
 export const setupApp = (app: Express) => {
@@ -24,7 +23,7 @@ export const setupApp = (app: Express) => {
 
   // основной роут
   app.get('/', (req, res) => {
-    res.status(200).send('bloggers api session 11 ');
+    res.status(200).send('bloggers api 3sprint 1lesson ');
   });
   app.use(POSTS_PATH, postsRouter);
   app.use(BLOGS_PATH, blogsRouter);

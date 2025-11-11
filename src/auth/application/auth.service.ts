@@ -10,7 +10,6 @@ import { WithId } from 'mongodb';
 import { RegistrationInput } from '../router/input/registration.input';
 import { usersService } from '../../users/application/users.service';
 import { nodemailerService } from '../adapters/nodemailer.service';
-import { revokedTokensRepository } from '../repositories/revokedTokens.repository';
 import { bcryptService } from '../adapters/bcrypt.service';
 import { authInput } from '../router/input/auth.input';
 import { jwtDecode } from 'jwt-decode';
@@ -40,8 +39,8 @@ export const authService = {
       deviceId: deviceId,
       userId: resultUser._id.toString(),
       ip: ip,
-      iat: iat!.toString(),
-      exp: exp!.toString(),
+      iat: iat!,
+      exp: exp!,
     };
     await sessionsRepository.create(session);
     console.log(session);
@@ -109,44 +108,36 @@ export const authService = {
   },
 
   async refreshToken(token: string, userId: string, deviceId: string) {
-    // await this.revokeToken(token) ;
-
     const oldVersion = jwtDecode(token).iat;
-
+    console.log('refreshToken OLD:', token);
     const accessToken = await jwtService.createAccessToken(userId);
     const refreshToken = await jwtService.createRefreshToken(userId, deviceId);
-
+    console.log('REFRESH TOKEN NEW: ', refreshToken);
     const { exp, iat } = jwtDecode(refreshToken);
-    await sessionsRepository.update(
-      iat!.toString(),
-      exp!.toString(),
-      oldVersion!.toString(),
-    );
+    await sessionsRepository.update(iat!, exp!, oldVersion!);
     return [accessToken, refreshToken];
   },
 
-  async ensureRefreshTokenValid(payload: refreshTokenPayload) {
-    const session = await sessionsRepository.find(payload.iat.toString());
-    console.log('ENSURE : ', session);
+  async ensureRefreshTokenValid(payload: refreshTokenPayload, token: string) {
+    const session = await sessionsRepository.find(
+      payload.iat,
+      payload.deviceId,
+    );
+    console.log('ensureRefreshTokenValid CHECK : ', 'token: ', token);
     if (!session) throw new LoginError('Unauthorized (refresh)');
-  },
-
-  async ensureTokenNotRevoked(refreshToken: string) {
-    const token = await revokedTokensRepository.find(refreshToken);
-    console.log(token);
-    if (token) throw new LoginError('Token in blacklist');
-    return false;
+    console.log('SESSION IS VALID with token:', token);
   },
 
   // async
   async revokeToken(token: string) {
     // await revokedTokensRepository.insert(token) ;
     const { iat } = jwtDecode(token);
-    console.log('REVOCK IAT:', iat);
-    await sessionsRepository.delete(iat!.toString());
+    console.log('REVOKE TOKEN WITH IAT:', iat, token);
+    await sessionsRepository.delete(iat!);
   },
 
   async logout(token: string) {
+    console.log('LOGOUT:', token);
     await this.revokeToken(token);
   },
 };

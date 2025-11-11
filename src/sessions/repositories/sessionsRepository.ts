@@ -6,21 +6,21 @@ export const sessionsRepository = {
     await sessionsCollection.insertOne(sessionDto);
   },
 
-  async find(iat: string) {
-    return sessionsCollection.findOne({ iat: iat });
+  async find(iat: number, deviceId: string): Promise<UserSession | null> {
+    return sessionsCollection.findOne({ iat: iat, deviceId: deviceId });
   },
   findByDeviceId(deviceId: string) {
     return sessionsCollection.findOne({ deviceId: deviceId });
   },
 
-  async update(iat: string, exp: string, oldVersion: string) {
+  async update(iat: number, exp: number, oldVersion: number) {
     console.log('iat in db:', iat, 'exp', exp);
     await sessionsCollection.updateOne(
       { iat: oldVersion },
       { $set: { iat: iat, exp: exp } },
     );
   },
-  async delete(iat: string) {
+  async delete(iat: number) {
     await sessionsCollection.deleteOne({ iat: iat });
   },
   async deleteByDevice(deviceId: string) {

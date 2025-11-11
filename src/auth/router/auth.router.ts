@@ -15,18 +15,54 @@ import { emailResendingHandler } from './handlers/email-resending.handler';
 import { refreshTokenGuardMiddleware } from '../guards/refresh.token.guard-middleware';
 import { refreshTokenHandler } from './handlers/refresh-token.handler';
 import { logoutHandler } from './handlers/logout.handler';
+import rateLimit from 'express-rate-limit';
+
+export const loginRateLimiter = rateLimit({
+  windowMs: 10 * 1000, // 10 секунд
+  max: 5,
+  keyGenerator: (req) => `${req.ip}-login`,
+  skipSuccessfulRequests: false,
+
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+export const registerRateLimiter = rateLimit({
+  windowMs: 10 * 1000, // 10 секунд
+  max: 5,
+  keyGenerator: (req) => `${req.ip}-login`,
+  skipSuccessfulRequests: false,
+});
+
+export const emailRateLimiter = rateLimit({
+  windowMs: 10 * 1000, // 10 секунд
+  max: 5,
+  keyGenerator: (req) => `${req.ip}-login`,
+  skipSuccessfulRequests: false,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+export const confirmationRateLimiter = rateLimit({
+  windowMs: 10 * 1000, // 10 секунд
+  max: 5,
+  keyGenerator: (req) => `${req.ip}-login`,
+  skipSuccessfulRequests: false,
+});
 
 export const authRouter = Router();
 
 authRouter.post(
   '/login',
   loginInputDtoValidation,
+  loginRateLimiter,
   inputValidationResultMiddleware,
   loginHandler,
 );
 
 authRouter.post(
   '/registration',
+  registerRateLimiter,
   registrationInputDtoValidationMiddleware,
   inputValidationResultMiddleware,
   registrationHandler,
@@ -34,6 +70,7 @@ authRouter.post(
 
 authRouter.post(
   '/registration-confirmation',
+  confirmationRateLimiter,
   confirmationInputDtoValidationMiddleware,
   inputValidationResultMiddleware,
   registrationConfirmationHandler,
@@ -41,6 +78,7 @@ authRouter.post(
 
 authRouter.post(
   '/registration-email-resending',
+  emailRateLimiter,
   emailResendingInputDtoValidationMiddleware,
   inputValidationResultMiddleware,
   emailResendingHandler,

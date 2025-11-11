@@ -6,9 +6,9 @@ import { HttpStatus } from '../../../core/types/http-statuses';
 export async function refreshTokenHandler(req: Request, res: Response) {
   try {
     const { userId, deviceId } = req.user!;
-    console.log('REFRESH USER ID', userId);
+    // console.log('REFRESH USER ID', userId);
     const token = req.cookies.refreshToken;
-    console.log('REFRESH TOKEN', token);
+    // console.log('REFRESH TOKEN', token);
     const [accessToken, refreshToken] = await authService.refreshToken(
       token,
       userId,

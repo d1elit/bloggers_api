@@ -6,7 +6,7 @@ export function mapToDeviceList(sessions: UserSession[]): DeviceOutput[] {
     return {
       ip: session.ip,
       title: session.deviceName,
-      lastActiveDate: session.iat,
+      lastActiveDate: new Date(Number(session.iat) * 1000).toISOString(),
       deviceId: session.deviceId,
     };
   });

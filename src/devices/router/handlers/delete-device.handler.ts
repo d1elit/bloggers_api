@@ -10,7 +10,8 @@ export async function deleteDeviceHandler(
 ) {
   try {
     const deviceId = req.params.deviceId;
-    await devicesService.deleteDevice(deviceId);
+    const userId = req.user.userId;
+    await devicesService.deleteDevice(deviceId, userId);
     res.status(HttpStatus.NoContent).send();
   } catch (e: unknown) {
     errorsHandler(e, res);
