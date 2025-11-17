@@ -2,6 +2,7 @@ import { usersCollection } from '../../db/mongo.db';
 import { ObjectId, WithId } from 'mongodb';
 import { User } from '../types/user';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
+import { add } from 'date-fns';
 
 export const usersRepository = {
   async create(newUser: User): Promise<WithId<User>> {
@@ -41,16 +42,50 @@ export const usersRepository = {
     );
   },
 
+  async updateRecoveryCode(_id: ObjectId, code: string) {
+    await usersCollection.updateOne(
+      { _id },
+      {
+        $set: {
+          'passwordRecovery.confirmationCode': code,
+          'passwordRecovery.expirationDate': add(new Date(), {
+            hours: 1,
+          }).toISOString(),
+        },
+      },
+    );
+  },
+  async updateRecoveryStatus(_id: ObjectId) {
+    await usersCollection.updateOne(
+      { _id },
+      { $set: { 'passwordRecovery.confirmationCode': '' } },
+    );
+  },
+  async updatePassword(_id: ObjectId, password: string) {
+    await usersCollection.updateOne({ _id }, { $set: { password: password } });
+  },
+
   async updateConfirmationCode(_id: ObjectId, code: string) {
     await usersCollection.updateOne(
       { _id },
       { $set: { 'confirmationEmail.confirmationCode': code } },
     );
   },
+
   async findByCodeOrError(code: string): Promise<WithId<User>> {
     console.log('findByCode: ', code);
     let resultUser = await usersCollection.findOne({
       'confirmationEmail.confirmationCode': code,
+    });
+    if (!resultUser) {
+      throw new RepositoryNotFoundError('User not found', 'user');
+    }
+    return resultUser;
+  },
+  async findByRecoveryCodeOrError(code: string): Promise<WithId<User>> {
+    console.log('findByCode: ', code);
+    let resultUser = await usersCollection.findOne({
+      'passwordRecovery.confirmationCode': code,
     });
     if (!resultUser) {
       throw new RepositoryNotFoundError('User not found', 'user');

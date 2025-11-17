@@ -8,4 +8,9 @@ export type User = {
     isConfirmed: boolean;
     expirationDate: string;
   };
+  passwordRecovery: {
+    confirmationCode: string;
+    isUsed: boolean;
+    expirationDate: string;
+  };
 };

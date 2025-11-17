@@ -1,13 +1,8 @@
 import { SETTINGS } from '../../core/settings/settings';
 import nodemailer from 'nodemailer';
-import { emailExamples } from './emailExamples';
 
 export const nodemailerService = {
-  async sendEmail(
-    email: string,
-    code: string,
-    // template: string,
-  ) {
+  async sendEmail(email: string, template: string) {
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -21,7 +16,7 @@ export const nodemailerService = {
         from: '"Kek 👻"  <dropdox12@gmail.com>',
         to: email,
         subject: 'RegistrationInput',
-        html: emailExamples.registrationEmail(code), // html body
+        html: template, // html body
       });
       return;
     } catch (e: unknown) {

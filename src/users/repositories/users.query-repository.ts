@@ -48,4 +48,7 @@ export const usersQueryRepository = {
     }
     return user;
   },
+  async findByEmail(email: string): Promise<WithId<User> | null> {
+    return usersCollection.findOne({ email: email });
+  },
 };

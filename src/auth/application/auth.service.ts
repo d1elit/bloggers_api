@@ -15,6 +15,9 @@ import { authInput } from '../router/input/auth.input';
 import { jwtDecode } from 'jwt-decode';
 import { sessionsRepository } from '../../sessions/repositories/sessionsRepository';
 import { refreshTokenPayload } from '../types/refreshTokenPayload';
+import { emailExamples } from '../adapters/emailExamples';
+import { usersQueryRepository } from '../../users/repositories/users.query-repository';
+import { NewPasswordInput } from '../router/input/new-password.input';
 
 export const authService = {
   async auth({ loginDto, ip, deviceName }: authInput): Promise<string[]> {
@@ -71,7 +74,10 @@ export const authService = {
     const confirmationCode = crypto.randomUUID();
     await usersService.create(userDto, confirmationCode);
     nodemailerService
-      .sendEmail(userDto.email, confirmationCode)
+      .sendEmail(
+        userDto.email,
+        emailExamples.registrationEmail(confirmationCode),
+      )
       .catch((error) => {
         console.log('Email sending failed', error);
       });
@@ -104,7 +110,41 @@ export const authService = {
       );
     const confirmationCode = crypto.randomUUID();
     await usersRepository.updateConfirmationCode(user._id, confirmationCode);
-    await nodemailerService.sendEmail(email, confirmationCode);
+    await nodemailerService.sendEmail(
+      email,
+      emailExamples.registrationEmail(confirmationCode),
+    );
+  },
+
+  async passwordRecovery(email: string) {
+    const user = await usersQueryRepository.findByEmail(email);
+    if (!user) return;
+
+    const confirmationCode = crypto.randomUUID();
+    await usersRepository.updateRecoveryCode(user._id, confirmationCode);
+    nodemailerService
+      .sendEmail(email, emailExamples.passwordRecoveryEmail(confirmationCode))
+      .catch((error) => {
+        console.log('Email sending failed', error);
+      });
+    return confirmationCode;
+  },
+
+  async passwordRecoveryConfirmation({ code, password }: NewPasswordInput) {
+    const user = await usersRepository.findByRecoveryCodeOrError(code);
+    if (user.passwordRecovery.isUsed)
+      throw new RegistrationConfirmationError(
+        'Confirm code already used',
+        'code',
+      );
+    if (code !== user.passwordRecovery.confirmationCode)
+      throw new RegistrationConfirmationError(
+        'Wrong confirmation code',
+        'code',
+      );
+    await usersRepository.updateRecoveryStatus(user._id);
+    let newPassword = await bcryptService.hashPassword(password);
+    await usersRepository.updatePassword(user._id, newPassword);
   },
 
   async refreshToken(token: string, userId: string, deviceId: string) {

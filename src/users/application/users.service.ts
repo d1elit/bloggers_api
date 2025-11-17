@@ -18,6 +18,13 @@ export const usersService = {
       password: await bcryptService.hashPassword(userDto.password),
       email: userDto.email,
       createdAt: new Date().toISOString(),
+      passwordRecovery: {
+        confirmationCode: confirmationCode || crypto.randomUUID(),
+        isUsed: false,
+        expirationDate: add(new Date(), {
+          hours: 1,
+        }).toISOString(),
+      },
       confirmationEmail: {
         confirmationCode: confirmationCode || crypto.randomUUID(),
         isConfirmed: false,
