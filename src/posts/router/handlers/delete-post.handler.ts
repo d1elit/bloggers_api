@@ -1,8 +1,8 @@
 import { RequestWithParams } from '../../../core/types/requestTypes';
 import { HttpStatus } from '../../../core/types/http-statuses';
 import { Response } from 'express';
-import { postsService } from '../../application/posts.service';
 import { errorsHandler } from '../../../core/errors/errors.handler';
+import { postsService } from '../../../composition-root';
 
 export async function deletePostHandler(
   req: RequestWithParams<{ id: string }>,

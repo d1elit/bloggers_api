@@ -4,8 +4,8 @@ import { HttpStatus } from '../../../core/types/http-statuses';
 import { PostInput } from '../input/post.input';
 import { mapToPostViewModel } from '../mappers/map-to-post-view-model';
 import { PostOutput } from '../output/post.output';
-import { postsService } from '../../application/posts.service';
 import { errorsHandler } from '../../../core/errors/errors.handler';
+import { postsService } from '../../../composition-root';
 
 export async function createPostHandler(
   req: RequestWithBody<PostInput>,

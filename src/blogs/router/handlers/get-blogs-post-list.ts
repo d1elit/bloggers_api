@@ -4,9 +4,11 @@ import { setDefaultSortAndPaginationIfNotExist } from '../../../core/helpers/set
 import { PostQueryInput } from '../../../posts/router/input/post-query.input';
 import { postListPaginatedOutput } from '../../../posts/router/output/post-list-paginated.output';
 import { RequestWithParamsAndQuery } from '../../../core/types/requestTypes';
-import { blogsQueryRepository } from '../../repositories/blogs.query-repository';
-import { postsQueryRepository } from '../../../posts/repositories/posts.query-repository';
 import { HttpStatus } from '../../../core/types/http-statuses';
+import {
+  blogsQueryRepository,
+  postsQueryRepository,
+} from '../../../composition-root';
 
 export async function getBlogsPostList(
   req: RequestWithParamsAndQuery<{ id: string }, PostQueryInput>,

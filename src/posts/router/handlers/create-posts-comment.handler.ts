@@ -1,8 +1,10 @@
 import { errorsHandler } from '../../../core/errors/errors.handler';
 import { Request, Response } from 'express';
-import { postsService } from '../../application/posts.service';
 import { HttpStatus } from '../../../core/types/http-statuses';
-import { commentsQueryRepository } from '../../../comments/repositories/comments.query-repository';
+import {
+  commentsQueryRepository,
+  postsService,
+} from '../../../composition-root';
 
 export async function createPostsCommentHandler(req: Request, res: Response) {
   try {

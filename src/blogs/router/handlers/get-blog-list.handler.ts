@@ -5,7 +5,7 @@ import { setDefaultSortAndPaginationIfNotExist } from '../../../core/helpers/set
 import { BlogListPaginatedOutput } from '../output/blog-list-paginated.output';
 import { RequestWithQuery } from '../../../core/types/requestTypes';
 import { BlogQueryInput } from '../input/blog-query.input';
-import { blogsQueryRepository } from '../../repositories/blogs.query-repository';
+import { blogsQueryRepository } from '../../../composition-root';
 
 export async function getBlogsListHandler(
   req: RequestWithQuery<BlogQueryInput>,

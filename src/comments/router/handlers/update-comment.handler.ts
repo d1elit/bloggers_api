@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { errorsHandler } from '../../../core/errors/errors.handler';
-import { commentsService } from '../../application/comments.service';
 import { HttpStatus } from '../../../core/types/http-statuses';
+import { commentsService } from '../../../composition-root';
 
 export async function updateCommentHandler(req: Request, res: Response) {
   try {

@@ -1,17 +1,23 @@
 import { Post } from '../types/post';
 import { PostInput } from '../router/input/post.input';
 import { WithId } from 'mongodb';
-import { postsRepository } from '../repositories/posts.repository';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
-import { blogsRepository } from '../../blogs/repositories/blogs.repository';
 import { CommentInput } from '../../comments/router/input/comment.input';
-import { commentsRepository } from '../../comments/repositories/comments.repository';
 import { Comment } from '../../comments/types/comment';
 import { usersRepository } from '../../users/repositories/users.repository';
+import { BlogsRepository } from '../../blogs/repositories/blogs.repository';
+import { PostsRepository } from '../repositories/posts.repository';
+import { CommentsRepository } from '../../comments/repositories/comments.repository';
 
-export const postsService = {
+export class PostsService {
+  constructor(
+    public readonly blogsRepository: BlogsRepository,
+    public readonly postsRepository: PostsRepository,
+    public readonly commentsRepository: CommentsRepository,
+  ) {}
+
   async create(dto: PostInput, blogId?: string): Promise<WithId<Post>> {
-    const blog = await blogsRepository.findByIdOrError(dto.blogId);
+    const blog = await this.blogsRepository.findByIdOrError(dto.blogId);
 
     if (!blog) {
       throw new RepositoryNotFoundError(
@@ -28,25 +34,27 @@ export const postsService = {
       createdAt: new Date().toISOString(),
     };
 
-    return await postsRepository.create(newPostDto);
-  },
+    return await this.postsRepository.create(newPostDto);
+  }
+
   async delete(id: string): Promise<void> {
-    await postsRepository.findByIdOrError(id);
-    await postsRepository.delete(id);
+    await this.postsRepository.findByIdOrError(id);
+    await this.postsRepository.delete(id);
     return;
-  },
+  }
+
   async update(id: string, dto: PostInput): Promise<void> {
-    await postsRepository.findByIdOrError(id);
-    await postsRepository.update(id, dto);
+    await this.postsRepository.findByIdOrError(id);
+    await this.postsRepository.update(id, dto);
     return;
-  },
+  }
 
   async createComment(
     postId: string,
     commentDto: CommentInput,
     userId: string,
   ): Promise<string> {
-    const post = await postsRepository.findByIdOrError(postId);
+    const post = await this.postsRepository.findByIdOrError(postId);
     const user = await usersRepository.findByIdOrError(userId);
     if (!post) {
       throw new RepositoryNotFoundError('Post not found');
@@ -60,6 +68,6 @@ export const postsService = {
       postId: post._id.toString(),
       createdAt: new Date().toISOString(),
     };
-    return await commentsRepository.create(newComment);
-  },
-};
+    return await this.commentsRepository.create(newComment);
+  }
+}

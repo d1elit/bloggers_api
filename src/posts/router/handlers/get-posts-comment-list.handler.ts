@@ -3,9 +3,11 @@ import { Response } from 'express';
 import { setDefaultSortAndPaginationIfNotExist } from '../../../core/helpers/set-default-query-params';
 import { RequestWithParamsAndQuery } from '../../../core/types/requestTypes';
 import { CommentQueryInput } from '../../../comments/router/input/comment-query.input';
-import { commentsQueryRepository } from '../../../comments/repositories/comments.query-repository';
 import { HttpStatus } from '../../../core/types/http-statuses';
-import { postsQueryRepository } from '../../repositories/posts.query-repository';
+import {
+  commentsQueryRepository,
+  postsQueryRepository,
+} from '../../../composition-root';
 
 export async function getPostsCommentListHandler(
   req: RequestWithParamsAndQuery<{ id: string }, CommentQueryInput>,

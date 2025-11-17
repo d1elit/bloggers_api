@@ -1,24 +1,28 @@
 import { CommentInput } from '../router/input/comment.input';
-import { commentsRepository } from '../repositories/comments.repository';
+import { CommentsRepository } from '../repositories/comments.repository';
 import { AccessError } from '../../core/errors/domain.errors';
 
-export const commentsService = {
+export class CommentsService {
+  constructor(public readonly commentsRepository: CommentsRepository) {}
+
   async delete(commentId: string, userId: string): Promise<void> {
-    await commentsRepository.findByIdOrError(commentId);
+    await this.commentsRepository.findByIdOrError(commentId);
     await this.isUserOwner(commentId, userId);
-    return await commentsRepository.delete(commentId);
-  },
+    return await this.commentsRepository.delete(commentId);
+  }
+
   async update(commentId: string, userId: string, commentDto: CommentInput) {
-    await commentsRepository.findByIdOrError(commentId);
+    await this.commentsRepository.findByIdOrError(commentId);
     await this.isUserOwner(commentId, userId);
-    await commentsRepository.update(commentId, commentDto);
+    await this.commentsRepository.update(commentId, commentDto);
     return;
-  },
+  }
+
   async isUserOwner(commentId: string, userID: string) {
-    let comment = await commentsRepository.findByIdOrError(commentId);
+    let comment = await this.commentsRepository.findByIdOrError(commentId);
     if (comment.commentatorInfo.userId !== userID) {
       throw new AccessError('Access denied');
     }
     return;
-  },
-};
+  }
+}

@@ -1,10 +1,11 @@
 import { RequestWithParams } from '../../../core/types/requestTypes';
-import { blogsService } from '../../application/blogs.service';
+
 import { Response } from 'express';
 import { PostOutput } from '../../../posts/router/output/post.output';
 import { mapToPostViewModel } from '../../../posts/router/mappers/map-to-post-view-model';
 import { HttpStatus } from '../../../core/types/http-statuses';
 import { errorsHandler } from '../../../core/errors/errors.handler';
+import { blogsService } from '../../../composition-root';
 
 export async function createBlogsPostHandler(
   req: RequestWithParams<{ id: string }>,

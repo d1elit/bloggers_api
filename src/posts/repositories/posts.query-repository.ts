@@ -6,7 +6,7 @@ import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { mapToPostListPaginated } from '../router/mappers/map-to-post-list-paginated';
 import { postListPaginatedOutput } from '../router/output/post-list-paginated.output';
 
-export const postsQueryRepository = {
+export class PostsQueryRepository {
   async findAll(
     queryDto: PostQueryInput,
     blogId?: string,
@@ -52,12 +52,13 @@ export const postsQueryRepository = {
       pageSize: pageSize,
       totalCount,
     });
-  },
+  }
+
   async findByIdOrError(id: string): Promise<WithId<Post>> {
     const res = await postsCollection.findOne({ _id: new ObjectId(id) });
     if (!res) {
       throw new RepositoryNotFoundError('Post not found');
     }
     return res;
-  },
-};
+  }
+}

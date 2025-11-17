@@ -1,9 +1,9 @@
-import { blogsService } from '../../application/blogs.service';
 import { HttpStatus } from '../../../core/types/http-statuses';
 import { Response } from 'express';
 import { RequestWithParamsAndBody } from '../../../core/types/requestTypes';
 import { BlogInput } from '../input/blog.input';
 import { errorsHandler } from '../../../core/errors/errors.handler';
+import { blogsService } from '../../../composition-root';
 
 export async function updateBlogHandler(
   req: RequestWithParamsAndBody<{ id: string }, BlogInput>,

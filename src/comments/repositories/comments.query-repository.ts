@@ -7,18 +7,19 @@ import { mapToCommentListPaginated } from '../router/mappers/map-to-comment-list
 import { CommentListPaginatedOutput } from '../router/output/comment-list-paginated.output';
 import { CommentOutput } from '../router/output/comment.output';
 
-export const commentsQueryRepository = {
+export class CommentsQueryRepository {
   async findByIdOrError(id: string): Promise<CommentOutput> {
     const result = await commentsCollection.findOne({ _id: new ObjectId(id) });
     if (!result) {
       throw new RepositoryNotFoundError('Comment not found');
     }
     return mapToCommentViewModel(result._id, result);
-  },
+  }
 
   async testFindAll() {
     return await commentsCollection.find().toArray();
-  },
+  }
+
   async findAll(
     queryDto: CommentQueryInput,
     postId: string,
@@ -50,5 +51,5 @@ export const commentsQueryRepository = {
       pageSize: pageSize,
       totalCount,
     });
-  },
-};
+  }
+}

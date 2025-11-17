@@ -2,8 +2,8 @@ import { RequestWithParamsAndBody } from '../../../core/types/requestTypes';
 import { Response } from 'express';
 import { HttpStatus } from '../../../core/types/http-statuses';
 import { PostInput } from '../input/post.input';
-import { postsService } from '../../application/posts.service';
 import { errorsHandler } from '../../../core/errors/errors.handler';
+import { postsService } from '../../../composition-root';
 
 export async function updatePostHandler(
   req: RequestWithParamsAndBody<{ id: string }, PostInput>,

@@ -5,7 +5,7 @@ import { setDefaultSortAndPaginationIfNotExist } from '../../../core/helpers/set
 import { PostQueryInput } from '../input/post-query.input';
 import { postListPaginatedOutput } from '../output/post-list-paginated.output';
 import { RequestWithQuery } from '../../../core/types/requestTypes';
-import { postsQueryRepository } from '../../repositories/posts.query-repository';
+import { postsQueryRepository } from '../../../composition-root';
 
 export async function getPostListHandler(
   req: RequestWithQuery<PostQueryInput>,

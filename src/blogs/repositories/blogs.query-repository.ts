@@ -6,7 +6,7 @@ import { BlogQueryInput } from '../router/input/blog-query.input';
 import { mapToBlogViewModel } from '../router/mappers/map-to-blog-list-paginated.util';
 import { BlogListPaginatedOutput } from '../router/output/blog-list-paginated.output';
 
-export const blogsQueryRepository = {
+export class BlogsQueryRepository {
   async findAll(queryDto: BlogQueryInput): Promise<BlogListPaginatedOutput> {
     const {
       pageNumber,
@@ -39,12 +39,13 @@ export const blogsQueryRepository = {
       pageSize: pageSize,
       totalCount,
     });
-  },
+  }
+
   async findByIdOrError(id: string): Promise<WithId<Blog>> {
     const res = await blogsCollection.findOne({ _id: new ObjectId(id) });
     if (!res) {
       throw new RepositoryNotFoundError('blog not exist');
     }
     return res;
-  },
-};
+  }
+}

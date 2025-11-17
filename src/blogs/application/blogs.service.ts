@@ -1,12 +1,17 @@
 import { Blog } from '../types/blog';
 import { BlogInput } from '../router/input/blog.input';
-import { blogsRepository } from '../repositories/blogs.repository';
 import { WithId } from 'mongodb';
 import { Post } from '../../posts/types/post';
-import { postsRepository } from '../../posts/repositories/posts.repository';
 import { PostInput } from '../../posts/router/input/post.input';
+import { BlogsRepository } from '../repositories/blogs.repository';
+import { PostsRepository } from '../../posts/repositories/posts.repository';
 
-export const blogsService = {
+export class BlogsService {
+  constructor(
+    public readonly blogsRepository: BlogsRepository,
+    public readonly postsRepository: PostsRepository,
+  ) {}
+
   async create(dto: BlogInput): Promise<WithId<Blog>> {
     const newBlog: Blog = {
       name: dto.name,
@@ -15,19 +20,22 @@ export const blogsService = {
       createdAt: new Date().toISOString(),
       isMembership: false,
     };
-    return blogsRepository.create(newBlog);
-  },
+    return this.blogsRepository.create(newBlog);
+  }
+
   async delete(id: string): Promise<void> {
-    await blogsRepository.findByIdOrError(id);
-    await blogsRepository.delete(id);
-  },
+    await this.blogsRepository.findByIdOrError(id);
+    await this.blogsRepository.delete(id);
+  }
+
   async update(id: string, dto: BlogInput): Promise<void> {
-    await blogsRepository.findByIdOrError(id);
-    await blogsRepository.update(id, dto);
+    await this.blogsRepository.findByIdOrError(id);
+    await this.blogsRepository.update(id, dto);
     return;
-  },
+  }
+
   async createPost(id: string, dto: PostInput): Promise<WithId<Post>> {
-    const blog = await blogsRepository.findByIdOrError(id);
+    const blog = await this.blogsRepository.findByIdOrError(id);
     const newPostDto: Post = {
       title: dto.title,
       shortDescription: dto.shortDescription,
@@ -36,6 +44,6 @@ export const blogsService = {
       blogName: blog.name,
       createdAt: new Date().toISOString(),
     };
-    return postsRepository.create(newPostDto);
-  },
-};
+    return this.postsRepository.create(newPostDto);
+  }
+}
