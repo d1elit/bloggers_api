@@ -1,11 +1,11 @@
 import { Response } from 'express';
 import { errorsHandler } from '../../../core/errors/errors.handler';
-import { usersQueryRepository } from '../../repositories/users.query-repository';
 import { setDefaultSortAndPaginationIfNotExist } from '../../../core/helpers/set-default-query-params';
 import { RequestWithQuery } from '../../../core/types/requestTypes';
 import { UsersQueryInput } from '../input/user-query.input';
 import { UsersPaginatedOutput } from '../output/users-paginated.output';
 import { HttpStatus } from '../../../core/types/http-statuses';
+import { usersQueryRepository } from '../../../composition-root';
 
 export async function getUserList(
   req: RequestWithQuery<UsersQueryInput>,

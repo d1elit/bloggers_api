@@ -7,7 +7,7 @@ import { ObjectId, WithId } from 'mongodb';
 import { User } from '../types/user';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 
-export const usersQueryRepository = {
+export class UsersQueryRepository {
   async findAll(queryDto: UsersQueryInput): Promise<UsersPaginatedOutput> {
     const {
       pageNumber,
@@ -39,7 +39,7 @@ export const usersQueryRepository = {
     const totalCount = await usersCollection.countDocuments(filter);
     console.log(`totalCount ${totalCount} users`);
     return mapToPostListPaginated(users, { pageNumber, pageSize, totalCount });
-  },
+  }
 
   async findByIdOrError(id: string): Promise<WithId<User> | null> {
     let user = usersCollection.findOne({ _id: new ObjectId(id) });
@@ -47,8 +47,9 @@ export const usersQueryRepository = {
       throw new RepositoryNotFoundError('User not found');
     }
     return user;
-  },
+  }
+
   async findByEmail(email: string): Promise<WithId<User> | null> {
     return usersCollection.findOne({ email: email });
-  },
-};
+  }
+}

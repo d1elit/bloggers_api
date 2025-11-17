@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import { jwtService } from '../adapters/jwt.service';
+import { NextFunction, Request, Response } from 'express';
 import { userIdType } from '../types/userIdType';
 import { errorsHandler } from '../../core/errors/errors.handler';
+import { jwtService } from '../../composition-root';
 
 export const AccsessTokenGuardMiddleware = async (
   req: Request,

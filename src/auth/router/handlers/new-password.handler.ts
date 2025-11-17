@@ -1,8 +1,8 @@
 import { errorsHandler } from '../../../core/errors/errors.handler';
 import { Response } from 'express';
 import { HttpStatus } from '../../../core/types/http-statuses';
-import { authService } from '../../application/auth.service';
 import { RequestWithBody } from '../../../core/types/requestTypes';
+import { authService } from '../../../composition-root';
 
 export async function newPasswordHandler(
   req: RequestWithBody<{ recoveryCode: string; newPassword: string }>,

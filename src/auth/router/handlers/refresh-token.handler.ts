@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { errorsHandler } from '../../../core/errors/errors.handler';
-import { authService } from '../../application/auth.service';
 import { HttpStatus } from '../../../core/types/http-statuses';
+import { authService } from '../../../composition-root';
 
 export async function refreshTokenHandler(req: Request, res: Response) {
   try {

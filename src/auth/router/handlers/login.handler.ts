@@ -3,8 +3,7 @@ import { RequestWithBody } from '../../../core/types/requestTypes';
 import { LoginInput } from '../input/login.input';
 import { HttpStatus } from '../../../core/types/http-statuses';
 import { errorsHandler } from '../../../core/errors/errors.handler';
-import { authService } from '../../application/auth.service';
-import { header } from 'express-validator';
+import { authService } from '../../../composition-root';
 
 export async function loginHandler(
   req: RequestWithBody<LoginInput>,

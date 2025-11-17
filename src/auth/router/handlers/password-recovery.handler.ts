@@ -1,8 +1,8 @@
 import { errorsHandler } from '../../../core/errors/errors.handler';
 import { Response } from 'express';
 import { RequestWithBody } from '../../../core/types/requestTypes';
-import { authService } from '../../application/auth.service';
 import { HttpStatus } from '../../../core/types/http-statuses';
+import { authService } from '../../../composition-root';
 
 export async function passwordRecoveryHandler(
   req: RequestWithBody<{ email: string }>,

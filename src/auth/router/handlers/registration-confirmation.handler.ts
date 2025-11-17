@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { errorsHandler } from '../../../core/errors/errors.handler';
-import { authService } from '../../application/auth.service';
 import { RequestWithBody } from '../../../core/types/requestTypes';
 import { HttpStatus } from '../../../core/types/http-statuses';
+import { authService } from '../../../composition-root';
 
 export async function registrationConfirmationHandler(
   req: RequestWithBody<{ code: string }>,

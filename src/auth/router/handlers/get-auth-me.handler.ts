@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { errorsHandler } from '../../../core/errors/errors.handler';
 import { HttpStatus } from '../../../core/types/http-statuses';
-import { usersQueryRepository } from '../../../users/repositories/users.query-repository';
+import { usersQueryRepository } from '../../../composition-root';
 
 export async function getAuthMeHandler(req: Request, res: Response) {
   try {

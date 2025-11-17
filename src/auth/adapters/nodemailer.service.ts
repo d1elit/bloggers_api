@@ -1,7 +1,7 @@
 import { SETTINGS } from '../../core/settings/settings';
 import nodemailer from 'nodemailer';
 
-export const nodemailerService = {
+export class NodemailerService {
   async sendEmail(email: string, template: string) {
     let transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -22,5 +22,5 @@ export const nodemailerService = {
     } catch (e: unknown) {
       console.log('Sending email failed', e);
     }
-  },
-};
+  }
+}

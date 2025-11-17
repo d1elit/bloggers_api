@@ -4,16 +4,17 @@ import { WithId } from 'mongodb';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { CommentInput } from '../../comments/router/input/comment.input';
 import { Comment } from '../../comments/types/comment';
-import { usersRepository } from '../../users/repositories/users.repository';
 import { BlogsRepository } from '../../blogs/repositories/blogs.repository';
 import { PostsRepository } from '../repositories/posts.repository';
 import { CommentsRepository } from '../../comments/repositories/comments.repository';
+import { UsersRepository } from '../../users/repositories/users.repository';
 
 export class PostsService {
   constructor(
     public readonly blogsRepository: BlogsRepository,
     public readonly postsRepository: PostsRepository,
     public readonly commentsRepository: CommentsRepository,
+    public readonly usersRepository: UsersRepository,
   ) {}
 
   async create(dto: PostInput, blogId?: string): Promise<WithId<Post>> {
@@ -55,7 +56,7 @@ export class PostsService {
     userId: string,
   ): Promise<string> {
     const post = await this.postsRepository.findByIdOrError(postId);
-    const user = await usersRepository.findByIdOrError(userId);
+    const user = await this.usersRepository.findByIdOrError(userId);
     if (!post) {
       throw new RepositoryNotFoundError('Post not found');
     }

@@ -1,7 +1,7 @@
 import { errorsHandler } from '../../../core/errors/errors.handler';
 import { Request, Response } from 'express';
 import { HttpStatus } from '../../../core/types/http-statuses';
-import { authService } from '../../application/auth.service';
+import { authService } from '../../../composition-root';
 
 export async function registrationHandler(req: Request, res: Response) {
   try {

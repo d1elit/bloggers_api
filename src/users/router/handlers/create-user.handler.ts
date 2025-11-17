@@ -2,9 +2,9 @@ import { RequestWithBody } from '../../../core/types/requestTypes';
 import { UserInput } from '../input/user.input';
 import { errorsHandler } from '../../../core/errors/errors.handler';
 import { Response } from 'express';
-import { usersService } from '../../application/users.service';
 import { mapToUsers } from '../mappers/map-to-users-view-model';
 import { HttpStatus } from '../../../core/types/http-statuses';
+import { usersService } from '../../../composition-root';
 
 export async function createUserHandler(
   req: RequestWithBody<UserInput>,

@@ -2,8 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { errorsHandler } from '../../core/errors/errors.handler';
 import { HttpStatus } from '../../core/types/http-statuses';
 import { userIdType } from '../types/userIdType';
-import { jwtService } from '../adapters/jwt.service';
-import { authService } from '../application/auth.service';
+import { authService, jwtService } from '../../composition-root';
 
 export const refreshTokenGuardMiddleware = async (
   req: Request,
