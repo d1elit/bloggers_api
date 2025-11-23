@@ -1,4 +1,6 @@
+import 'reflect-metadata';
 import { CommentsQueryRepository } from './comments/repositories/comments.query-repository';
+
 import { CommentsRepository } from './comments/repositories/comments.repository';
 import { CommentsService } from './comments/application/comments.service';
 import { BlogsRepository } from './blogs/repositories/blogs.repository';
@@ -17,45 +19,84 @@ import { BcryptService } from './auth/adapters/bcrypt.service';
 import { JwtService } from './auth/adapters/jwt.service';
 import { NodemailerService } from './auth/adapters/nodemailer.service';
 
-export const blogsRepository = new BlogsRepository();
-export const blogsQueryRepository = new BlogsQueryRepository();
+import { Container } from 'inversify';
 
-export const postsRepository = new PostsRepository();
-export const postsQueryRepository = new PostsQueryRepository();
+// export const blogsRepository = new BlogsRepository();
+// export const blogsQueryRepository = new BlogsQueryRepository();
+//
+// export const postsRepository = new PostsRepository();
+// export const postsQueryRepository = new PostsQueryRepository();
+//
+// export const commentsQueryRepository = new CommentsQueryRepository();
+// export const commentsRepository = new CommentsRepository();
+//
+// export const usersRepository = new UsersRepository();
+// export const usersQueryRepository = new UsersQueryRepository();
+//
+// export const sessionsRepository = new SessionsRepository();
 
-export const commentsQueryRepository = new CommentsQueryRepository();
-export const commentsRepository = new CommentsRepository();
+// export const blogsService = new BlogsService(blogsRepository, postsRepository);
 
-export const usersRepository = new UsersRepository();
+// export const commentsService = new CommentsService(commentsRepository);
+
+// export const postsService = new PostsService(
+//   blogsRepository,
+//   postsRepository,
+//   commentsRepository,
+//   usersRepository,
+// );
+// export const deviceService = new DevicesService(sessionsRepository);
+//
+// export const jwtService = new JwtService();
+//
+// export const bcryptService = new BcryptService();
+//
+// export const usersService = new UsersService(usersRepository, bcryptService);
+
+// export const nodemailerService = new NodemailerService();
+// export const authService = new AuthService(
+//   usersRepository,
+//   usersQueryRepository,
+//   usersService,
+//   sessionsRepository,
+//   bcryptService,
+//   jwtService,
+//   nodemailerService,
+// );
+
+export const container = new Container();
+container.bind<BlogsRepository>(BlogsRepository).toSelf();
+container.bind<BlogsQueryRepository>(BlogsQueryRepository).toSelf();
+container.bind<PostsRepository>(PostsRepository).toSelf();
+container.bind<PostsQueryRepository>(PostsQueryRepository).toSelf();
+container.bind<CommentsRepository>(CommentsRepository).toSelf();
+container.bind<CommentsQueryRepository>(CommentsQueryRepository).toSelf();
+container.bind<UsersRepository>(UsersRepository).toSelf();
+container.bind<UsersQueryRepository>(UsersQueryRepository).toSelf();
+container.bind<SessionsRepository>(SessionsRepository).toSelf();
+
+container.bind<CommentsService>(CommentsService).toSelf();
+container.bind<AuthService>(AuthService).toSelf();
+container.bind<BcryptService>(BcryptService).toSelf();
+container.bind<JwtService>(JwtService).toSelf();
+container.bind<UsersService>(UsersService).toSelf();
+container.bind<DevicesService>(DevicesService).toSelf();
+container.bind<PostsService>(PostsService).toSelf();
+container.bind<BlogsService>(BlogsService).toSelf();
+container.bind<NodemailerService>(NodemailerService).toSelf();
+
 export const usersQueryRepository = new UsersQueryRepository();
+export const blogsQueryRepository = new BlogsQueryRepository();
+export const postsQueryRepository = new PostsQueryRepository();
+export const commentsQueryRepository = new CommentsQueryRepository();
 
-export const sessionsRepository = new SessionsRepository();
+export const blogsService = container.get(BlogsService);
+export const commentsService = container.get(CommentsService);
+export const postsService = container.get(PostsService);
+export const deviceService = container.get(DevicesService);
 
-export const blogsService = new BlogsService(blogsRepository, postsRepository);
+export const jwtService = container.get(JwtService);
 
-export const commentsService = new CommentsService(commentsRepository);
+export const usersService = container.get(UsersService);
 
-export const postsService = new PostsService(
-  blogsRepository,
-  postsRepository,
-  commentsRepository,
-  usersRepository,
-);
-export const deviceService = new DevicesService(sessionsRepository);
-
-export const jwtService = new JwtService();
-
-export const bcryptService = new BcryptService();
-
-export const usersService = new UsersService(usersRepository, bcryptService);
-
-export const nodemailerService = new NodemailerService();
-export const authService = new AuthService(
-  usersRepository,
-  usersQueryRepository,
-  usersService,
-  sessionsRepository,
-  bcryptService,
-  jwtService,
-  nodemailerService,
-);
+export const authService = container.get(AuthService);

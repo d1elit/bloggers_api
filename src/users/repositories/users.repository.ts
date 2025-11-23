@@ -3,7 +3,9 @@ import { ObjectId, WithId } from 'mongodb';
 import { User } from '../types/user';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { add } from 'date-fns';
+import { injectable } from 'inversify';
 
+@injectable()
 export class UsersRepository {
   async create(newUser: User): Promise<WithId<User>> {
     const insertResult = await usersCollection.insertOne(newUser);

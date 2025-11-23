@@ -5,7 +5,9 @@ import { postsCollection } from '../../db/mongo.db';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { mapToPostListPaginated } from '../router/mappers/map-to-post-list-paginated';
 import { postListPaginatedOutput } from '../router/output/post-list-paginated.output';
+import { injectable } from 'inversify';
 
+@injectable()
 export class PostsQueryRepository {
   async findAll(
     queryDto: PostQueryInput,

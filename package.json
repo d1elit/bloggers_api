@@ -27,10 +27,13 @@
     "express": "^4.21.2",
     "express-rate-limit": "^8.2.1",
     "express-validator": "^7.2.1",
+    "inversify": "^7.10.4",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "mongodb": "^6.20.0",
+    "mongoose": "^9.0.0",
     "nodemailer": "^7.0.9",
+    "reflect-metadata": "^0.2.2",
     "vercel": "^48.8.0"
   },
   "devDependencies": {

@@ -3,7 +3,10 @@ import { PostInput } from '../router/input/post.input';
 import { ObjectId, WithId } from 'mongodb';
 import { postsCollection } from '../../db/mongo.db';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
+import 'reflect-metadata';
+import { injectable } from 'inversify';
 
+@injectable()
 export class PostsRepository {
   async create(newPost: Post): Promise<WithId<Post>> {
     const insertResult = await postsCollection.insertOne(newPost);

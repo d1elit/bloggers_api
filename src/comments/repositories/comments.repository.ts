@@ -3,7 +3,9 @@ import { Comment } from '../types/comment';
 import { ObjectId } from 'mongodb';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { CommentInput } from '../router/input/comment.input';
+import { injectable } from 'inversify';
 
+@injectable()
 export class CommentsRepository {
   async create(newComment: Comment): Promise<string> {
     const insertResult = await commentsCollection.insertOne(newComment);

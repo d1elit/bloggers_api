@@ -2,7 +2,9 @@ import { SETTINGS } from '../../core/settings/settings';
 import jwt from 'jsonwebtoken';
 import { LoginError } from '../../core/errors/domain.errors';
 import { refreshTokenPayload } from '../types/refreshTokenPayload';
+import { injectable } from 'inversify';
 
+@injectable()
 export class JwtService {
   async createAccessToken(userId: string): Promise<string> {
     return jwt.sign({ userId }, SETTINGS.AC_SECRET, {

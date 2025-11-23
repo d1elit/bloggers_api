@@ -9,8 +9,18 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-//    "types": ["node", "express"]
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+    //    "types": ["node", "express"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["__tests__", "dist", "node_modules"]
+  //...
+
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "__tests__",
+    "dist",
+    "node_modules"
+  ]
 }

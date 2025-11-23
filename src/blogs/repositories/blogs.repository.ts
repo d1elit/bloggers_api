@@ -3,7 +3,9 @@ import { BlogInput } from '../router/input/blog.input';
 import { ObjectId, WithId } from 'mongodb';
 import { blogsCollection } from '../../db/mongo.db';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
+import { injectable } from 'inversify';
 
+@injectable()
 export class BlogsRepository {
   async create(newBlog: Blog): Promise<WithId<Blog>> {
     const insertResult = await blogsCollection.insertOne(newBlog);

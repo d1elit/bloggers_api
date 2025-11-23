@@ -1,11 +1,15 @@
+import 'reflect-metadata';
 import { Blog } from '../types/blog';
+
 import { BlogInput } from '../router/input/blog.input';
 import { WithId } from 'mongodb';
 import { Post } from '../../posts/types/post';
 import { PostInput } from '../../posts/router/input/post.input';
 import { BlogsRepository } from '../repositories/blogs.repository';
 import { PostsRepository } from '../../posts/repositories/posts.repository';
+import { injectable } from 'inversify';
 
+@injectable()
 export class BlogsService {
   constructor(
     public readonly blogsRepository: BlogsRepository,

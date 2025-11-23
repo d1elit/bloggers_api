@@ -5,7 +5,9 @@ import {
   AccessError,
   RepositoryNotFoundError,
 } from '../../core/errors/domain.errors';
+import { injectable } from 'inversify';
 
+@injectable()
 export class DevicesService {
   constructor(public readonly sessionsRepository: SessionsRepository) {}
 

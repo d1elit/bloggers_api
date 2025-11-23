@@ -5,7 +5,9 @@ import { WithId } from 'mongodb';
 import { add } from 'date-fns';
 import { UsersRepository } from '../repositories/users.repository';
 import { BcryptService } from '../../auth/adapters/bcrypt.service';
+import { injectable } from 'inversify';
 
+@injectable()
 export class UsersService {
   constructor(
     public readonly usersRepository: UsersRepository,

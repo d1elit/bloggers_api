@@ -1,7 +1,9 @@
 import { CommentInput } from '../router/input/comment.input';
 import { CommentsRepository } from '../repositories/comments.repository';
 import { AccessError } from '../../core/errors/domain.errors';
+import { injectable } from 'inversify';
 
+@injectable()
 export class CommentsService {
   constructor(public readonly commentsRepository: CommentsRepository) {}
 

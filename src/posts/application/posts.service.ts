@@ -8,7 +8,9 @@ import { BlogsRepository } from '../../blogs/repositories/blogs.repository';
 import { PostsRepository } from '../repositories/posts.repository';
 import { CommentsRepository } from '../../comments/repositories/comments.repository';
 import { UsersRepository } from '../../users/repositories/users.repository';
+import { injectable } from 'inversify';
 
+@injectable()
 export class PostsService {
   constructor(
     public readonly blogsRepository: BlogsRepository,

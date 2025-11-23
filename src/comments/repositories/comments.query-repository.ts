@@ -6,7 +6,9 @@ import { CommentQueryInput } from '../router/input/comment-query.input';
 import { mapToCommentListPaginated } from '../router/mappers/map-to-comment-list-paginated';
 import { CommentListPaginatedOutput } from '../router/output/comment-list-paginated.output';
 import { CommentOutput } from '../router/output/comment.output';
+import { injectable } from 'inversify';
 
+@injectable()
 export class CommentsQueryRepository {
   async findByIdOrError(id: string): Promise<CommentOutput> {
     const result = await commentsCollection.findOne({ _id: new ObjectId(id) });

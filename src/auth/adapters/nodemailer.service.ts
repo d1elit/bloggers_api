@@ -1,6 +1,8 @@
 import { SETTINGS } from '../../core/settings/settings';
 import nodemailer from 'nodemailer';
+import { injectable } from 'inversify';
 
+@injectable()
 export class NodemailerService {
   async sendEmail(email: string, template: string) {
     let transporter = nodemailer.createTransport({

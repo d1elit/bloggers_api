@@ -6,7 +6,9 @@ import { UsersPaginatedOutput } from '../router/output/users-paginated.output';
 import { ObjectId, WithId } from 'mongodb';
 import { User } from '../types/user';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
+import { injectable } from 'inversify';
 
+@injectable()
 export class UsersQueryRepository {
   async findAll(queryDto: UsersQueryInput): Promise<UsersPaginatedOutput> {
     const {

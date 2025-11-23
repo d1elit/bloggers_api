@@ -1,6 +1,8 @@
 import { UserSession } from '../types/userSession';
 import { sessionsCollection } from '../../db/mongo.db';
+import { injectable } from 'inversify';
 
+@injectable()
 export class SessionsRepository {
   async create(sessionDto: UserSession) {
     await sessionsCollection.insertOne(sessionDto);

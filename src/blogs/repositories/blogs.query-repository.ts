@@ -5,7 +5,9 @@ import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { BlogQueryInput } from '../router/input/blog-query.input';
 import { mapToBlogViewModel } from '../router/mappers/map-to-blog-list-paginated.util';
 import { BlogListPaginatedOutput } from '../router/output/blog-list-paginated.output';
+import { injectable } from 'inversify';
 
+@injectable()
 export class BlogsQueryRepository {
   async findAll(queryDto: BlogQueryInput): Promise<BlogListPaginatedOutput> {
     const {

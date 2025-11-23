@@ -18,7 +18,9 @@ import { UsersQueryRepository } from '../../users/repositories/users.query-repos
 import { NewPasswordInput } from '../router/input/new-password.input';
 import { UsersService } from '../../users/application/users.service';
 import { BcryptService } from '../adapters/bcrypt.service';
+import { injectable } from 'inversify';
 
+@injectable()
 export class AuthService {
   constructor(
     public readonly usersRepository: UsersRepository,
