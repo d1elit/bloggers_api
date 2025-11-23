@@ -1,23 +1,24 @@
-import { getDeviceListHandler } from './handlers/get-device-list.handler';
 import { Router } from 'express';
-import { deleteDeviceHandler } from './handlers/delete-device.handler';
-import { deleteDeviceExceptCurrentHandler } from './handlers/delete-device-except-current.handler';
 import { refreshTokenGuardMiddleware } from '../../auth/guards/refresh.token.guard-middleware';
+import { container } from '../../composition-root';
+import { DevicesController } from './devices.controller';
+
+const devicesController = container.get(DevicesController);
 
 export const devicesRouter = Router();
 
 devicesRouter.get(
   '/devices',
   refreshTokenGuardMiddleware,
-  getDeviceListHandler,
+  devicesController.getDeviceList.bind(devicesController),
 );
 devicesRouter.delete(
   '/devices/:deviceId',
   refreshTokenGuardMiddleware,
-  deleteDeviceHandler,
+  devicesController.deleteDevice.bind(devicesController),
 );
 devicesRouter.delete(
   '/devices',
   refreshTokenGuardMiddleware,
-  deleteDeviceExceptCurrentHandler,
+  devicesController.deleteDeviceExceptCurrent.bind(devicesController),
 );

@@ -1,26 +1,27 @@
-import { getUserList } from './handlers/get-user-list.handler';
 import { Router } from 'express';
-import { createUserHandler } from './handlers/create-user.handler';
-import { deleteUserHandler } from './handlers/delete-user.handler';
 import { userInputDtoValidation } from './user.input-dto.validation-middlewares';
 import { superAdminGuardMiddleware } from '../../auth/guards/super-admin.guard-middleware';
 import { inputValidationResultMiddleware } from '../../core/middlewares/validation/input-validtion-result.middleware';
 import { idValidation } from '../../core/middlewares/validation/params-id.validation-middleware';
+import { container } from '../../composition-root';
+import { UsersController } from './users.controller';
+
+const usersController = container.get(UsersController);
 
 export const usersRouter = Router();
 
-usersRouter.get('', getUserList);
+usersRouter.get('', usersController.getUserList.bind(usersController));
 usersRouter.post(
   '',
   superAdminGuardMiddleware,
   userInputDtoValidation,
   inputValidationResultMiddleware,
-  createUserHandler,
+  usersController.createUser.bind(usersController),
 );
 usersRouter.delete(
   '/:id',
   superAdminGuardMiddleware,
   idValidation,
   inputValidationResultMiddleware,
-  deleteUserHandler,
+  usersController.deleteUser.bind(usersController),
 );

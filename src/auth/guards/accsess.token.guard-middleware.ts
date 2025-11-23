@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { userIdType } from '../types/userIdType';
 import { errorsHandler } from '../../core/errors/errors.handler';
-import { jwtService } from '../../composition-root';
+import { container } from '../../composition-root';
+import { JwtService } from '../adapters/jwt.service';
 
+const jwtService = container.get(JwtService);
 export const AccsessTokenGuardMiddleware = async (
   req: Request,
   res: Response,
@@ -17,6 +19,7 @@ export const AccsessTokenGuardMiddleware = async (
     const payload = await jwtService.verifyToken(token);
 
     if (payload) {
+      console.log('ALL WE HERE 1', payload);
       const { userId } = payload;
 
       req.user = { userId: userId } as userIdType;

@@ -22,6 +22,10 @@ import { NodemailerService } from './auth/adapters/nodemailer.service';
 import { Container } from 'inversify';
 import { BlogsController } from './blogs/router/blogs.controller';
 import { AuthController } from './auth/router/auth.controller';
+import { CommentsController } from './comments/router/comments.controller';
+import { PostsController } from './posts/router/posts.controller';
+import { UsersController } from './users/router/users.controller';
+import { DevicesController } from './devices/router/devices.controller';
 
 export const container = new Container();
 container.bind<BlogsRepository>(BlogsRepository).toSelf();
@@ -45,19 +49,23 @@ container.bind<BlogsService>(BlogsService).toSelf();
 container.bind<NodemailerService>(NodemailerService).toSelf();
 container.bind<BlogsController>(BlogsController).toSelf();
 container.bind<AuthController>(AuthController).toSelf();
+container.bind<CommentsController>(CommentsController).toSelf();
+container.bind<PostsController>(PostsController).toSelf();
+container.bind<UsersController>(UsersController).toSelf();
+container.bind<DevicesController>(DevicesController).toSelf();
 
-export const usersQueryRepository = new UsersQueryRepository();
-// export const blogsQueryRepository = new BlogsQueryRepository();
-export const postsQueryRepository = new PostsQueryRepository();
-export const commentsQueryRepository = new CommentsQueryRepository();
-
-// export const blogsService = container.get(BlogsService);
-export const commentsService = container.get(CommentsService);
-export const postsService = container.get(PostsService);
-export const deviceService = container.get(DevicesService);
-
-export const jwtService = container.get(JwtService);
-
-export const usersService = container.get(UsersService);
-
-// export const authService = container.get(AuthService);
+// export const usersQueryRepository = new UsersQueryRepository();
+// // export const blogsQueryRepository = new BlogsQueryRepository();
+// export const postsQueryRepository = new PostsQueryRepository();
+// export const commentsQueryRepository = new CommentsQueryRepository();
+//
+// // export const blogsService = container.get(BlogsService);
+// export const commentsService = container.get(CommentsService);
+// export const postsService = container.get(PostsService);
+// export const deviceService = container.get(DevicesService);
+//
+// export const jwtService = container.get(JwtService);
+//
+// export const usersService = container.get(UsersService);
+//
+// // export const authService = container.get(AuthService);
