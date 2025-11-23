@@ -5,3 +5,4 @@ dist
 src/videos
 #src/core/settings/
 .vercel
+GEMINI.md

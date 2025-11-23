@@ -20,6 +20,7 @@ import { JwtService } from './auth/adapters/jwt.service';
 import { NodemailerService } from './auth/adapters/nodemailer.service';
 
 import { Container } from 'inversify';
+import { BlogsController } from './blogs/router/blogs.controller';
 
 // export const blogsRepository = new BlogsRepository();
 // export const blogsQueryRepository = new BlogsQueryRepository();
@@ -84,13 +85,14 @@ container.bind<DevicesService>(DevicesService).toSelf();
 container.bind<PostsService>(PostsService).toSelf();
 container.bind<BlogsService>(BlogsService).toSelf();
 container.bind<NodemailerService>(NodemailerService).toSelf();
+container.bind<BlogsController>(BlogsController).toSelf();
 
 export const usersQueryRepository = new UsersQueryRepository();
-export const blogsQueryRepository = new BlogsQueryRepository();
+// export const blogsQueryRepository = new BlogsQueryRepository();
 export const postsQueryRepository = new PostsQueryRepository();
 export const commentsQueryRepository = new CommentsQueryRepository();
 
-export const blogsService = container.get(BlogsService);
+// export const blogsService = container.get(BlogsService);
 export const commentsService = container.get(CommentsService);
 export const postsService = container.get(PostsService);
 export const deviceService = container.get(DevicesService);
