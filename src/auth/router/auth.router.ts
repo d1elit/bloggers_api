@@ -1,24 +1,19 @@
 import { Router } from 'express';
-import { loginHandler } from './handlers/login.handler';
 import { loginInputDtoValidation } from '../middlewares/login.input-dto.validation-middlware';
 import { inputValidationResultMiddleware } from '../../core/middlewares/validation/input-validtion-result.middleware';
-import { getAuthMeHandler } from './handlers/get-auth-me.handler';
 import { AccsessTokenGuardMiddleware } from '../guards/accsess.token.guard-middleware';
-import { registrationHandler } from './handlers/registration.handler';
 import {
   confirmationInputDtoValidationMiddleware,
   emailInputDtoValidationMiddleware,
   newPasswordInputDtoValidationMiddleware,
   registrationInputDtoValidationMiddleware,
 } from '../middlewares/registration.input-dto.validation-middleware';
-import { registrationConfirmationHandler } from './handlers/registration-confirmation.handler';
-import { emailResendingHandler } from './handlers/email-resending.handler';
 import { refreshTokenGuardMiddleware } from '../guards/refresh.token.guard-middleware';
-import { refreshTokenHandler } from './handlers/refresh-token.handler';
-import { logoutHandler } from './handlers/logout.handler';
-import { passwordRecoveryHandler } from './handlers/password-recovery.handler';
-import { newPasswordHandler } from './handlers/new-password.handler';
-import rateLimit from 'express-rate-limit'; // export const loginRateLimiter = rateLimit({
+import rateLimit from 'express-rate-limit';
+import { container } from '../../composition-root';
+import { AuthController } from './auth.controller';
+
+const authController = container.get(AuthController); // export const loginRateLimiter = rateLimit({
 
 // export const loginRateLimiter = rateLimit({
 //   windowMs: 10 * 1000, // 10 секунд
@@ -74,7 +69,7 @@ authRouter.post(
   loginInputDtoValidation,
   // loginRateLimiter,
   inputValidationResultMiddleware,
-  loginHandler,
+  authController.login.bind(authController),
 );
 
 authRouter.post(
@@ -82,7 +77,7 @@ authRouter.post(
   // registerRateLimiter,
   registrationInputDtoValidationMiddleware,
   inputValidationResultMiddleware,
-  registrationHandler,
+  authController.registration.bind(authController),
 );
 
 authRouter.post(
@@ -90,7 +85,7 @@ authRouter.post(
   // confirmationRateLimiter,
   confirmationInputDtoValidationMiddleware,
   inputValidationResultMiddleware,
-  registrationConfirmationHandler,
+  authController.registrationConfirmation.bind(authController),
 );
 
 authRouter.post(
@@ -98,28 +93,36 @@ authRouter.post(
   // emailRateLimiter,
   emailInputDtoValidationMiddleware,
   inputValidationResultMiddleware,
-  emailResendingHandler,
+  authController.emailResending.bind(authController),
 );
 
-authRouter.get('/me', AccsessTokenGuardMiddleware, getAuthMeHandler);
+authRouter.get(
+  '/me',
+  AccsessTokenGuardMiddleware,
+  authController.getAuthMe.bind(authController),
+);
 authRouter.post(
   '/refresh-token',
   refreshTokenGuardMiddleware,
-  refreshTokenHandler,
+  authController.refreshToken.bind(authController),
 );
-authRouter.post('/logout', refreshTokenGuardMiddleware, logoutHandler);
+authRouter.post(
+  '/logout',
+  refreshTokenGuardMiddleware,
+  authController.logout.bind(authController),
+);
 
 authRouter.post(
   '/password-recovery',
   passwordRecRateLimiter,
   emailInputDtoValidationMiddleware,
   inputValidationResultMiddleware,
-  passwordRecoveryHandler,
+  authController.passwordRecovery.bind(authController),
 );
 authRouter.post(
   '/new-password',
   newPasswordInputDtoValidationMiddleware,
   newPasswordRateLimiter,
   inputValidationResultMiddleware,
-  newPasswordHandler,
+  authController.newPassword.bind(authController),
 );

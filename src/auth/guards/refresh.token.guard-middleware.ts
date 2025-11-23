@@ -2,8 +2,11 @@ import { NextFunction, Request, Response } from 'express';
 import { errorsHandler } from '../../core/errors/errors.handler';
 import { HttpStatus } from '../../core/types/http-statuses';
 import { userIdType } from '../types/userIdType';
-import { authService, jwtService } from '../../composition-root';
-
+import { container } from '../../composition-root';
+import { AuthService } from '../application/auth.service';
+import { JwtService } from '../adapters/jwt.service';
+const authService = container.get(AuthService); // <--- Берем из контейнера
+const jwtService = container.get(JwtService);
 export const refreshTokenGuardMiddleware = async (
   req: Request,
   res: Response,
@@ -23,7 +26,7 @@ export const refreshTokenGuardMiddleware = async (
     // await authService.ensureTokenNotRevoked(refreshToken);
 
     await authService.ensureRefreshTokenValid(payload, refreshToken);
-    // console.log(payload);
+
     req.user = {
       userId: payload.userId,
       deviceId: payload.deviceId,

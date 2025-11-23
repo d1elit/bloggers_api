@@ -21,49 +21,7 @@ import { NodemailerService } from './auth/adapters/nodemailer.service';
 
 import { Container } from 'inversify';
 import { BlogsController } from './blogs/router/blogs.controller';
-
-// export const blogsRepository = new BlogsRepository();
-// export const blogsQueryRepository = new BlogsQueryRepository();
-//
-// export const postsRepository = new PostsRepository();
-// export const postsQueryRepository = new PostsQueryRepository();
-//
-// export const commentsQueryRepository = new CommentsQueryRepository();
-// export const commentsRepository = new CommentsRepository();
-//
-// export const usersRepository = new UsersRepository();
-// export const usersQueryRepository = new UsersQueryRepository();
-//
-// export const sessionsRepository = new SessionsRepository();
-
-// export const blogsService = new BlogsService(blogsRepository, postsRepository);
-
-// export const commentsService = new CommentsService(commentsRepository);
-
-// export const postsService = new PostsService(
-//   blogsRepository,
-//   postsRepository,
-//   commentsRepository,
-//   usersRepository,
-// );
-// export const deviceService = new DevicesService(sessionsRepository);
-//
-// export const jwtService = new JwtService();
-//
-// export const bcryptService = new BcryptService();
-//
-// export const usersService = new UsersService(usersRepository, bcryptService);
-
-// export const nodemailerService = new NodemailerService();
-// export const authService = new AuthService(
-//   usersRepository,
-//   usersQueryRepository,
-//   usersService,
-//   sessionsRepository,
-//   bcryptService,
-//   jwtService,
-//   nodemailerService,
-// );
+import { AuthController } from './auth/router/auth.controller';
 
 export const container = new Container();
 container.bind<BlogsRepository>(BlogsRepository).toSelf();
@@ -86,6 +44,7 @@ container.bind<PostsService>(PostsService).toSelf();
 container.bind<BlogsService>(BlogsService).toSelf();
 container.bind<NodemailerService>(NodemailerService).toSelf();
 container.bind<BlogsController>(BlogsController).toSelf();
+container.bind<AuthController>(AuthController).toSelf();
 
 export const usersQueryRepository = new UsersQueryRepository();
 // export const blogsQueryRepository = new BlogsQueryRepository();
@@ -101,4 +60,4 @@ export const jwtService = container.get(JwtService);
 
 export const usersService = container.get(UsersService);
 
-export const authService = container.get(AuthService);
+// export const authService = container.get(AuthService);
