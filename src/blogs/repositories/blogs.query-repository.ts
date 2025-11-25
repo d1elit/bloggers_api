@@ -6,6 +6,7 @@ import { BlogQueryInput } from '../router/input/blog-query.input';
 import { mapToBlogViewModel } from '../router/mappers/map-to-blog-list-paginated.util';
 import { BlogListPaginatedOutput } from '../router/output/blog-list-paginated.output';
 import { injectable } from 'inversify';
+import { BlogDocument, BlogModel } from '../Schemas/blog.schema';
 
 @injectable()
 export class BlogsQueryRepository {
@@ -27,14 +28,12 @@ export class BlogsQueryRepository {
       filter.description = { $regex: searchDescriptionTerm, $options: 'i' };
     }
 
-    const items = await blogsCollection
-      .find(filter)
+    const items = await BlogModel.find(filter)
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
-      .limit(+pageSize)
-      .toArray();
+      .limit(+pageSize);
 
-    const totalCount = await blogsCollection.countDocuments(filter);
+    const totalCount = await BlogModel.countDocuments(filter);
 
     return mapToBlogViewModel(items, {
       pageNumber: pageNumber,
@@ -43,11 +42,12 @@ export class BlogsQueryRepository {
     });
   }
 
-  async findByIdOrError(id: string): Promise<WithId<Blog>> {
-    const res = await blogsCollection.findOne({ _id: new ObjectId(id) });
+  async findByIdOrError(id: string): Promise<BlogDocument> {
+    const res = await BlogModel.findById(id);
     if (!res) {
       throw new RepositoryNotFoundError('blog not exist');
     }
+
     return res;
   }
 }

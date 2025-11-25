@@ -34,8 +34,11 @@ export class BlogsController {
 
   async createBlog(req: RequestWithBody<BlogInput>, res: Response) {
     try {
-      const createdBlog = await this.blogsService.create(req.body);
-      const blogViewModel: BlogOutput = mapToBlogViewModel(createdBlog);
+      const createdBlogId = await this.blogsService.create(req.body);
+
+      const blogViewModel =
+        await this.blogsQueryRepository.findByIdOrError(createdBlogId);
+
       res.status(HttpStatus.Created).send(blogViewModel);
     } catch (e: unknown) {
       errorsHandler(e, res);
