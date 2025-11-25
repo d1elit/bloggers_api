@@ -1,30 +1,28 @@
 import { Post } from '../types/post';
 import { PostInput } from '../router/input/post.input';
-import { ObjectId, WithId } from 'mongodb';
-import { postsCollection } from '../../db/mongo.db';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import 'reflect-metadata';
 import { injectable } from 'inversify';
+import { PostDocument, PostModel } from '../Schemas/post.schema';
 
 @injectable()
 export class PostsRepository {
-  async create(newPost: Post): Promise<WithId<Post>> {
-    const insertResult = await postsCollection.insertOne(newPost);
-    return { ...newPost, _id: insertResult.insertedId };
+  async create(newPost: Post): Promise<PostDocument> {
+    return PostModel.create(newPost);
   }
 
   async delete(id: string): Promise<void> {
-    await postsCollection.deleteOne({ _id: new ObjectId(id) });
+    await PostModel.deleteOne({ _id: id });
     return;
   }
 
   async update(id: string, dto: PostInput): Promise<void> {
-    await postsCollection.updateOne({ _id: new ObjectId(id) }, { $set: dto });
+    await PostModel.updateOne({ _id: id }, { $set: dto });
     return;
   }
 
-  async findByIdOrError(id: string): Promise<WithId<Post>> {
-    const res = await postsCollection.findOne({ _id: new ObjectId(id) });
+  async findByIdOrError(id: string): Promise<PostDocument> {
+    const res = await PostModel.findById(id);
     if (!res) {
       throw new RepositoryNotFoundError('Post not found');
     }

@@ -1,5 +1,3 @@
-import { commentsCollection } from '../../db/mongo.db';
-import { ObjectId } from 'mongodb';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { mapToCommentViewModel } from '../router/mappers/map-to-comment-view-model';
 import { CommentQueryInput } from '../router/input/comment-query.input';
@@ -7,19 +5,20 @@ import { mapToCommentListPaginated } from '../router/mappers/map-to-comment-list
 import { CommentListPaginatedOutput } from '../router/output/comment-list-paginated.output';
 import { CommentOutput } from '../router/output/comment.output';
 import { injectable } from 'inversify';
+import { CommentModel } from '../Schemas/comment.schema';
 
 @injectable()
 export class CommentsQueryRepository {
   async findByIdOrError(id: string): Promise<CommentOutput> {
-    const result = await commentsCollection.findOne({ _id: new ObjectId(id) });
+    const result = await CommentModel.findById(id);
     if (!result) {
       throw new RepositoryNotFoundError('Comment not found');
     }
-    return mapToCommentViewModel(result._id, result);
+    return mapToCommentViewModel(result);
   }
 
   async testFindAll() {
-    return await commentsCollection.find().toArray();
+    return CommentModel.find();
   }
 
   async findAll(
@@ -31,22 +30,20 @@ export class CommentsQueryRepository {
     const skip = (+pageNumber - 1) * +pageSize;
     const filter: any = {};
     if (postId) {
-      filter.postId = { $regex: postId, $options: 'i' };
+      filter.postId = postId;
     }
     if (createdAt) {
-      filter.title = { $regex: createdAt, $options: 'i' };
+      filter.createdAt = { $regex: createdAt, $options: 'i' };
     }
     if (content) {
       filter.content = { $regex: content, $options: 'i' };
     }
-    const items = await commentsCollection
-      .find(filter)
+    const items = await CommentModel.find(filter)
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
-      .limit(+pageSize)
-      .toArray();
+      .limit(+pageSize);
 
-    const totalCount = await commentsCollection.countDocuments(filter);
+    const totalCount = await CommentModel.countDocuments(filter);
 
     return mapToCommentListPaginated(items, {
       pageNumber: pageNumber,

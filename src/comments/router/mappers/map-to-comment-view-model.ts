@@ -1,13 +1,11 @@
 import { ObjectId } from 'mongodb';
 import { Comment } from '../../types/comment';
 import { CommentOutput } from '../output/comment.output';
+import { CommentDocument } from '../../Schemas/comment.schema';
 
-export function mapToCommentViewModel(
-  id: ObjectId,
-  comment: Comment,
-): CommentOutput {
+export function mapToCommentViewModel(comment: CommentDocument): CommentOutput {
   return {
-    id: id.toString(),
+    id: comment._id.toString(),
     content: comment.content,
     commentatorInfo: {
       userLogin: comment.commentatorInfo.userLogin,

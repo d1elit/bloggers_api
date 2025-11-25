@@ -9,6 +9,7 @@ import { PostsRepository } from '../repositories/posts.repository';
 import { CommentsRepository } from '../../comments/repositories/comments.repository';
 import { UsersRepository } from '../../users/repositories/users.repository';
 import { injectable } from 'inversify';
+import { PostDocument } from '../Schemas/post.schema';
 
 @injectable()
 export class PostsService {
@@ -19,7 +20,7 @@ export class PostsService {
     public readonly usersRepository: UsersRepository,
   ) {}
 
-  async create(dto: PostInput, blogId?: string): Promise<WithId<Post>> {
+  async create(dto: PostInput, blogId?: string): Promise<PostDocument> {
     const blog = await this.blogsRepository.findByIdOrError(dto.blogId);
 
     if (!blog) {

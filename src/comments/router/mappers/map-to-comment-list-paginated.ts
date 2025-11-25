@@ -2,9 +2,10 @@ import { WithId } from 'mongodb';
 import { CommentListPaginatedOutput } from '../output/comment-list-paginated.output';
 import { CommentOutput } from '../output/comment.output';
 import { Comment } from '../../types/comment';
+import { CommentDocument } from '../../Schemas/comment.schema';
 
 export function mapToCommentListPaginated(
-  comments: WithId<Comment>[],
+  comments: CommentDocument[],
   meta: { pageNumber: number; pageSize: number; totalCount: number },
 ): CommentListPaginatedOutput {
   return {

@@ -1,11 +1,10 @@
 import { PostQueryInput } from '../router/input/post-query.input';
-import { ObjectId, WithId } from 'mongodb';
 import { Post } from '../types/post';
-import { postsCollection } from '../../db/mongo.db';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { mapToPostListPaginated } from '../router/mappers/map-to-post-list-paginated';
 import { postListPaginatedOutput } from '../router/output/post-list-paginated.output';
 import { injectable } from 'inversify';
+import { PostDocument, PostModel } from '../Schemas/post.schema';
 
 @injectable()
 export class PostsQueryRepository {
@@ -40,14 +39,12 @@ export class PostsQueryRepository {
     if (blogName) {
       filter.blogName = { $regex: blogName, $options: 'i' };
     }
-    const items = await postsCollection
-      .find(filter)
+    const items = await PostModel.find(filter)
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
-      .limit(+pageSize)
-      .toArray();
+      .limit(+pageSize);
 
-    const totalCount = await postsCollection.countDocuments(filter);
+    const totalCount = await PostModel.countDocuments(filter);
 
     return mapToPostListPaginated(items, {
       pageNumber: pageNumber,
@@ -56,8 +53,8 @@ export class PostsQueryRepository {
     });
   }
 
-  async findByIdOrError(id: string): Promise<WithId<Post>> {
-    const res = await postsCollection.findOne({ _id: new ObjectId(id) });
+  async findByIdOrError(id: string): Promise<PostDocument> {
+    const res = await PostModel.findById(id);
     if (!res) {
       throw new RepositoryNotFoundError('Post not found');
     }

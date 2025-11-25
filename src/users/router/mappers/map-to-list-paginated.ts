@@ -1,9 +1,10 @@
 import { WithId } from 'mongodb';
 import { User } from '../../types/user';
 import { UsersPaginatedOutput } from '../output/users-paginated.output';
+import { UserDocument } from '../../Schemas/user.schema';
 
 export function mapToPostListPaginated(
-  users: WithId<User>[],
+  users: UserDocument[],
   meta: { pageNumber: number; pageSize: number; totalCount: number },
 ): UsersPaginatedOutput {
   return {

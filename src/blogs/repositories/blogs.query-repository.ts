@@ -1,6 +1,3 @@
-import { Blog } from '../types/blog';
-import { ObjectId, WithId } from 'mongodb';
-import { blogsCollection } from '../../db/mongo.db';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { BlogQueryInput } from '../router/input/blog-query.input';
 import { mapToBlogViewModel } from '../router/mappers/map-to-blog-list-paginated.util';

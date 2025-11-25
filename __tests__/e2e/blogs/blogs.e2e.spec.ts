@@ -14,20 +14,26 @@ import { getBlogById } from '../../utils/blogs/get-blog-by-id';
 import { BlogOutput } from '../../../src/blogs/router/output/blog.output';
 import { createPost } from '../../utils/posts/create-post';
 import { getPostById } from '../../utils/posts/get-post-by-id';
+import mongoose from 'mongoose';
 
 describe('BLOGS_TESTS', () => {
   const app = express();
   setupApp(app);
-
+  const mongoURI = 'mongodb://0.0.0.0:27017/learning';
   const adminToken = generateBasicAuthToken();
   beforeAll(async () => {
-    await runDB('mongodb://localhost:27017/db-test');
+    await mongoose.connect(mongoURI);
     await clearDb(app);
   });
   afterAll(async () => {
-    await stopDb();
+    await mongoose.connection.close();
   });
-
+  describe('GET blogs', () => {
+    it('+ GET blogs', async () => {
+      const res_ = await request(app).get('/blogs').expect(200);
+      expect(res_.body.items.length).toBe(0);
+    });
+  });
   describe('✅ POST /blogs', () => {
     it('POST /blog: Should create a blog; ', async () => {
       const newBlog: BlogInput = {

@@ -31,7 +31,7 @@ export class PostsController {
   async createPost(req: RequestWithBody<PostInput>, res: Response) {
     try {
       const createdPost = await this.postsService.create(req.body);
-      const postViewModel: PostOutput = mapToPostViewModel(createdPost);
+      const postViewModel = mapToPostViewModel(createdPost);
       res.status(HttpStatus.Created).send(postViewModel);
     } catch (e: unknown) {
       errorsHandler(e, res);

@@ -9,6 +9,7 @@ import { BlogsRepository } from '../repositories/blogs.repository';
 import { PostsRepository } from '../../posts/repositories/posts.repository';
 import { injectable } from 'inversify';
 import { BlogModel } from '../Schemas/blog.schema';
+import { PostDocument } from '../../posts/Schemas/post.schema';
 
 @injectable()
 export class BlogsService {
@@ -42,7 +43,7 @@ export class BlogsService {
     return;
   }
 
-  async createPost(id: string, dto: PostInput): Promise<WithId<Post>> {
+  async createPost(id: string, dto: PostInput): Promise<PostDocument> {
     const blog = await this.blogsRepository.findByIdOrError(id);
     const newPostDto: Post = {
       title: dto.title,
