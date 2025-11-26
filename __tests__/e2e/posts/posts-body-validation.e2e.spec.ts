@@ -12,18 +12,20 @@ import { createBlog } from '../../utils/blogs/create-blog';
 import { BlogOutput } from '../../../src/blogs/router/output/blog.output';
 import { createPost } from '../../utils/posts/create-post';
 import { getPostById } from '../../utils/posts/get-post-by-id';
+import mongoose from 'mongoose';
 
 describe('POSTS_VALIDATION', () => {
   const app = express();
   setupApp(app);
 
+  const mongoURI = 'mongodb://localhost:27017/db-test';
   const adminToken = generateBasicAuthToken();
   beforeAll(async () => {
-    await runDB('mongodb://localhost:27017/db-test');
+    await mongoose.connect(mongoURI);
     await clearDb(app);
   });
   afterAll(async () => {
-    await stopDb();
+    await mongoose.connection.close();
   });
 
   describe('✅ POST /posts validation');

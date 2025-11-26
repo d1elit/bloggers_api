@@ -19,7 +19,7 @@ import mongoose from 'mongoose';
 describe('BLOGS_TESTS', () => {
   const app = express();
   setupApp(app);
-  const mongoURI = 'mongodb://0.0.0.0:27017/learning';
+  const mongoURI = 'mongodb://localhost:27017/db-test';
   const adminToken = generateBasicAuthToken();
   beforeAll(async () => {
     await mongoose.connect(mongoURI);
@@ -35,7 +35,7 @@ describe('BLOGS_TESTS', () => {
     });
   });
   describe('✅ POST /blogs', () => {
-    it('POST /blog: Should create a blog; ', async () => {
+    it('POST /blog: Should create a  blog; ', async () => {
       const newBlog: BlogInput = {
         ...getBlogDto(),
         name: 'Test blog',
@@ -61,6 +61,8 @@ describe('BLOGS_TESTS', () => {
   describe('✅ GET /blogs:id', () => {
     it('GET /blogs:id : Should return blog by id', async () => {
       const createdBlog = await createBlog(app);
+      console.log('CREATED BLOG___________________________________');
+      console.log(createdBlog);
       const blog = await getBlogById(app, createdBlog.id);
       expect(blog).toEqual({
         ...createdBlog,
