@@ -8,10 +8,7 @@ export class SessionsRepository {
     await SessionModel.create(sessionDto);
   }
 
-  async find(
-    iat: number,
-    deviceId: string,
-  ): Promise<SessionDocument | null> {
+  async find(iat: number, deviceId: string): Promise<SessionDocument | null> {
     return SessionModel.findOne({ iat: iat, deviceId: deviceId });
   }
 

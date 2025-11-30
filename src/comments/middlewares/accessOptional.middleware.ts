@@ -27,8 +27,7 @@ export const AccessOptionalMiddleware = async (
       const { userId } = payload;
       const commentId = req.params.id;
       let like = await likesRepository.find(userId, commentId);
-      console.log(`Im here after likes: ${like}`);
-      console.log('AFter likes user id', req.user);
+
       if (like) {
         req.user = {
           likeStatus: like.myStatus,
@@ -39,40 +38,11 @@ export const AccessOptionalMiddleware = async (
         return;
       }
       req.user = { likeStatus: 'None', userId: payload.userId } as userIdType;
-      console.log('GO OUT');
-      console.log('AFter likes 2 user id', req.user);
+
       next();
 
       return;
     }
-
-    // const userId = req.user.userId;
-    //
-    // if (!userId) {
-    //   next();
-    // }
-
-    // if (myStatus) {}
-    // const [authType, token] = req.headers.authorization.split(' ');
-    //
-    // if (token) {
-    //   const payload = await jwtService.verifyToken(token);
-    //
-    //   if (payload) {
-    //     // console.log('ALL WE HERE  1', payload);
-    //     const { userId } = payload;
-    //     // console.log('ALL WE HERE  2', userId);
-    //
-    //     req.user = { userId: userId } as userIdType;
-    //     next();
-    //
-    //     return;
-    //   }
-    //   res.sendStatus(401);
-    //
-    //   return;
-    // }
-    // return;
   } catch (e: unknown) {
     errorsHandler(e, res);
   }

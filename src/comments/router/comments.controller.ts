@@ -10,7 +10,6 @@ import {
   RequestWithParamsAndBody,
 } from '../../core/types/requestTypes';
 import { CommentInput } from './input/comment.input';
-import { CommentListPaginatedOutput } from './output/comment-list-paginated.output';
 
 @injectable()
 export class CommentsController {

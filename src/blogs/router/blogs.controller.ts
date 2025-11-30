@@ -11,7 +11,7 @@ import {
 } from '../../core/types/requestTypes';
 import { BlogInput } from './input/blog.input';
 import { HttpStatus } from '../../core/types/http-statuses';
-import { mapToBlogViewModel } from './mappers/map-to-blog-view-model';
+import { mapToBlogView } from './mappers/map-to-blog-view-model';
 import { BlogOutput } from './output/blog.output';
 import { errorsHandler } from '../../core/errors/errors.handler';
 import { PostOutput } from '../../posts/router/output/post.output';
@@ -95,7 +95,7 @@ export class BlogsController {
     try {
       const id = req.params.id;
       const blog = await this.blogsQueryRepository.findByIdOrError(id);
-      const blogViewModel = mapToBlogViewModel(blog);
+      const blogViewModel = mapToBlogView(blog);
       res.status(HttpStatus.Ok).send(blogViewModel);
     } catch (e: unknown) {
       errorsHandler(e, res);

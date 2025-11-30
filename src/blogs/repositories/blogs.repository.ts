@@ -27,8 +27,6 @@ export class BlogsRepository {
     return res;
   }
   async find(id: string): Promise<BlogDocument | null> {
-    const res = await BlogModel.findById(id);
-
-    return res;
+    return BlogModel.findById(id);
   }
 }

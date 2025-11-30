@@ -1,7 +1,6 @@
 import express from 'express';
 import { setupApp } from '../../../src/setup-app';
 import { generateBasicAuthToken } from '../../utils/generate-admin-auth-token';
-import { runDB, stopDb } from '../../../src/db/mongo.db';
 import { clearDb } from '../../utils/clear-db';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
 import request from 'supertest';
@@ -15,7 +14,7 @@ import mongoose from 'mongoose';
 
 describe('BLOGS_VALIDATION', () => {
   const app = express();
-  зтзь;
+
   setupApp(app);
   const mongoURI = 'mongodb://0.0.0.0:27017/db-test';
   const adminToken = generateBasicAuthToken();

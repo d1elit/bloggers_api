@@ -2,7 +2,6 @@ import request from 'supertest';
 import express from 'express';
 import { setupApp } from '../../../src/setup-app';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
-import { runDB, stopDb } from '../../../src/db/mongo.db';
 import { clearDb } from '../../utils/clear-db';
 import { generateBasicAuthToken } from '../../utils/generate-admin-auth-token';
 import { BLOGS_PATH } from '../../../src/core/path';

@@ -1,6 +1,5 @@
 import { Post } from '../types/post';
 import { PostInput } from '../router/input/post.input';
-import { WithId } from 'mongodb';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { CommentInput } from '../../comments/router/input/comment.input';
 import { Comment } from '../../comments/types/comment';
@@ -21,7 +20,6 @@ export class PostsService {
   ) {}
 
   async create(dto: PostInput, blogId?: string): Promise<PostDocument> {
-    console.log('Im in CREATION POST_____________________________', dto.blogId);
     const blog = await this.blogsRepository.find(dto.blogId);
 
     if (!blog) {

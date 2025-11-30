@@ -13,7 +13,7 @@ import { LikesRepository } from './likes.repository';
 export class CommentsQueryRepository {
   async findByIdOrError(
     id: string,
-    likeStatus?: string,
+    likeStatus?: string | undefined,
   ): Promise<CommentOutput> {
     const result = await CommentModel.findById(id);
     if (!result) {
@@ -48,25 +48,13 @@ export class CommentsQueryRepository {
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
       .limit(+pageSize);
-    // const likes = likesRepository.find(userId);
+
     const likesRepository = container.get(LikesRepository);
-    //
-    console.log('USER ID: ' + userId);
+
     const likes = await Promise.all(
       items.map((c) => likesRepository.find(userId, c._id.toString())),
     );
     console.log(likes);
-
-    // const likes = await likesRepository.find({
-    //   commentId: { $in: commentIds },
-    // });
-
-    // const commentIds = items.map((c) => c._id.toString());
-
-    // items.map((item) => {
-    //   let likes = await likesRepository.find(userId, item._id.toString());
-    //   console.log(likes);
-    // });
 
     const totalCount = await CommentModel.countDocuments(filter);
 
@@ -77,6 +65,7 @@ export class CommentsQueryRepository {
         pageSize: pageSize,
         totalCount,
       },
+      // @ts-ignore
       likes,
     );
   }
