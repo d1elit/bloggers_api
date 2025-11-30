@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import { AccsessTokenGuardMiddleware } from '../../auth/guards/accsess.token.guard-middleware';
-import { commentInputDtoValidation } from './comment.input-dto.validation-middleware';
+import {
+  commentInputDtoValidation,
+  likeInputDtoValidation,
+} from './comment.input-dto.validation-middleware';
 import { idValidation } from '../../core/middlewares/validation/params-id.validation-middleware';
 import { inputValidationResultMiddleware } from '../../core/middlewares/validation/input-validtion-result.middleware';
 import { container } from '../../composition-root';
@@ -36,6 +39,8 @@ commentsRouter
   )
   .put(
     '/:id/like-status',
+    likeInputDtoValidation,
     AccsessTokenGuardMiddleware,
+    inputValidationResultMiddleware,
     commentsController.likesStatus.bind(commentsController),
   );
