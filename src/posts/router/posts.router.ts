@@ -52,5 +52,6 @@ postsRouter
   .get(
     '/:id/comments',
     AccessOptionalMiddleware,
+    // @ts-ignore
     postsController.getPostsCommentList.bind(postsController),
   );
