@@ -7,6 +7,7 @@ import { AccsessTokenGuardMiddleware } from '../../auth/guards/accsess.token.gua
 import { commentInputDtoValidation } from '../../comments/router/comment.input-dto.validation-middleware';
 import { container } from '../../composition-root';
 import { PostsController } from './posts.controller';
+import { AccessOptionalMiddleware } from '../../comments/middlewares/accessOptional.middleware';
 
 const postsController = container.get(PostsController);
 
@@ -50,5 +51,6 @@ postsRouter
   )
   .get(
     '/:id/comments',
+    AccessOptionalMiddleware,
     postsController.getPostsCommentList.bind(postsController),
   );

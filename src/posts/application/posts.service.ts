@@ -21,11 +21,12 @@ export class PostsService {
   ) {}
 
   async create(dto: PostInput, blogId?: string): Promise<PostDocument> {
-    const blog = await this.blogsRepository.findByIdOrError(dto.blogId);
+    console.log('Im in CREATION POST_____________________________', dto.blogId);
+    const blog = await this.blogsRepository.find(dto.blogId);
 
     if (!blog) {
       throw new RepositoryNotFoundError(
-        `Blog with id ${dto.blogId} not found!`,
+        `Blog with id ${dto.blogId} not found or ${blogId}, not found!`,
       );
     }
 
@@ -70,6 +71,11 @@ export class PostsService {
         userLogin: user.login,
       },
       postId: post._id.toString(),
+      likesInfo: {
+        likesCount: 0,
+        dislikesCount: 0,
+        myStatus: 'none',
+      },
       createdAt: new Date().toISOString(),
     };
     return await this.commentsRepository.create(newComment);

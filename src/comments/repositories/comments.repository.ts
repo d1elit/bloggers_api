@@ -20,6 +20,10 @@ export class CommentsRepository {
     await CommentModel.updateOne({ _id: id }, { $set: dto });
     return;
   }
+  async save(comment: CommentDocument) {
+    await comment.save();
+    return;
+  }
 
   async findByIdOrError(id: string): Promise<CommentDocument> {
     const result = await CommentModel.findById(id);

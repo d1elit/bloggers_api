@@ -61,8 +61,6 @@ describe('BLOGS_TESTS', () => {
   describe('✅ GET /blogs:id', () => {
     it('GET /blogs:id : Should return blog by id', async () => {
       const createdBlog = await createBlog(app);
-      console.log('CREATED BLOG___________________________________');
-      console.log(createdBlog);
       const blog = await getBlogById(app, createdBlog.id);
       expect(blog).toEqual({
         ...createdBlog,

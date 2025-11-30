@@ -98,11 +98,15 @@ export class PostsController {
   ) {
     try {
       const postId = req.params.id;
+      const userId = req.user.userId;
+      const MyStatus = req.user.likeStatus;
+      console.log(MyStatus);
       await this.postsQueryRepository.findByIdOrError(postId);
       const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
       const comments = await this.commentsQueryRepository.findAll(
         queryInput,
         postId,
+        userId,
       );
       res.status(HttpStatus.Ok).send(comments);
     } catch (e: unknown) {

@@ -44,6 +44,10 @@ export class BlogsService {
   }
 
   async createPost(id: string, dto: PostInput): Promise<PostDocument> {
+    console.log(
+      'Im in CREATION BLOGSSSSSSSSSSSS POST_____________________________',
+      dto.blogId,
+    );
     const blog = await this.blogsRepository.findByIdOrError(id);
     const newPostDto: Post = {
       title: dto.title,

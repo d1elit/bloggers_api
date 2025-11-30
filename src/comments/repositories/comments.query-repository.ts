@@ -6,15 +6,20 @@ import { CommentListPaginatedOutput } from '../router/output/comment-list-pagina
 import { CommentOutput } from '../router/output/comment.output';
 import { injectable } from 'inversify';
 import { CommentModel } from '../Schemas/comment.schema';
+import { container } from '../../composition-root';
+import { LikesRepository } from './likes.repository';
 
 @injectable()
 export class CommentsQueryRepository {
-  async findByIdOrError(id: string): Promise<CommentOutput> {
+  async findByIdOrError(
+    id: string,
+    likeStatus?: string,
+  ): Promise<CommentOutput> {
     const result = await CommentModel.findById(id);
     if (!result) {
       throw new RepositoryNotFoundError('Comment not found');
     }
-    return mapToCommentViewModel(result);
+    return mapToCommentViewModel(result, likeStatus);
   }
 
   async testFindAll() {
@@ -24,6 +29,7 @@ export class CommentsQueryRepository {
   async findAll(
     queryDto: CommentQueryInput,
     postId: string,
+    userId?: string,
   ): Promise<CommentListPaginatedOutput> {
     const { pageNumber, pageSize, sortBy, sortDirection, content, createdAt } =
       queryDto;
@@ -42,13 +48,36 @@ export class CommentsQueryRepository {
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
       .limit(+pageSize);
+    // const likes = likesRepository.find(userId);
+    const likesRepository = container.get(LikesRepository);
+    //
+    console.log('USER ID: ' + userId);
+    const likes = await Promise.all(
+      items.map((c) => likesRepository.find(userId, c._id.toString())),
+    );
+    console.log(likes);
+
+    // const likes = await likesRepository.find({
+    //   commentId: { $in: commentIds },
+    // });
+
+    // const commentIds = items.map((c) => c._id.toString());
+
+    // items.map((item) => {
+    //   let likes = await likesRepository.find(userId, item._id.toString());
+    //   console.log(likes);
+    // });
 
     const totalCount = await CommentModel.countDocuments(filter);
 
-    return mapToCommentListPaginated(items, {
-      pageNumber: pageNumber,
-      pageSize: pageSize,
-      totalCount,
-    });
+    return mapToCommentListPaginated(
+      items,
+      {
+        pageNumber: pageNumber,
+        pageSize: pageSize,
+        totalCount,
+      },
+      likes,
+    );
   }
 }

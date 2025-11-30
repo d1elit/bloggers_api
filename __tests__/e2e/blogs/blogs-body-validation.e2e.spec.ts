@@ -15,6 +15,7 @@ import mongoose from 'mongoose';
 
 describe('BLOGS_VALIDATION', () => {
   const app = express();
+  зтзь;
   setupApp(app);
   const mongoURI = 'mongodb://0.0.0.0:27017/db-test';
   const adminToken = generateBasicAuthToken();

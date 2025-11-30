@@ -4,6 +4,8 @@ import { mapToBlogViewModel } from '../router/mappers/map-to-blog-list-paginated
 import { BlogListPaginatedOutput } from '../router/output/blog-list-paginated.output';
 import { injectable } from 'inversify';
 import { BlogDocument, BlogModel } from '../Schemas/blog.schema';
+import { mapToBlogView } from '../router/mappers/map-to-blog-view-model';
+import { BlogOutput } from '../router/output/blog.output';
 
 @injectable()
 export class BlogsQueryRepository {
@@ -46,5 +48,12 @@ export class BlogsQueryRepository {
     }
 
     return res;
+  }
+  async findMappedOrError(id: string): Promise<BlogOutput> {
+    const res = await BlogModel.findById(id);
+    if (!res) {
+      throw new RepositoryNotFoundError('blog not exist');
+    }
+    return mapToBlogView(res);
   }
 }

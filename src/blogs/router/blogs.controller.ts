@@ -37,7 +37,7 @@ export class BlogsController {
       const createdBlogId = await this.blogsService.create(req.body);
 
       const blogViewModel =
-        await this.blogsQueryRepository.findByIdOrError(createdBlogId);
+        await this.blogsQueryRepository.findMappedOrError(createdBlogId);
 
       res.status(HttpStatus.Created).send(blogViewModel);
     } catch (e: unknown) {
@@ -50,6 +50,10 @@ export class BlogsController {
     res: Response,
   ) {
     try {
+      console.log(
+        'Im in CREATION BLOGSSSSSSSSSSSS POST_____________________________',
+      );
+      console.log(req.params.id);
       const createdPostInBlog = await this.blogsService.createPost(
         req.params.id,
         req.body,
