@@ -14,18 +14,20 @@ import { HttpStatus } from '../../../src/core/types/http-statuses';
 import { PostOutput } from '../../../src/posts/router/output/post.output';
 import { getPostById } from '../../utils/posts/get-post-by-id';
 import { BlogOutput } from '../../../src/blogs/router/output/blog.output';
+import mongoose from 'mongoose';
 
 describe('POSTS_TESTS', () => {
   const app = express();
   setupApp(app);
 
+  const mongoURI = 'mongodb://localhost:27017/db-test';
   const adminToken = generateBasicAuthToken();
   beforeAll(async () => {
-    await runDB('mongodb://localhost:27017/db-test');
+    await mongoose.connect(mongoURI);
     await clearDb(app);
   });
   afterAll(async () => {
-    await stopDb();
+    await mongoose.connection.close();
   });
   describe('✅ POST /posts', () => {
     it('POST /posts: Should create a post; ', async () => {

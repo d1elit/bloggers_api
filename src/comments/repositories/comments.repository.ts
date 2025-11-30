@@ -1,32 +1,32 @@
-import { commentsCollection } from '../../db/mongo.db';
 import { Comment } from '../types/comment';
-import { ObjectId } from 'mongodb';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { CommentInput } from '../router/input/comment.input';
 import { injectable } from 'inversify';
+import { CommentDocument, CommentModel } from '../Schemas/comment.schema';
 
 @injectable()
 export class CommentsRepository {
   async create(newComment: Comment): Promise<string> {
-    const insertResult = await commentsCollection.insertOne(newComment);
-    return insertResult.insertedId.toString();
+    const comment = await CommentModel.create(newComment);
+    return comment._id.toString();
   }
 
   async delete(commentId: string): Promise<void> {
-    await commentsCollection.deleteOne({ _id: new ObjectId(commentId) });
+    await CommentModel.deleteOne({ _id: commentId });
     return;
   }
 
   async update(id: string, dto: CommentInput) {
-    await commentsCollection.updateOne(
-      { _id: new ObjectId(id) },
-      { $set: dto },
-    );
+    await CommentModel.updateOne({ _id: id }, { $set: dto });
+    return;
+  }
+  async save(comment: CommentDocument) {
+    await comment.save();
     return;
   }
 
-  async findByIdOrError(id: string): Promise<Comment> {
-    const result = await commentsCollection.findOne({ _id: new ObjectId(id) });
+  async findByIdOrError(id: string): Promise<CommentDocument> {
+    const result = await CommentModel.findById(id);
     if (!result) {
       throw new RepositoryNotFoundError('Comment not found');
     }

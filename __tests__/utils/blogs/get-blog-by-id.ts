@@ -9,6 +9,7 @@ export async function getBlogById(
   app: Express,
   id: string,
 ): Promise<BlogOutput> {
+  console.log(BLOGS_PATH + '/' + id);
   const blog = await request(app)
     .get(BLOGS_PATH + '/' + id)
     .set('Authorization', generateBasicAuthToken())

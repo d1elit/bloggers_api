@@ -1,12 +1,10 @@
-import { usersCollection } from '../../db/mongo.db';
 import { UsersQueryInput } from '../router/input/user-query.input';
 import { mapToPostListPaginated } from '../router/mappers/map-to-list-paginated';
 import { UsersPaginatedOutput } from '../router/output/users-paginated.output';
 
-import { ObjectId, WithId } from 'mongodb';
-import { User } from '../types/user';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { injectable } from 'inversify';
+import { UserDocument, UserModel } from '../Schemas/user.schema';
 
 @injectable()
 export class UsersQueryRepository {
@@ -31,27 +29,25 @@ export class UsersQueryRepository {
         orFilter.push({ email: { $regex: searchEmailTerm, $options: 'i' } });
       filter.$or = orFilter;
     }
-    const users = await usersCollection
-      .find(filter)
+    const users = await UserModel.find(filter)
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
-      .limit(+pageSize)
-      .toArray();
+      .limit(+pageSize);
 
-    const totalCount = await usersCollection.countDocuments(filter);
+    const totalCount = await UserModel.countDocuments(filter);
     console.log(`totalCount ${totalCount} users`);
     return mapToPostListPaginated(users, { pageNumber, pageSize, totalCount });
   }
 
-  async findByIdOrError(id: string): Promise<WithId<User> | null> {
-    let user = usersCollection.findOne({ _id: new ObjectId(id) });
+  async findByIdOrError(id: string): Promise<UserDocument | null> {
+    let user = UserModel.findById(id);
     if (!user) {
       throw new RepositoryNotFoundError('User not found');
     }
     return user;
   }
 
-  async findByEmail(email: string): Promise<WithId<User> | null> {
-    return usersCollection.findOne({ email: email });
+  async findByEmail(email: string): Promise<UserDocument | null> {
+    return UserModel.findOne({ email: email });
   }
 }

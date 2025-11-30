@@ -1,11 +1,13 @@
-import { WithId } from 'mongodb';
 import { CommentListPaginatedOutput } from '../output/comment-list-paginated.output';
-import { CommentOutput } from '../output/comment.output';
-import { Comment } from '../../types/comment';
+
+import { CommentDocument } from '../../Schemas/comment.schema';
+
+import { LikeDocument } from '../../Schemas/likes.schema';
 
 export function mapToCommentListPaginated(
-  comments: WithId<Comment>[],
+  comments: CommentDocument[],
   meta: { pageNumber: number; pageSize: number; totalCount: number },
+  likes?: LikeDocument[] | undefined,
 ): CommentListPaginatedOutput {
   return {
     pagesCount: Math.ceil(meta.totalCount / meta.pageSize),
@@ -13,8 +15,13 @@ export function mapToCommentListPaginated(
     pageSize: +meta.pageSize,
     totalCount: meta.totalCount,
 
-    items: comments.map(
-      (comment): CommentOutput => ({
+    items: comments.map((comment, index) => {
+      let like: LikeDocument | undefined;
+      if (likes) {
+        like = likes[index];
+      }
+
+      return {
         id: comment._id.toString(),
         content: comment.content,
         commentatorInfo: {
@@ -22,7 +29,12 @@ export function mapToCommentListPaginated(
           userId: comment.commentatorInfo.userId,
         },
         createdAt: comment.createdAt,
-      }),
-    ),
+        likesInfo: {
+          likesCount: comment.likesInfo.likesCount,
+          dislikesCount: comment.likesInfo.dislikesCount,
+          myStatus: like?.myStatus ?? 'None',
+        },
+      };
+    }),
   };
 }

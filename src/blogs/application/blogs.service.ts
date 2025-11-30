@@ -8,6 +8,8 @@ import { PostInput } from '../../posts/router/input/post.input';
 import { BlogsRepository } from '../repositories/blogs.repository';
 import { PostsRepository } from '../../posts/repositories/posts.repository';
 import { injectable } from 'inversify';
+import { BlogModel } from '../Schemas/blog.schema';
+import { PostDocument } from '../../posts/Schemas/post.schema';
 
 @injectable()
 export class BlogsService {
@@ -16,29 +18,36 @@ export class BlogsService {
     public readonly postsRepository: PostsRepository,
   ) {}
 
-  async create(dto: BlogInput): Promise<WithId<Blog>> {
-    const newBlog: Blog = {
-      name: dto.name,
-      description: dto.description,
-      websiteUrl: dto.websiteUrl,
-      createdAt: new Date().toISOString(),
-      isMembership: false,
-    };
-    return this.blogsRepository.create(newBlog);
+  async create(dto: BlogInput): Promise<string> {
+    const blog = new BlogModel();
+    blog.name = dto.name;
+    blog.description = dto.description;
+    blog.websiteUrl = dto.websiteUrl;
+    blog.createdAt = new Date().toISOString();
+    blog.isMembership = false;
+
+    return await this.blogsRepository.save(blog);
   }
 
   async delete(id: string): Promise<void> {
-    await this.blogsRepository.findByIdOrError(id);
-    await this.blogsRepository.delete(id);
+    let blog = await this.blogsRepository.findByIdOrError(id);
+    await this.blogsRepository.delete(blog);
   }
 
   async update(id: string, dto: BlogInput): Promise<void> {
-    await this.blogsRepository.findByIdOrError(id);
-    await this.blogsRepository.update(id, dto);
+    let blog = await this.blogsRepository.findByIdOrError(id);
+    blog.name = dto.name;
+    blog.description = dto.description;
+    blog.websiteUrl = dto.websiteUrl || blog.websiteUrl;
+    await this.blogsRepository.update(blog);
     return;
   }
 
-  async createPost(id: string, dto: PostInput): Promise<WithId<Post>> {
+  async createPost(id: string, dto: PostInput): Promise<PostDocument> {
+    console.log(
+      'Im in CREATION BLOGSSSSSSSSSSSS POST_____________________________',
+      dto.blogId,
+    );
     const blog = await this.blogsRepository.findByIdOrError(id);
     const newPostDto: Post = {
       title: dto.title,

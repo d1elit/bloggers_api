@@ -1,6 +1,5 @@
 import { Post } from '../types/post';
 import { PostInput } from '../router/input/post.input';
-import { WithId } from 'mongodb';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { CommentInput } from '../../comments/router/input/comment.input';
 import { Comment } from '../../comments/types/comment';
@@ -9,6 +8,7 @@ import { PostsRepository } from '../repositories/posts.repository';
 import { CommentsRepository } from '../../comments/repositories/comments.repository';
 import { UsersRepository } from '../../users/repositories/users.repository';
 import { injectable } from 'inversify';
+import { PostDocument } from '../Schemas/post.schema';
 
 @injectable()
 export class PostsService {
@@ -19,12 +19,12 @@ export class PostsService {
     public readonly usersRepository: UsersRepository,
   ) {}
 
-  async create(dto: PostInput, blogId?: string): Promise<WithId<Post>> {
-    const blog = await this.blogsRepository.findByIdOrError(dto.blogId);
+  async create(dto: PostInput, blogId?: string): Promise<PostDocument> {
+    const blog = await this.blogsRepository.find(dto.blogId);
 
     if (!blog) {
       throw new RepositoryNotFoundError(
-        `Blog with id ${dto.blogId} not found!`,
+        `Blog with id ${dto.blogId} not found or ${blogId}, not found!`,
       );
     }
 
@@ -69,6 +69,11 @@ export class PostsService {
         userLogin: user.login,
       },
       postId: post._id.toString(),
+      likesInfo: {
+        likesCount: 0,
+        dislikesCount: 0,
+        myStatus: 'none',
+      },
       createdAt: new Date().toISOString(),
     };
     return await this.commentsRepository.create(newComment);

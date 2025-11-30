@@ -1,11 +1,11 @@
-import { Blog } from '../types/blog';
-import { ObjectId, WithId } from 'mongodb';
-import { blogsCollection } from '../../db/mongo.db';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { BlogQueryInput } from '../router/input/blog-query.input';
 import { mapToBlogViewModel } from '../router/mappers/map-to-blog-list-paginated.util';
 import { BlogListPaginatedOutput } from '../router/output/blog-list-paginated.output';
 import { injectable } from 'inversify';
+import { BlogDocument, BlogModel } from '../Schemas/blog.schema';
+import { mapToBlogView } from '../router/mappers/map-to-blog-view-model';
+import { BlogOutput } from '../router/output/blog.output';
 
 @injectable()
 export class BlogsQueryRepository {
@@ -27,14 +27,12 @@ export class BlogsQueryRepository {
       filter.description = { $regex: searchDescriptionTerm, $options: 'i' };
     }
 
-    const items = await blogsCollection
-      .find(filter)
+    const items = await BlogModel.find(filter)
       .sort({ [sortBy]: sortDirection })
       .skip(skip)
-      .limit(+pageSize)
-      .toArray();
+      .limit(+pageSize);
 
-    const totalCount = await blogsCollection.countDocuments(filter);
+    const totalCount = await BlogModel.countDocuments(filter);
 
     return mapToBlogViewModel(items, {
       pageNumber: pageNumber,
@@ -43,11 +41,19 @@ export class BlogsQueryRepository {
     });
   }
 
-  async findByIdOrError(id: string): Promise<WithId<Blog>> {
-    const res = await blogsCollection.findOne({ _id: new ObjectId(id) });
+  async findByIdOrError(id: string): Promise<BlogDocument> {
+    const res = await BlogModel.findById(id);
     if (!res) {
       throw new RepositoryNotFoundError('blog not exist');
     }
+
     return res;
+  }
+  async findMappedOrError(id: string): Promise<BlogOutput> {
+    const res = await BlogModel.findById(id);
+    if (!res) {
+      throw new RepositoryNotFoundError('blog not exist');
+    }
+    return mapToBlogView(res);
   }
 }

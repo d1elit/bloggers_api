@@ -19,6 +19,7 @@ import { NewPasswordInput } from '../router/input/new-password.input';
 import { UsersService } from '../../users/application/users.service';
 import { BcryptService } from '../adapters/bcrypt.service';
 import { injectable } from 'inversify';
+import { UserDocument } from '../../users/Schemas/user.schema';
 
 @injectable()
 export class AuthService {
@@ -63,7 +64,7 @@ export class AuthService {
     return [accessToken, refreshToken];
   }
 
-  async checkUserCredentials(loginDto: LoginInput): Promise<WithId<User>> {
+  async checkUserCredentials(loginDto: LoginInput): Promise<UserDocument> {
     const user = await this.verifyLoginOrEmail(loginDto.loginOrEmail);
     const isPasswordVerified = await this.bcryptService.verifyPasswords(
       loginDto.password,
@@ -76,7 +77,7 @@ export class AuthService {
     return user;
   }
 
-  async verifyLoginOrEmail(login: string): Promise<WithId<User>> {
+  async verifyLoginOrEmail(login: string): Promise<UserDocument> {
     const user = await this.usersRepository.findByLoginOrEmail(login);
     if (!user) throw new LoginError('Wrong login or password');
     return user;
@@ -107,7 +108,7 @@ export class AuthService {
         'Wrong confirmation code',
         'code',
       );
-    await this.usersRepository.updateConfirmationStatus(user._id);
+    await this.usersRepository.updateConfirmationStatus(user._id.toString());
     return false;
   }
 
@@ -122,7 +123,7 @@ export class AuthService {
       );
     const confirmationCode = crypto.randomUUID();
     await this.usersRepository.updateConfirmationCode(
-      user._id,
+      user._id.toString(),
       confirmationCode,
     );
     await this.nodemailerService.sendEmail(
@@ -136,7 +137,10 @@ export class AuthService {
     if (!user) return;
 
     const confirmationCode = crypto.randomUUID();
-    await this.usersRepository.updateRecoveryCode(user._id, confirmationCode);
+    await this.usersRepository.updateRecoveryCode(
+      user._id.toString(),
+      confirmationCode,
+    );
     this.nodemailerService
       .sendEmail(email, emailExamples.passwordRecoveryEmail(confirmationCode))
       .catch((error) => {
@@ -157,9 +161,9 @@ export class AuthService {
         'Wrong confirmation code',
         'code',
       );
-    await this.usersRepository.updateRecoveryStatus(user._id);
+    await this.usersRepository.updateRecoveryStatus(user._id.toString());
     let newPassword = await this.bcryptService.hashPassword(password);
-    await this.usersRepository.updatePassword(user._id, newPassword);
+    await this.usersRepository.updatePassword(user._id.toString(), newPassword);
   }
 
   async refreshToken(token: string, userId: string, deviceId: string) {

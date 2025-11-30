@@ -1,7 +1,6 @@
 import express from 'express';
 import { setupApp } from '../../../src/setup-app';
 import { generateBasicAuthToken } from '../../utils/generate-admin-auth-token';
-import { runDB, stopDb } from '../../../src/db/mongo.db';
 import { clearDb } from '../../utils/clear-db';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
 import request from 'supertest';
@@ -11,18 +10,20 @@ import { getBlogDto } from '../../utils/blogs/get-blog-dto';
 import { BlogOutput } from '../../../src/blogs/router/output/blog.output';
 import { createBlog } from '../../utils/blogs/create-blog';
 import { getBlogById } from '../../utils/blogs/get-blog-by-id';
+import mongoose from 'mongoose';
 
 describe('BLOGS_VALIDATION', () => {
   const app = express();
-  setupApp(app);
 
+  setupApp(app);
+  const mongoURI = 'mongodb://0.0.0.0:27017/db-test';
   const adminToken = generateBasicAuthToken();
   beforeAll(async () => {
-    await runDB('mongodb://localhost:27017/db-test');
+    await mongoose.connect(mongoURI);
     await clearDb(app);
   });
   afterAll(async () => {
-    await stopDb();
+    await mongoose.connection.close();
   });
 
   describe('✅ POST /blogs validation', () => {

@@ -48,19 +48,19 @@ const authController = container.get(AuthController); // export const loginRateL
 //   skipSuccessfulRequests: false,
 // });
 
-export const passwordRecRateLimiter = rateLimit({
-  windowMs: 10 * 1000, // 10 секунд
-  max: 5,
-  keyGenerator: (req) => `${req.ip}-login`,
-  skipSuccessfulRequests: false,
-});
-
-export const newPasswordRateLimiter = rateLimit({
-  windowMs: 10 * 1000, // 10 секунд
-  max: 5,
-  keyGenerator: (req) => `${req.ip}-login`,
-  skipSuccessfulRequests: false,
-});
+// export const passwordRecRateLimiter = rateLimit({
+//   windowMs: 10 * 1000, // 10 секунд
+//   max: 5,
+//   keyGenerator: (req) => `${req.ip}-login`,
+//   skipSuccessfulRequests: false,
+// });
+//
+// export const newPasswordRateLimiter = rateLimit({
+//   windowMs: 10 * 1000, // 10 секунд
+//   max: 5,
+//   keyGenerator: (req) => `${req.ip}-login`,
+//   skipSuccessfulRequests: false,
+// });
 
 export const authRouter = Router();
 
@@ -114,7 +114,7 @@ authRouter.post(
 
 authRouter.post(
   '/password-recovery',
-  passwordRecRateLimiter,
+  // passwordRecRateLimiter,
   emailInputDtoValidationMiddleware,
   inputValidationResultMiddleware,
   authController.passwordRecovery.bind(authController),
@@ -122,7 +122,7 @@ authRouter.post(
 authRouter.post(
   '/new-password',
   newPasswordInputDtoValidationMiddleware,
-  newPasswordRateLimiter,
+  // newPasswordRateLimiter,
   inputValidationResultMiddleware,
   authController.newPassword.bind(authController),
 );

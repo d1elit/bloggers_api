@@ -2,9 +2,10 @@ import { Blog } from '../../types/blog';
 import { BlogOutput } from '../output/blog.output';
 import { WithId } from 'mongodb';
 import { BlogListPaginatedOutput } from '../output/blog-list-paginated.output';
+import { BlogDocument } from '../../Schemas/blog.schema';
 
 export function mapToBlogViewModel(
-  blogs: WithId<Blog>[],
+  blogs: BlogDocument[],
   meta: { pageNumber: number; pageSize: number; totalCount: number },
 ): BlogListPaginatedOutput {
   return {

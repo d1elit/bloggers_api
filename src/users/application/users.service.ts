@@ -6,6 +6,7 @@ import { add } from 'date-fns';
 import { UsersRepository } from '../repositories/users.repository';
 import { BcryptService } from '../../auth/adapters/bcrypt.service';
 import { injectable } from 'inversify';
+import { UserDocument } from '../Schemas/user.schema';
 
 @injectable()
 export class UsersService {
@@ -17,7 +18,7 @@ export class UsersService {
   async create(
     userDto: UserInput,
     confirmationCode?: string,
-  ): Promise<WithId<User>> {
+  ): Promise<UserDocument> {
     console.log('usersService confirmation code', confirmationCode);
     await this.ensureIsUserUnique(userDto.login, userDto.email);
     const newUser: User = {

@@ -11,7 +11,7 @@ import {
 } from '../../core/types/requestTypes';
 import { BlogInput } from './input/blog.input';
 import { HttpStatus } from '../../core/types/http-statuses';
-import { mapToBlogViewModel } from './mappers/map-to-blog-view-model';
+import { mapToBlogView } from './mappers/map-to-blog-view-model';
 import { BlogOutput } from './output/blog.output';
 import { errorsHandler } from '../../core/errors/errors.handler';
 import { PostOutput } from '../../posts/router/output/post.output';
@@ -34,8 +34,11 @@ export class BlogsController {
 
   async createBlog(req: RequestWithBody<BlogInput>, res: Response) {
     try {
-      const createdBlog = await this.blogsService.create(req.body);
-      const blogViewModel: BlogOutput = mapToBlogViewModel(createdBlog);
+      const createdBlogId = await this.blogsService.create(req.body);
+
+      const blogViewModel =
+        await this.blogsQueryRepository.findMappedOrError(createdBlogId);
+
       res.status(HttpStatus.Created).send(blogViewModel);
     } catch (e: unknown) {
       errorsHandler(e, res);
@@ -47,6 +50,10 @@ export class BlogsController {
     res: Response,
   ) {
     try {
+      console.log(
+        'Im in CREATION BLOGSSSSSSSSSSSS POST_____________________________',
+      );
+      console.log(req.params.id);
       const createdPostInBlog = await this.blogsService.createPost(
         req.params.id,
         req.body,
@@ -88,7 +95,7 @@ export class BlogsController {
     try {
       const id = req.params.id;
       const blog = await this.blogsQueryRepository.findByIdOrError(id);
-      const blogViewModel = mapToBlogViewModel(blog);
+      const blogViewModel = mapToBlogView(blog);
       res.status(HttpStatus.Ok).send(blogViewModel);
     } catch (e: unknown) {
       errorsHandler(e, res);

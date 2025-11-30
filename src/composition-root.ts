@@ -26,6 +26,7 @@ import { CommentsController } from './comments/router/comments.controller';
 import { PostsController } from './posts/router/posts.controller';
 import { UsersController } from './users/router/users.controller';
 import { DevicesController } from './devices/router/devices.controller';
+import { LikesRepository } from './comments/repositories/likes.repository';
 
 export const container = new Container();
 container.bind<BlogsRepository>(BlogsRepository).toSelf();
@@ -37,6 +38,7 @@ container.bind<CommentsQueryRepository>(CommentsQueryRepository).toSelf();
 container.bind<UsersRepository>(UsersRepository).toSelf();
 container.bind<UsersQueryRepository>(UsersQueryRepository).toSelf();
 container.bind<SessionsRepository>(SessionsRepository).toSelf();
+container.bind<LikesRepository>(LikesRepository).toSelf();
 
 container.bind<CommentsService>(CommentsService).toSelf();
 container.bind<AuthService>(AuthService).toSelf();

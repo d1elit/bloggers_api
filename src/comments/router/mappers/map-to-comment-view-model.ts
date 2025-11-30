@@ -1,18 +1,26 @@
 import { ObjectId } from 'mongodb';
 import { Comment } from '../../types/comment';
 import { CommentOutput } from '../output/comment.output';
+import { CommentDocument } from '../../Schemas/comment.schema';
 
 export function mapToCommentViewModel(
-  id: ObjectId,
-  comment: Comment,
+  comment: CommentDocument,
+  likeStatus?: string,
 ): CommentOutput {
+  console.log(likeStatus);
   return {
-    id: id.toString(),
+    id: comment._id.toString(),
     content: comment.content,
     commentatorInfo: {
       userLogin: comment.commentatorInfo.userLogin,
       userId: comment.commentatorInfo.userId,
     },
+    likesInfo: {
+      likesCount: comment.likesInfo.likesCount || 0,
+      dislikesCount: comment.likesInfo.dislikesCount || 0,
+      myStatus: likeStatus || 'None',
+    },
+
     createdAt: comment.createdAt,
   };
 }

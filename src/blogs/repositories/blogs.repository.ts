@@ -1,32 +1,32 @@
-import { Blog } from '../types/blog';
-import { BlogInput } from '../router/input/blog.input';
-import { ObjectId, WithId } from 'mongodb';
-import { blogsCollection } from '../../db/mongo.db';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { injectable } from 'inversify';
+import { BlogDocument, BlogModel } from '../Schemas/blog.schema';
 
 @injectable()
 export class BlogsRepository {
-  async create(newBlog: Blog): Promise<WithId<Blog>> {
-    const insertResult = await blogsCollection.insertOne(newBlog);
-    return { ...newBlog, _id: insertResult.insertedId };
+  async save(newBlog: BlogDocument): Promise<string> {
+    const createdUser = await newBlog.save();
+    return createdUser._id.toString();
   }
 
-  async delete(id: string): Promise<void> {
-    await blogsCollection.deleteOne({ _id: new ObjectId(id) });
+  async delete(blog: BlogDocument): Promise<void> {
+    await blog.deleteOne().exec();
     return;
   }
 
-  async update(id: string, dto: BlogInput): Promise<void> {
-    await blogsCollection.updateOne({ _id: new ObjectId(id) }, { $set: dto });
+  async update(blog: BlogDocument): Promise<void> {
+    await blog.save();
     return;
   }
 
-  async findByIdOrError(id: string): Promise<WithId<Blog>> {
-    const res = await blogsCollection.findOne({ _id: new ObjectId(id) });
+  async findByIdOrError(id: string): Promise<BlogDocument> {
+    const res = await BlogModel.findById(id);
     if (!res) {
       throw new RepositoryNotFoundError('blog not exist');
     }
     return res;
+  }
+  async find(id: string): Promise<BlogDocument | null> {
+    return BlogModel.findById(id);
   }
 }
