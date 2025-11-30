@@ -1,7 +1,6 @@
 import { UserInput } from '../router/input/user.input';
 import { UserCreationError } from '../../core/errors/domain.errors';
 import { User } from '../types/user';
-import { WithId } from 'mongodb';
 import { add } from 'date-fns';
 import { UsersRepository } from '../repositories/users.repository';
 import { BcryptService } from '../../auth/adapters/bcrypt.service';
