@@ -1,5 +1,3 @@
-import { WithId } from 'mongodb';
-import { User } from '../../types/user';
 import { UserOutput } from '../output/user.output';
 import { UserDocument } from '../../Schemas/user.schema';
 

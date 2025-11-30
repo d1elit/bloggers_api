@@ -1,5 +1,4 @@
 import { PostQueryInput } from '../router/input/post-query.input';
-import { Post } from '../types/post';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { mapToPostListPaginated } from '../router/mappers/map-to-post-list-paginated';
 import { postListPaginatedOutput } from '../router/output/post-list-paginated.output';

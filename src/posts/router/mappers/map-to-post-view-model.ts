@@ -1,5 +1,3 @@
-import { WithId } from 'mongodb';
-import { Post } from '../../types/post';
 import { PostOutput } from '../output/post.output';
 import { PostDocument } from '../../Schemas/post.schema';
 

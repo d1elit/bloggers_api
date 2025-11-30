@@ -1,5 +1,3 @@
-import { WithId } from 'mongodb';
-import { User } from '../../types/user';
 import { UsersPaginatedOutput } from '../output/users-paginated.output';
 import { UserDocument } from '../../Schemas/user.schema';
 

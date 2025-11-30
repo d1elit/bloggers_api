@@ -3,10 +3,8 @@ import {
   LoginError,
   RegistrationConfirmationError,
 } from '../../core/errors/domain.errors';
-import { User } from '../../users/types/user';
 import { UsersRepository } from '../../users/repositories/users.repository';
 import { JwtService } from '../adapters/jwt.service';
-import { WithId } from 'mongodb';
 import { RegistrationInput } from '../router/input/registration.input';
 import { NodemailerService } from '../adapters/nodemailer.service';
 import { authInput } from '../router/input/auth.input';
