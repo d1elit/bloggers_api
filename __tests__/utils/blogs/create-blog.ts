@@ -7,7 +7,7 @@ import request from 'supertest';
 import { getBlogDto } from './get-blog-dto';
 import { BlogOutput } from '../../../src/blogs/router/output/blog.output';
 import { BlogDocument } from '../../../src/blogs/Schemas/blog.schema';
-import { mapToBlogViewModel } from '../../../src/blogs/router/mappers/map-to-blog-view-model';
+import { mapToBlogView } from '../../../src/blogs/router/mappers/map-to-blog-view-model';
 
 export async function createBlog(
   app: Express,
@@ -23,5 +23,5 @@ export async function createBlog(
     .send(testBlogData)
     .expect(HttpStatus.Created);
 
-  return mapToBlogViewModel(createBlogResponse.body);
+  return mapToBlogView(createBlogResponse.body);
 }

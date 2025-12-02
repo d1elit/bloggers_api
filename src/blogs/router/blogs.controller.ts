@@ -50,10 +50,6 @@ export class BlogsController {
     res: Response,
   ) {
     try {
-      console.log(
-        'Im in CREATION BLOGSSSSSSSSSSSS POST_____________________________',
-      );
-      console.log(req.params.id);
       const createdPostInBlog = await this.blogsService.createPost(
         req.params.id,
         req.body,

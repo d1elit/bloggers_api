@@ -1,14 +1,13 @@
-import { Post } from '../types/post';
 import { PostInput } from '../router/input/post.input';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { CommentInput } from '../../comments/router/input/comment.input';
-import { Comment } from '../../comments/types/comment';
 import { BlogsRepository } from '../../blogs/repositories/blogs.repository';
 import { PostsRepository } from '../repositories/posts.repository';
 import { CommentsRepository } from '../../comments/repositories/comments.repository';
 import { UsersRepository } from '../../users/repositories/users.repository';
 import { injectable } from 'inversify';
-import { PostDocument } from '../Schemas/post.schema';
+import { PostDocument, PostModel } from '../Schemas/post.schema';
+import { CommentModel } from '../../comments/Schemas/comment.schema';
 
 @injectable()
 export class PostsService {
@@ -28,16 +27,16 @@ export class PostsService {
       );
     }
 
-    const newPostDto: Post = {
-      title: dto.title,
-      shortDescription: dto.shortDescription,
-      content: dto.content,
-      blogId: blogId ?? dto.blogId,
-      blogName: blog.name,
-      createdAt: new Date().toISOString(),
-    };
+    const post = new PostModel();
 
-    return await this.postsRepository.create(newPostDto);
+    post.title = dto.title;
+    post.shortDescription = dto.shortDescription;
+    post.content = dto.content;
+    post.blogId = blogId ?? dto.blogId;
+    post.blogName = blog.name;
+    post.createdAt = new Date().toISOString();
+
+    return await this.postsRepository.create(post);
   }
 
   async delete(id: string): Promise<void> {
@@ -62,20 +61,20 @@ export class PostsService {
     if (!post) {
       throw new RepositoryNotFoundError('Post not found');
     }
-    const newComment: Comment = {
-      content: commentDto.content,
-      commentatorInfo: {
-        userId: userId,
-        userLogin: user.login,
-      },
-      postId: post._id.toString(),
-      likesInfo: {
-        likesCount: 0,
-        dislikesCount: 0,
-        myStatus: 'none',
-      },
-      createdAt: new Date().toISOString(),
+    const comment = new CommentModel();
+    comment.content = commentDto.content;
+    comment.commentatorInfo = {
+      userId: userId,
+      userLogin: user.login,
     };
-    return await this.commentsRepository.create(newComment);
+    comment.postId = post._id.toString();
+    comment.likesInfo = {
+      likesCount: 0,
+      dislikesCount: 0,
+      myStatus: 'none',
+    };
+    comment.createdAt = new Date().toISOString();
+
+    return await this.commentsRepository.create(comment);
   }
 }

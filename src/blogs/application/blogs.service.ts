@@ -1,15 +1,11 @@
 import 'reflect-metadata';
-import { Blog } from '../types/blog';
-
 import { BlogInput } from '../router/input/blog.input';
-import { WithId } from 'mongodb';
-import { Post } from '../../posts/types/post';
 import { PostInput } from '../../posts/router/input/post.input';
 import { BlogsRepository } from '../repositories/blogs.repository';
 import { PostsRepository } from '../../posts/repositories/posts.repository';
 import { injectable } from 'inversify';
 import { BlogModel } from '../Schemas/blog.schema';
-import { PostDocument } from '../../posts/Schemas/post.schema';
+import { PostDocument, PostModel } from '../../posts/Schemas/post.schema';
 
 @injectable()
 export class BlogsService {
@@ -44,19 +40,14 @@ export class BlogsService {
   }
 
   async createPost(id: string, dto: PostInput): Promise<PostDocument> {
-    console.log(
-      'Im in CREATION BLOGSSSSSSSSSSSS POST_____________________________',
-      dto.blogId,
-    );
     const blog = await this.blogsRepository.findByIdOrError(id);
-    const newPostDto: Post = {
-      title: dto.title,
-      shortDescription: dto.shortDescription,
-      content: dto.content,
-      blogId: id,
-      blogName: blog.name,
-      createdAt: new Date().toISOString(),
-    };
-    return this.postsRepository.create(newPostDto);
+    const post = new PostModel();
+    post.title = dto.title;
+    post.shortDescription = dto.shortDescription;
+    post.content = dto.content;
+    post.blogId = id;
+    post.blogName = blog.name;
+    post.createdAt = new Date().toISOString();
+    return this.postsRepository.create(post);
   }
 }
