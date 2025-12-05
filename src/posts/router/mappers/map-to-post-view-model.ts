@@ -10,5 +10,6 @@ export function mapToPostViewModel(post: PostDocument): PostOutput {
     blogId: post.blogId,
     blogName: post.blogName,
     createdAt: post.createdAt,
+    extendedLikesInfo: post.extendedLikesInfo,
   };
 }

@@ -126,4 +126,19 @@ export class PostsController {
       errorsHandler(e, res);
     }
   }
+  async postLike(
+    req: RequestWithParamsAndBody<{ id: string }, { likeStatus: string }>,
+    res: Response,
+  ) {
+    try {
+      const likeStatus = req.body.likeStatus;
+      const userId = req.user.userId as string;
+      const id = req.params.id;
+      console.log('Im inside POSTLIKE');
+      await this.postsService.postLike(likeStatus, id, userId);
+      res.sendStatus(HttpStatus.NoContent);
+    } catch (e: unknown) {
+      errorsHandler(e, res);
+    }
+  }
 }

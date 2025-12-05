@@ -4,7 +4,10 @@ import { inputValidationResultMiddleware } from '../../core/middlewares/validati
 import { postInputDtoValidation } from './post.input-dto.validation-middlewares';
 import { superAdminGuardMiddleware } from '../../auth/guards/super-admin.guard-middleware';
 import { AccsessTokenGuardMiddleware } from '../../auth/guards/accsess.token.guard-middleware';
-import { commentInputDtoValidation } from '../../comments/router/comment.input-dto.validation-middleware';
+import {
+  commentInputDtoValidation,
+  likeInputDtoValidation,
+} from '../../comments/router/comment.input-dto.validation-middleware';
 import { container } from '../../composition-root';
 import { PostsController } from './posts.controller';
 import { AccessOptionalMiddleware } from '../../comments/middlewares/accessOptional.middleware';
@@ -13,6 +16,7 @@ const postsController = container.get(PostsController);
 
 export const postsRouter = Router({});
 
+// @ts-ignore
 postsRouter
   .get('', postsController.getPostList.bind(postsController))
   .get(
@@ -54,4 +58,12 @@ postsRouter
     AccessOptionalMiddleware,
     // @ts-ignore
     postsController.getPostsCommentList.bind(postsController),
+  )
+  .put(
+    '/:id/like-status',
+    likeInputDtoValidation,
+    AccsessTokenGuardMiddleware,
+    inputValidationResultMiddleware,
+    // @ts-ignore
+    postsController.postLike.bind(postsController),
   );

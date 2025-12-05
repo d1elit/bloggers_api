@@ -20,6 +20,7 @@ export function mapToPostListPaginated(
         blogId: post.blogId,
         blogName: post.blogName,
         createdAt: post.createdAt,
+        extendedLikesInfo: post.extendedLikesInfo,
       }),
     ),
   };

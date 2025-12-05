@@ -28,4 +28,8 @@ export class PostsRepository {
     }
     return res;
   }
+  async save(post: PostDocument) {
+    await post.save();
+    return;
+  }
 }

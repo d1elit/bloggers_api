@@ -7,7 +7,13 @@ import { CommentsRepository } from '../../comments/repositories/comments.reposit
 import { UsersRepository } from '../../users/repositories/users.repository';
 import { injectable } from 'inversify';
 import { PostDocument, PostModel } from '../Schemas/post.schema';
-import { CommentModel } from '../../comments/Schemas/comment.schema';
+import {
+  CommentDocument,
+  CommentModel,
+} from '../../comments/Schemas/comment.schema';
+import { LikeDocument, LikesModel } from '../../comments/Schemas/likes.schema';
+import { PostLikesRepository } from '../repositories/post-likes.repository';
+import { PostLikeDocument, PostLikesModel } from '../Schemas/postLikes.schema';
 
 @injectable()
 export class PostsService {
@@ -16,6 +22,7 @@ export class PostsService {
     public readonly postsRepository: PostsRepository,
     public readonly commentsRepository: CommentsRepository,
     public readonly usersRepository: UsersRepository,
+    public readonly postLikesRepository: PostLikesRepository,
   ) {}
 
   async create(dto: PostInput, blogId?: string): Promise<PostDocument> {
@@ -35,6 +42,11 @@ export class PostsService {
     post.blogId = blogId ?? dto.blogId;
     post.blogName = blog.name;
     post.createdAt = new Date().toISOString();
+    post.extendedLikesInfo = {
+      likesCount: 0,
+      dislikesCount: 0,
+      myStatus: 'None',
+    };
 
     return await this.postsRepository.create(post);
   }
@@ -76,5 +88,79 @@ export class PostsService {
     comment.createdAt = new Date().toISOString();
 
     return await this.commentsRepository.create(comment);
+  }
+
+  // async postLike(postId: string) {
+  //
+  // }
+
+  async postLike(
+    likeStatus: string,
+    postId: string,
+    userId?: string,
+  ): Promise<void> {
+    console.log('Im inside POSTLIKE 2');
+    // console.log('userId', userId);
+    let post = await this.postsRepository.findByIdOrError(postId);
+    // let user = await this.usersRepository.findByIdOrError(userId);
+    if (userId) {
+      console.log('YA TYT');
+      let like = await this.postLikesRepository.find(userId, postId);
+      console.log('Like', like);
+      if (like === null) {
+        console.log('INSIDE IF 1');
+
+        const newLike = new PostLikesModel();
+        console.log('INSIDE IF 2');
+        newLike.userId = userId.toString();
+        newLike.postId = postId.toString();
+        newLike.myStatus = likeStatus;
+        // newLike.newestLikes = {
+        //   addedAt: new Date().toISOString(),
+        //   userId: user._id.toString(),
+        //   login: user.login,
+        // };
+        console.log('Like', newLike);
+        likeStatus === 'Like'
+          ? (post.extendedLikesInfo.likesCount += 1)
+          : (post.extendedLikesInfo.dislikesCount += 1);
+        await this.postsRepository.save(post);
+        console.log('likStatyse', likeStatus);
+        console.log('NEW LIKE', newLike);
+        await this.postLikesRepository.create(newLike);
+        console.log('INSIDE IF 3');
+        return;
+      }
+      if (likeStatus === like.myStatus) {
+        return;
+      }
+
+      like.myStatus = likeStatus;
+      await this.postLikeControl(likeStatus, post, like);
+      await this.postLikesRepository.update(like);
+      return;
+    }
+    // console.log(comment);
+  }
+
+  async postLikeControl(
+    likeStatus: string,
+    post: PostDocument,
+    like: PostLikeDocument,
+  ): Promise<void> {
+    if (likeStatus === 'None') {
+      like.myStatus === 'Like'
+        ? (post.extendedLikesInfo.likesCount -= 1)
+        : (post.extendedLikesInfo.dislikesCount -= 1);
+    }
+    if (likeStatus === 'Like') {
+      post.extendedLikesInfo.likesCount += 1;
+      post.extendedLikesInfo.dislikesCount -= 1;
+    }
+    if (likeStatus === 'Dislike') {
+      post.extendedLikesInfo.likesCount -= 1;
+      post.extendedLikesInfo.dislikesCount += 1;
+    }
+    await this.postsRepository.save(post);
   }
 }
