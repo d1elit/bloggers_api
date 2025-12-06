@@ -70,8 +70,12 @@ export class PostsController {
     res: Response<postListPaginatedOutput>,
   ) {
     try {
+      const userId = req.user.userId as string;
       const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
-      const posts = await this.postsQueryRepository.findAll(queryInput);
+      const posts = await this.postsQueryRepository.findAll({
+        queryDto: queryInput,
+        userId,
+      });
       res.status(HttpStatus.Ok).send(posts);
     } catch (e: unknown) {
       errorsHandler(e, res);

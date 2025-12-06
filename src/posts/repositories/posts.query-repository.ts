@@ -4,13 +4,21 @@ import { mapToPostListPaginated } from '../router/mappers/map-to-post-list-pagin
 import { postListPaginatedOutput } from '../router/output/post-list-paginated.output';
 import { injectable } from 'inversify';
 import { PostDocument, PostModel } from '../Schemas/post.schema';
+import { container } from '../../composition-root';
+
+import { PostLikesRepository } from './post-likes.repository';
 
 @injectable()
 export class PostsQueryRepository {
-  async findAll(
-    queryDto: PostQueryInput,
-    blogId?: string,
-  ): Promise<postListPaginatedOutput> {
+  async findAll({
+    queryDto,
+    blogId,
+    userId,
+  }: {
+    queryDto: PostQueryInput;
+    blogId?: string;
+    userId?: string;
+  }): Promise<postListPaginatedOutput> {
     const {
       pageNumber,
       pageSize,
@@ -43,13 +51,24 @@ export class PostsQueryRepository {
       .skip(skip)
       .limit(+pageSize);
 
+    const postLikesRepository = container.get(PostLikesRepository);
+    // const usersRepository = container.get(UsersRepository);
+
+    const itemsIds = items.map((item) => item._id.toString());
+    let likes = await postLikesRepository.findByIds(itemsIds, userId);
+    console.log('POSTS WITH LIKES', likes);
+
     const totalCount = await PostModel.countDocuments(filter);
 
-    return mapToPostListPaginated(items, {
-      pageNumber: pageNumber,
-      pageSize: pageSize,
-      totalCount,
-    });
+    return mapToPostListPaginated(
+      items,
+      {
+        pageNumber: pageNumber,
+        pageSize: pageSize,
+        totalCount,
+      },
+      likes,
+    );
   }
 
   async findByIdOrError(id: string): Promise<PostDocument> {

@@ -18,7 +18,12 @@ export const postsRouter = Router({});
 
 // @ts-ignore
 postsRouter
-  .get('', postsController.getPostList.bind(postsController))
+  .get(
+    '',
+    AccessOptionalMiddleware,
+    // @ts-ignore
+    postsController.getPostList.bind(postsController),
+  )
   .get(
     '/:id',
     idValidation,

@@ -25,4 +25,11 @@ export class LikesRepository {
     await like.save();
     return;
   }
+  async findByAllId(ids: string[], userId: string | undefined) {
+    let likes = await LikesModel.find({
+      commentId: { $in: ids },
+      userId: userId,
+    });
+    return likes;
+  }
 }

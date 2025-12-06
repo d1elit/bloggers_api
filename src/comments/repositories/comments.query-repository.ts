@@ -51,10 +51,14 @@ export class CommentsQueryRepository {
 
     const likesRepository = container.get(LikesRepository);
 
-    const likes = await Promise.all(
-      items.map((c) => likesRepository.find(userId, c._id.toString())),
-    );
-    console.log(likes);
+    const itemsIds = items.map((item) => item._id.toString());
+
+    let likes = await likesRepository.findByAllId(itemsIds, userId);
+    // const likes = await Promise.all(
+    //   items.map((c) => likesRepository.find(userId, c._id.toString())),
+    // );
+    console.log('LIKES 1', likes);
+    // console.log('LIKES 2', likes2);
 
     const totalCount = await CommentModel.countDocuments(filter);
 

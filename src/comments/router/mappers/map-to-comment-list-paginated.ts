@@ -15,11 +15,8 @@ export function mapToCommentListPaginated(
     pageSize: +meta.pageSize,
     totalCount: meta.totalCount,
 
-    items: comments.map((comment, index) => {
-      let like: LikeDocument | undefined;
-      if (likes) {
-        like = likes[index];
-      }
+    items: comments.map((comment) => {
+      let like = likes?.find((l) => l.commentId === comment._id.toString());
 
       return {
         id: comment._id.toString(),

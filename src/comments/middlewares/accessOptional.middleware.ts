@@ -19,10 +19,12 @@ export const AccessOptionalMiddleware = async (
       return;
     }
 
-    console.log('I"m her in optional access');
+    console.log('I"m her in optional access ');
     const [authType, token] = req.headers.authorization.split(' ');
+    console.log('token:', token);
     const payload = await jwtService.verifyToken(token);
     if (payload) {
+      console.log('JWT token ', payload);
       req.user = { userId: payload.userId } as userIdType;
       const { userId } = payload;
       const commentId = req.params.id;

@@ -1,6 +1,5 @@
 import { injectable } from 'inversify';
 import { PostLikeDocument, PostLikesModel } from '../Schemas/postLikes.schema';
-import { LikesModel } from '../../comments/Schemas/likes.schema';
 
 @injectable()
 export class PostLikesRepository {
@@ -8,7 +7,6 @@ export class PostLikesRepository {
     userId: string | undefined,
     postId: string,
   ): Promise<PostLikeDocument | null> {
-    console.log('IN FIND ID: ' + userId, 'COMMENT ID: ' + postId);
     let like = await PostLikesModel.findOne({
       userId: userId,
       postId: postId,
@@ -27,5 +25,17 @@ export class PostLikesRepository {
   async update(like: PostLikeDocument) {
     await like.save();
     return;
+  }
+
+  async lastLikes(postId: string): Promise<PostLikeDocument[] | null> {
+    return PostLikesModel.find({ postId }).sort({ addedAt: -1 }).limit(5);
+  }
+
+  async findByIds(ids: string[], userId: string | undefined) {
+    let likes = await PostLikesModel.find({
+      postId: { $in: ids },
+      userId: userId,
+    });
+    return likes;
   }
 }
