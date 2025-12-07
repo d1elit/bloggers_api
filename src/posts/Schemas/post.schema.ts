@@ -6,17 +6,17 @@ type PostModel = Model<Post>;
 
 export type PostDocument = HydratedDocument<Post>;
 
-type NewestLike = {
+export type NewestLike = {
   addedAt: string;
   userId: string;
   login: string;
 };
 
-type ExtendedLikesInfoSchema = {
+export type ExtendedLikesInfoSchema = {
   likesCount: number;
   dislikesCount: number;
   myStatus: string;
-  newestLikes: NewestLike[];
+  newestLikes: NewestLike[] | undefined;
 };
 
 const NewestLikeSchema = new mongoose.Schema<NewestLike>(

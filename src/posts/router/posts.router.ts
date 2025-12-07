@@ -27,6 +27,7 @@ postsRouter
   .get(
     '/:id',
     idValidation,
+    AccessOptionalMiddleware,
     inputValidationResultMiddleware,
     postsController.getPost.bind(postsController),
   )

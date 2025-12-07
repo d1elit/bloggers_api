@@ -3,10 +3,12 @@ import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { mapToPostListPaginated } from '../router/mappers/map-to-post-list-paginated';
 import { postListPaginatedOutput } from '../router/output/post-list-paginated.output';
 import { injectable } from 'inversify';
-import { PostDocument, PostModel } from '../Schemas/post.schema';
+import { PostModel } from '../Schemas/post.schema';
 import { container } from '../../composition-root';
 
 import { PostLikesRepository } from './post-likes.repository';
+import { mapToPostViewModel } from '../router/mappers/map-to-post-view-model';
+import { PostOutput } from '../router/output/post.output';
 
 @injectable()
 export class PostsQueryRepository {
@@ -51,9 +53,9 @@ export class PostsQueryRepository {
       .skip(skip)
       .limit(+pageSize);
 
-    const postLikesRepository = container.get(PostLikesRepository);
     // const usersRepository = container.get(UsersRepository);
-
+    const postLikesRepository =
+      container.get<PostLikesRepository>(PostLikesRepository);
     const itemsIds = items.map((item) => item._id.toString());
     let likes = await postLikesRepository.findByIds(itemsIds, userId);
 
@@ -73,11 +75,27 @@ export class PostsQueryRepository {
     );
   }
 
-  async findByIdOrError(id: string): Promise<PostDocument> {
+  async findByIdOrError(id: string, likeStatus?: string): Promise<PostOutput> {
     const res = await PostModel.findById(id);
     if (!res) {
       throw new RepositoryNotFoundError('Post not found');
     }
-    return res;
+    return mapToPostViewModel(res, likeStatus);
+  }
+
+  async findPostWithLikeOrError(
+    postId: string,
+    userId: string,
+  ): Promise<PostOutput> {
+    const post = await PostModel.findById(postId);
+    if (!post) {
+      throw new RepositoryNotFoundError('Post not found');
+    }
+    const postLikesRepository =
+      container.get<PostLikesRepository>(PostLikesRepository);
+
+    const like = await postLikesRepository.find(userId, post._id.toString());
+
+    return mapToPostViewModel(post, like?.myStatus);
   }
 }

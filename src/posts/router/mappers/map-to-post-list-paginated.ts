@@ -29,6 +29,7 @@ export function mapToPostListPaginated(
           likesCount: post.extendedLikesInfo.likesCount,
           dislikesCount: post.extendedLikesInfo.dislikesCount,
           myStatus: postLike?.myStatus ?? 'None',
+          newestLikes: post.extendedLikesInfo.newestLikes,
         },
       };
     }),

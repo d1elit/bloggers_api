@@ -7,6 +7,7 @@ export class PostLikesRepository {
     userId: string | undefined,
     postId: string,
   ): Promise<PostLikeDocument | null> {
+    console.log('IM INSIDE OF POSTLIke FIND METHOD');
     let like = await PostLikesModel.findOne({
       userId: userId,
       postId: postId,
@@ -31,17 +32,16 @@ export class PostLikesRepository {
     console.log(postId);
     return PostLikesModel.find({
       postId: postId,
-      status: 'Like',
+      myStatus: 'Like',
     })
       .sort({ addedAt: -1 })
-      .limit(5);
+      .limit(3);
   }
 
   async findByIds(ids: string[], userId: string | undefined) {
-    let likes = await PostLikesModel.find({
+    return PostLikesModel.find({
       postId: { $in: ids },
       userId: userId,
     });
-    return likes;
   }
 }

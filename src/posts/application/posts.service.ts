@@ -42,6 +42,7 @@ export class PostsService {
       likesCount: 0,
       dislikesCount: 0,
       myStatus: 'None',
+      newestLikes: [],
     };
 
     return await this.postsRepository.create(post);
@@ -95,19 +96,17 @@ export class PostsService {
     postId: string,
     userId: string,
   ): Promise<void> {
-    console.log('Im inside POSTLIKE 2');
     // console.log('userId', userId);
     let post = await this.postsRepository.findByIdOrError(postId);
     let user = await this.usersRepository.findByIdOrError(userId);
     if (userId) {
-      console.log('YA TYT');
       let like = await this.postLikesRepository.find(userId, postId);
-      console.log('Like', like);
+
       if (like === null) {
-        console.log('INSIDE IF 1');
+        // console.log('INSIDE IF 1');
 
         const newLike = new PostLikesModel();
-        console.log('INSIDE IF 2');
+        // console.log('INSIDE IF 2');
         newLike.userId = userId.toString();
         newLike.postId = postId.toString();
         newLike.myStatus = likeStatus;
@@ -118,15 +117,17 @@ export class PostsService {
         //   userId: user._id.toString(),
         //   login: user.login,
         // };
-        console.log('Like', newLike);
+        // console.log('Like', newLike);
         likeStatus === 'Like'
           ? (post.extendedLikesInfo.likesCount += 1)
           : (post.extendedLikesInfo.dislikesCount += 1);
         await this.postsRepository.save(post);
-        console.log('likStatyse', likeStatus);
-        console.log('NEW LIKE', newLike);
+        // console.log('likStatyse', likeStatus);
+        // console.log('NEW LIKE', newLike);
         await this.postLikesRepository.create(newLike);
-        console.log('INSIDE IF 3');
+        post.extendedLikesInfo.newestLikes = await this.getNewestLikes(postId);
+        await this.postsRepository.save(post);
+        // console.log('INSIDE IF 3');
         return;
       }
       if (likeStatus === like.myStatus) {
@@ -135,7 +136,12 @@ export class PostsService {
 
       like.myStatus = likeStatus;
       await this.postLikeControl(likeStatus, post, like);
+
       await this.postLikesRepository.update(like);
+
+      post.extendedLikesInfo.newestLikes = await this.getNewestLikes(postId);
+      await this.postsRepository.save(post);
+
       return;
     }
     // console.log(comment);
@@ -162,5 +168,16 @@ export class PostsService {
     await this.postsRepository.save(post);
   }
 
-  async handleNewestLikes() {}
+  async getNewestLikes(postId: string) {
+    const lastLikes = await this.postLikesRepository.findLastLikes(postId);
+    console.log('LAST LIKES', lastLikes);
+    if (!lastLikes) return;
+    return lastLikes.map((like) => {
+      return {
+        addedAt: like.addedAt,
+        userId: like.userId,
+        login: like.userLogin,
+      };
+    });
+  }
 }

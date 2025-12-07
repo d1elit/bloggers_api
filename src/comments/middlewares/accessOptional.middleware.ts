@@ -4,9 +4,11 @@ import { errorsHandler } from '../../core/errors/errors.handler';
 import { container } from '../../composition-root';
 import { JwtService } from '../../auth/adapters/jwt.service';
 import { LikesRepository } from '../repositories/likes.repository';
+import { PostLikesRepository } from '../../posts/repositories/post-likes.repository';
 
 const jwtService = container.get(JwtService);
 const likesRepository = container.get(LikesRepository);
+const postLikeRepo = container.get(PostLikesRepository);
 export const AccessOptionalMiddleware = async (
   req: Request,
   res: Response,
@@ -20,6 +22,7 @@ export const AccessOptionalMiddleware = async (
     }
 
     console.log('I"m her in optional access ');
+    console.log(req.originalUrl.indexOf('posts'));
     const [authType, token] = req.headers.authorization.split(' ');
     console.log('token:', token);
     const payload = await jwtService.verifyToken(token);
@@ -28,7 +31,12 @@ export const AccessOptionalMiddleware = async (
       req.user = { userId: payload.userId } as userIdType;
       const { userId } = payload;
       const commentId = req.params.id;
-      let like = await likesRepository.find(userId, commentId);
+      let like;
+      if (req.originalUrl.includes('comments')) {
+        like = await likesRepository.find(userId, commentId);
+      } else {
+        like = await postLikeRepo.find(userId, req.params.id);
+      }
 
       if (like) {
         req.user = {

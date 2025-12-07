@@ -87,10 +87,15 @@ export class PostsController {
     res: Response<PostOutput>,
   ) {
     try {
-      const id = req.params.id;
-      const post = await this.postsQueryRepository.findByIdOrError(id);
-      const postViewModel = mapToPostViewModel(post);
-      res.status(HttpStatus.Ok).send(postViewModel);
+      const postId = req.params.id;
+      const likeStatus = req.user.likeStatus as string;
+      console.log(req.user);
+      const post = await this.postsQueryRepository.findByIdOrError(
+        postId,
+        likeStatus,
+      );
+
+      res.status(HttpStatus.Ok).send(post);
     } catch (e: unknown) {
       errorsHandler(e, res);
     }

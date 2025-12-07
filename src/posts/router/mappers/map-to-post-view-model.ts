@@ -1,7 +1,10 @@
 import { PostOutput } from '../output/post.output';
 import { PostDocument } from '../../Schemas/post.schema';
 
-export function mapToPostViewModel(post: PostDocument): PostOutput {
+export function mapToPostViewModel(
+  post: PostDocument,
+  postLike?: string | undefined,
+): PostOutput {
   return {
     id: post._id.toString(),
     title: post.title,
@@ -10,6 +13,11 @@ export function mapToPostViewModel(post: PostDocument): PostOutput {
     blogId: post.blogId,
     blogName: post.blogName,
     createdAt: post.createdAt,
-    extendedLikesInfo: post.extendedLikesInfo,
+    extendedLikesInfo: {
+      likesCount: post.extendedLikesInfo.likesCount,
+      dislikesCount: post.extendedLikesInfo.dislikesCount,
+      myStatus: postLike ?? 'None',
+      newestLikes: post.extendedLikesInfo.newestLikes,
+    },
   };
 }
