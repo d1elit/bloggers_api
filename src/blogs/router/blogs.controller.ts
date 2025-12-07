@@ -23,6 +23,7 @@ import { BlogQueryInput } from './input/blog-query.input';
 import { PostQueryInput } from '../../posts/router/input/post-query.input';
 import { postListPaginatedOutput } from '../../posts/router/output/post-list-paginated.output';
 import { PostsQueryRepository } from '../../posts/repositories/posts.query-repository';
+import { PostsSortFields } from '../../posts/types/postsSortFields';
 
 @injectable()
 export class BlogsController {
@@ -109,9 +110,12 @@ export class BlogsController {
   ) {
     try {
       const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
-      const id = req.params.id;
-      await this.blogsQueryRepository.findByIdOrError(id);
-      const posts = await this.postsQueryRepository.findAll(queryInput, id);
+      const blogId = req.params.id;
+      await this.blogsQueryRepository.findByIdOrError(blogId);
+      const posts = await this.postsQueryRepository.findAll({
+        queryDto: queryInput,
+        blogId,
+      });
       res.status(HttpStatus.Ok).send(posts);
     } catch (e: unknown) {
       errorsHandler(e, res);

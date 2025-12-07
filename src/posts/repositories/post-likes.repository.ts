@@ -27,8 +27,13 @@ export class PostLikesRepository {
     return;
   }
 
-  async lastLikes(postId: string): Promise<PostLikeDocument[] | null> {
-    return PostLikesModel.find({ postId }).sort({ addedAt: -1 }).limit(5);
+  async findLastLikes(postIds: string[]): Promise<PostLikeDocument[] | null> {
+    console.log(postIds);
+    return PostLikesModel.find({
+      postId: { $in: postIds },
+    })
+      .sort({ addedAt: -1 })
+      .limit(5);
   }
 
   async findByIds(ids: string[], userId: string | undefined) {

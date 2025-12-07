@@ -56,7 +56,9 @@ export class PostsQueryRepository {
 
     const itemsIds = items.map((item) => item._id.toString());
     let likes = await postLikesRepository.findByIds(itemsIds, userId);
-    console.log('POSTS WITH LIKES', likes);
+
+    let likesLast = await postLikesRepository.findLastLikes(itemsIds);
+    console.log('LAST LIKES', likesLast);
 
     const totalCount = await PostModel.countDocuments(filter);
 

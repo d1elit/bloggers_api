@@ -1,5 +1,4 @@
 import mongoose, { HydratedDocument, model, Model } from 'mongoose';
-import { Like } from '../../comments/types/Likes';
 
 export type newestLikes = {
   addedAt: string;
@@ -11,6 +10,9 @@ export type PostLike = {
   userId: string;
   postId: string;
   myStatus: string;
+  userLogin: string;
+  addedAt: string;
+
   // newestLikes: newestLikes[];
 };
 
@@ -26,6 +28,8 @@ export const PostLikesInfoSchema = new mongoose.Schema({
 export const PostLikesSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   postId: { type: String, required: true },
+  userLogin: { type: String, required: true },
+  addedAt: { type: Date, default: Date.now },
   myStatus: {
     type: String,
     required: true,

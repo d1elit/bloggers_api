@@ -7,11 +7,7 @@ import { CommentsRepository } from '../../comments/repositories/comments.reposit
 import { UsersRepository } from '../../users/repositories/users.repository';
 import { injectable } from 'inversify';
 import { PostDocument, PostModel } from '../Schemas/post.schema';
-import {
-  CommentDocument,
-  CommentModel,
-} from '../../comments/Schemas/comment.schema';
-import { LikeDocument, LikesModel } from '../../comments/Schemas/likes.schema';
+import { CommentModel } from '../../comments/Schemas/comment.schema';
 import { PostLikesRepository } from '../repositories/post-likes.repository';
 import { PostLikeDocument, PostLikesModel } from '../Schemas/postLikes.schema';
 
@@ -97,12 +93,12 @@ export class PostsService {
   async postLike(
     likeStatus: string,
     postId: string,
-    userId?: string,
+    userId: string,
   ): Promise<void> {
     console.log('Im inside POSTLIKE 2');
     // console.log('userId', userId);
     let post = await this.postsRepository.findByIdOrError(postId);
-    // let user = await this.usersRepository.findByIdOrError(userId);
+    let user = await this.usersRepository.findByIdOrError(userId);
     if (userId) {
       console.log('YA TYT');
       let like = await this.postLikesRepository.find(userId, postId);
@@ -115,6 +111,8 @@ export class PostsService {
         newLike.userId = userId.toString();
         newLike.postId = postId.toString();
         newLike.myStatus = likeStatus;
+        newLike.userLogin = user.login;
+
         // newLike.newestLikes = {
         //   addedAt: new Date().toISOString(),
         //   userId: user._id.toString(),
