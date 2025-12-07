@@ -161,4 +161,6 @@ export class PostsService {
     }
     await this.postsRepository.save(post);
   }
+
+  async handleNewestLikes() {}
 }

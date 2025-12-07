@@ -17,7 +17,7 @@ export class PostLikesRepository {
   }
 
   async create(like: PostLikeDocument) {
-    console.log('IM INSIDE OF POSTLIKE ');
+    console.log('IM INSIDE OF POSTLIKE');
     console.log(like);
     await like.save();
     return;
@@ -27,10 +27,11 @@ export class PostLikesRepository {
     return;
   }
 
-  async findLastLikes(postIds: string[]): Promise<PostLikeDocument[] | null> {
-    console.log(postIds);
+  async findLastLikes(postId: string): Promise<PostLikeDocument[] | null> {
+    console.log(postId);
     return PostLikesModel.find({
-      postId: { $in: postIds },
+      postId: postId,
+      status: 'Like',
     })
       .sort({ addedAt: -1 })
       .limit(5);

@@ -111,10 +111,12 @@ export class BlogsController {
     try {
       const queryInput = setDefaultSortAndPaginationIfNotExist(req.query);
       const blogId = req.params.id;
+      const userId = req.user.userId as string;
       await this.blogsQueryRepository.findByIdOrError(blogId);
       const posts = await this.postsQueryRepository.findAll({
         queryDto: queryInput,
         blogId,
+        userId,
       });
       res.status(HttpStatus.Ok).send(posts);
     } catch (e: unknown) {
