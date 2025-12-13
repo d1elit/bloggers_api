@@ -4,8 +4,9 @@ import { PostInput } from '../../posts/router/input/post.input';
 import { BlogsRepository } from '../repositories/blogs.repository';
 import { PostsRepository } from '../../posts/repositories/posts.repository';
 import { injectable } from 'inversify';
-import { BlogModel } from '../Schemas/blog.schema';
+
 import { PostDocument, PostModel } from '../../posts/Schemas/post.schema';
+import { BlogModel } from '../Entity/blogSchema';
 
 @injectable()
 export class BlogsService {
@@ -16,12 +17,7 @@ export class BlogsService {
 
   async create(dto: BlogInput): Promise<string> {
     const blog = new BlogModel();
-    blog.name = dto.name;
-    blog.description = dto.description;
-    blog.websiteUrl = dto.websiteUrl;
-    blog.createdAt = new Date().toISOString();
-    blog.isMembership = false;
-
+    blog.create(dto);
     return await this.blogsRepository.save(blog);
   }
 

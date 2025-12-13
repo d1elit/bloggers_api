@@ -3,7 +3,7 @@ import { BlogQueryInput } from '../router/input/blog-query.input';
 import { mapToBlogViewModel } from '../router/mappers/map-to-blog-list-paginated.util';
 import { BlogListPaginatedOutput } from '../router/output/blog-list-paginated.output';
 import { injectable } from 'inversify';
-import { BlogDocument, BlogModel } from '../Schemas/blog.schema';
+import { BlogDocument, BlogModel } from '../Entity/blogSchema';
 import { mapToBlogView } from '../router/mappers/map-to-blog-view-model';
 import { BlogOutput } from '../router/output/blog.output';
 

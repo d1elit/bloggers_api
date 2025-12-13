@@ -2,7 +2,7 @@ import { Blog } from '../../types/blog';
 import { BlogOutput } from '../output/blog.output';
 import { WithId } from 'mongodb';
 import { BlogListPaginatedOutput } from '../output/blog-list-paginated.output';
-import { BlogDocument } from '../../Schemas/blog.schema';
+import { BlogDocument } from '../../Entity/blogSchema';
 
 export function mapToBlogViewModel(
   blogs: BlogDocument[],

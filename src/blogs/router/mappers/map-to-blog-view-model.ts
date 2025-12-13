@@ -1,7 +1,7 @@
 import { WithId } from 'mongodb';
 import { Blog } from '../../types/blog';
 import { BlogOutput } from '../output/blog.output';
-import { BlogDocument } from '../../Schemas/blog.schema';
+import { BlogDocument } from '../../Entity/blogSchema';
 
 export function mapToBlogView(blog: BlogDocument): BlogOutput {
   return {
