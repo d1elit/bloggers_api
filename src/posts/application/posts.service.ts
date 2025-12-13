@@ -9,7 +9,7 @@ import { injectable } from 'inversify';
 import { PostDocument, PostModel } from '../Schemas/post.schema';
 import { CommentModel } from '../../comments/Schemas/comment.schema';
 import { PostLikesRepository } from '../repositories/post-likes.repository';
-import { PostLikeDocument, PostLikesModel } from '../Schemas/postLikes.schema';
+import { PostLikesModel } from '../Schemas/postLikes.schema';
 
 @injectable()
 export class PostsService {
@@ -105,7 +105,7 @@ export class PostsService {
       newLike.myStatus = likeStatus;
       newLike.userLogin = user.login;
 
-      this.postLikeControl(post, newLike, likeStatus);
+      this.postLikeControl(post, likeStatus);
       await this.postLikesRepository.create(newLike);
     } else {
       if (likeStatus === like.myStatus) {
@@ -114,7 +114,7 @@ export class PostsService {
       let oldStatus = like.myStatus;
 
       like.myStatus = likeStatus;
-      this.postLikeControl(post, like, likeStatus, oldStatus);
+      this.postLikeControl(post, likeStatus, oldStatus);
       await this.postLikesRepository.update(like);
     }
     post.extendedLikesInfo.newestLikes = await this.getNewestLikes(postId);
@@ -124,7 +124,6 @@ export class PostsService {
 
   postLikeControl(
     post: PostDocument,
-    like: PostLikeDocument,
     likeStatus: string,
     oldLikeStatus?: string,
   ) {
