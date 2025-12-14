@@ -1,6 +1,6 @@
 import { postListPaginatedOutput } from '../output/post-list-paginated.output';
-import { PostDocument } from '../../Schemas/post.schema';
-import { PostLikeDocument } from '../../Schemas/postLikes.schema';
+import { PostDocument } from '../../../domain/postEntity';
+import { PostLikeDocument } from '../../../Schemas/postLikes.schema';
 
 export function mapToPostListPaginated(
   posts: PostDocument[],

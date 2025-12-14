@@ -1,13 +1,13 @@
-import { BlogInput } from '../../../src/blogs/router/input/blog.input';
+import { BlogInput } from '../../../src/blogs/router/dto/input/blog.input';
 import { Express } from 'express';
 import { BLOGS_PATH } from '../../../src/core/path';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
 import { generateBasicAuthToken } from '../generate-admin-auth-token';
 import request from 'supertest';
 import { getBlogDto } from './get-blog-dto';
-import { BlogOutput } from '../../../src/blogs/router/output/blog.output';
-import { BlogDocument } from '../../../src/blogs/Entity/blogSchema';
-import { mapToBlogView } from '../../../src/blogs/router/mappers/map-to-blog-view-model';
+import { BlogOutput } from '../../../src/blogs/router/dto/output/blog.output';
+import { BlogDocument } from '../../../src/blogs/domain/blogEntity';
+import { mapToBlogView } from '../../../src/blogs/router/dto/mappers/map-to-blog-view-model';
 
 export async function createBlog(
   app: Express,

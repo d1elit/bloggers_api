@@ -1,5 +1,5 @@
 import { PostOutput } from '../output/post.output';
-import { PostDocument } from '../../Schemas/post.schema';
+import { PostDocument } from '../../../domain/postEntity';
 
 export function mapToPostViewModel(
   post: PostDocument,

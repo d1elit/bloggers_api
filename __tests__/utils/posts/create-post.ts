@@ -1,6 +1,6 @@
 import { Express } from 'express';
-import { PostInput } from '../../../src/posts/router/input/post.input';
-import { PostOutput } from '../../../src/posts/router/output/post.output';
+import { PostInput } from '../../../src/posts/router/dto/input/post.input';
+import { PostOutput } from '../../../src/posts/router/dto/output/post.output';
 import request from 'supertest';
 import { POSTS_PATH } from '../../../src/core/path';
 import { generateBasicAuthToken } from '../generate-admin-auth-token';

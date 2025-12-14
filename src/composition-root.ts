@@ -3,12 +3,12 @@ import { CommentsQueryRepository } from './comments/repositories/comments.query-
 
 import { CommentsRepository } from './comments/repositories/comments.repository';
 import { CommentsService } from './comments/application/comments.service';
-import { BlogsRepository } from './blogs/repositories/blogs.repository';
-import { BlogsQueryRepository } from './blogs/repositories/blogs.query-repository';
+import { BlogsRepository } from './blogs/infrasturcture/repositories/blogs.repository';
+import { BlogsQueryRepository } from './blogs/infrasturcture/repositories/blogs.query-repository';
 import { BlogsService } from './blogs/application/blogs.service';
-import { PostsRepository } from './posts/repositories/posts.repository';
+import { PostsRepository } from './posts/infrasturcture/repositories/posts.repository';
 import { PostsService } from './posts/application/posts.service';
-import { PostsQueryRepository } from './posts/repositories/posts.query-repository';
+import { PostsQueryRepository } from './posts/infrasturcture/repositories/posts.query-repository';
 import { UsersRepository } from './users/repositories/users.repository';
 import { UsersQueryRepository } from './users/repositories/users.query-repository';
 import { UsersService } from './users/application/users.service';
@@ -27,7 +27,7 @@ import { PostsController } from './posts/router/posts.controller';
 import { UsersController } from './users/router/users.controller';
 import { DevicesController } from './devices/router/devices.controller';
 import { LikesRepository } from './comments/repositories/likes.repository';
-import { PostLikesRepository } from './posts/repositories/post-likes.repository';
+import { PostLikesRepository } from './posts/infrasturcture/repositories/post-likes.repository';
 
 export const container = new Container();
 container.bind<BlogsRepository>(BlogsRepository).toSelf();

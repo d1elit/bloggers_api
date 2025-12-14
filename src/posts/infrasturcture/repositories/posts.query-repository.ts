@@ -1,14 +1,14 @@
-import { PostQueryInput } from '../router/input/post-query.input';
-import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
-import { mapToPostListPaginated } from '../router/mappers/map-to-post-list-paginated';
-import { postListPaginatedOutput } from '../router/output/post-list-paginated.output';
+import { PostQueryInput } from '../../router/dto/input/post-query.input';
+import { RepositoryNotFoundError } from '../../../core/errors/domain.errors';
+import { mapToPostListPaginated } from '../../router/dto/mappers/map-to-post-list-paginated';
+import { postListPaginatedOutput } from '../../router/dto/output/post-list-paginated.output';
 import { injectable } from 'inversify';
-import { PostModel } from '../Schemas/post.schema';
-import { container } from '../../composition-root';
+import { PostModel } from '../../domain/postEntity';
+import { container } from '../../../composition-root';
 
 import { PostLikesRepository } from './post-likes.repository';
-import { mapToPostViewModel } from '../router/mappers/map-to-post-view-model';
-import { PostOutput } from '../router/output/post.output';
+import { mapToPostViewModel } from '../../router/dto/mappers/map-to-post-view-model';
+import { PostOutput } from '../../router/dto/output/post.output';
 
 @injectable()
 export class PostsQueryRepository {

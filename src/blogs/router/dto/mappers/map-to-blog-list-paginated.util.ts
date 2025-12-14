@@ -1,8 +1,6 @@
-import { Blog } from '../../types/blog';
 import { BlogOutput } from '../output/blog.output';
-import { WithId } from 'mongodb';
 import { BlogListPaginatedOutput } from '../output/blog-list-paginated.output';
-import { BlogDocument } from '../../Entity/blogSchema';
+import { BlogDocument } from '../../../domain/blogEntity';
 
 export function mapToBlogViewModel(
   blogs: BlogDocument[],

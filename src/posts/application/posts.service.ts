@@ -1,15 +1,15 @@
-import { PostInput } from '../router/input/post.input';
+import { PostInput } from '../router/dto/input/post.input';
 import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
 import { CommentInput } from '../../comments/router/input/comment.input';
-import { BlogsRepository } from '../../blogs/repositories/blogs.repository';
-import { PostsRepository } from '../repositories/posts.repository';
+import { BlogsRepository } from '../../blogs/infrasturcture/repositories/blogs.repository';
+import { PostsRepository } from '../infrasturcture/repositories/posts.repository';
 import { CommentsRepository } from '../../comments/repositories/comments.repository';
 import { UsersRepository } from '../../users/repositories/users.repository';
 import { injectable } from 'inversify';
-import { PostDocument, PostModel } from '../Schemas/post.schema';
+import { PostDocument, PostEntity, PostModel } from '../domain/postEntity';
 import { CommentModel } from '../../comments/Schemas/comment.schema';
-import { PostLikesRepository } from '../repositories/post-likes.repository';
-import { PostLikesModel } from '../Schemas/postLikes.schema';
+import { PostLikesRepository } from '../infrasturcture/repositories/post-likes.repository';
+import { PostLikeEntity, PostLikesModel } from '../Schemas/postLikes.schema';
 
 @injectable()
 export class PostsService {
@@ -21,31 +21,11 @@ export class PostsService {
     public readonly postLikesRepository: PostLikesRepository,
   ) {}
 
-  async create(dto: PostInput, blogId?: string): Promise<PostDocument> {
-    const blog = await this.blogsRepository.find(dto.blogId);
-
-    if (!blog) {
-      throw new RepositoryNotFoundError(
-        `Blog with id ${dto.blogId} not found or ${blogId}, not found!`,
-      );
-    }
-
-    const post = new PostModel();
-
-    post.title = dto.title;
-    post.shortDescription = dto.shortDescription;
-    post.content = dto.content;
-    post.blogId = blogId ?? dto.blogId;
-    post.blogName = blog.name;
-    post.createdAt = new Date().toISOString();
-    post.extendedLikesInfo = {
-      likesCount: 0,
-      dislikesCount: 0,
-      myStatus: 'None',
-      newestLikes: [],
-    };
-
-    return await this.postsRepository.create(post);
+  async create(postDto: PostInput): Promise<string> {
+    const blog = await this.blogsRepository.findByIdOrError(postDto.blogId);
+    const post = new PostModel(PostEntity.createNew(postDto, blog));
+    const createdPost = await this.postsRepository.create(post);
+    return createdPost._id.toString();
   }
 
   async delete(id: string): Promise<void> {
@@ -55,9 +35,9 @@ export class PostsService {
   }
 
   async update(id: string, dto: PostInput): Promise<void> {
-    await this.postsRepository.findByIdOrError(id);
+    const post = await this.postsRepository.findByIdOrError(id);
+    post.update(dto);
     await this.postsRepository.update(id, dto);
-    return;
   }
 
   async createComment(
@@ -98,44 +78,33 @@ export class PostsService {
     let like = await this.postLikesRepository.find(userId, postId);
 
     if (like === null) {
-      const newLike = new PostLikesModel();
+      const newLike = new PostLikesModel(
+        PostLikeEntity.createNew({
+          postId: postId.toString(),
+          userId: userId.toString(),
+          userLogin: user.login,
+          likeStatus,
+        }),
+      );
 
-      newLike.userId = userId.toString();
-      newLike.postId = postId.toString();
-      newLike.myStatus = likeStatus;
-      newLike.userLogin = user.login;
+      post.updateLikeCount(likeStatus);
 
-      this.postLikeControl(post, likeStatus);
       await this.postLikesRepository.create(newLike);
     } else {
       if (likeStatus === like.myStatus) {
         return;
       }
-      let oldStatus = like.myStatus;
+      const oldStatus = like.myStatus;
+      like.updateLikeStatus(likeStatus);
+      post.updateLikeCount(likeStatus, oldStatus);
 
-      like.myStatus = likeStatus;
-      this.postLikeControl(post, likeStatus, oldStatus);
       await this.postLikesRepository.update(like);
     }
-    post.extendedLikesInfo.newestLikes = await this.getNewestLikes(postId);
+    const newestLikes = await this.getNewestLikes(postId);
+    post.updateNewestLikes(newestLikes);
+
     await this.postsRepository.save(post);
     return;
-  }
-
-  postLikeControl(
-    post: PostDocument,
-    likeStatus: string,
-    oldLikeStatus?: string,
-  ) {
-    if (oldLikeStatus === 'Like') post.extendedLikesInfo.likesCount -= 1;
-    if (oldLikeStatus === 'Dislike') post.extendedLikesInfo.dislikesCount -= 1;
-
-    if (likeStatus === 'Like') {
-      post.extendedLikesInfo.likesCount += 1;
-    }
-    if (likeStatus === 'Dislike') {
-      post.extendedLikesInfo.dislikesCount += 1;
-    }
   }
 
   async getNewestLikes(postId: string) {

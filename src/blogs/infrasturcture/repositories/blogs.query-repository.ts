@@ -1,11 +1,11 @@
-import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
-import { BlogQueryInput } from '../router/input/blog-query.input';
-import { mapToBlogViewModel } from '../router/mappers/map-to-blog-list-paginated.util';
-import { BlogListPaginatedOutput } from '../router/output/blog-list-paginated.output';
+import { RepositoryNotFoundError } from '../../../core/errors/domain.errors';
+import { BlogQueryInput } from '../../router/dto/input/blog-query.input';
+import { mapToBlogViewModel } from '../../router/dto/mappers/map-to-blog-list-paginated.util';
+import { BlogListPaginatedOutput } from '../../router/dto/output/blog-list-paginated.output';
 import { injectable } from 'inversify';
-import { BlogDocument, BlogModel } from '../Entity/blogSchema';
-import { mapToBlogView } from '../router/mappers/map-to-blog-view-model';
-import { BlogOutput } from '../router/output/blog.output';
+import { BlogDocument, BlogModel } from '../../domain/blogEntity';
+import { mapToBlogView } from '../../router/dto/mappers/map-to-blog-view-model';
+import { BlogOutput } from '../../router/dto/output/blog.output';
 
 @injectable()
 export class BlogsQueryRepository {

@@ -4,7 +4,7 @@ import { errorsHandler } from '../../core/errors/errors.handler';
 import { container } from '../../composition-root';
 import { JwtService } from '../../auth/adapters/jwt.service';
 import { LikesRepository } from '../repositories/likes.repository';
-import { PostLikesRepository } from '../../posts/repositories/post-likes.repository';
+import { PostLikesRepository } from '../../posts/infrasturcture/repositories/post-likes.repository';
 
 const jwtService = container.get(JwtService);
 const likesRepository = container.get(LikesRepository);

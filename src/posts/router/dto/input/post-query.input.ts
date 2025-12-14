@@ -1,5 +1,5 @@
-import { PaginationAndSorting } from '../../../core/types/pagination-and-sorting';
-import { PostsSortFields } from '../../types/postsSortFields';
+import { PaginationAndSorting } from '../../../../core/types/pagination-and-sorting';
+import { PostsSortFields } from '../../../domain/types/postsSortFields';
 
 export type PostQueryInput = PaginationAndSorting<PostsSortFields> &
   Partial<{

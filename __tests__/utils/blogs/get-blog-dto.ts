@@ -1,4 +1,4 @@
-import { BlogInput } from '../../../src/blogs/router/input/blog.input';
+import { BlogInput } from '../../../src/blogs/router/dto/input/blog.input';
 
 export function getBlogDto(): BlogInput {
   return {

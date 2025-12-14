@@ -1,5 +1,5 @@
-import { blogsSortFields } from '../../types/blogsSortFields';
-import { PaginationAndSorting } from '../../../core/types/pagination-and-sorting';
+import { blogsSortFields } from '../../../types/blogsSortFields';
+import { PaginationAndSorting } from '../../../../core/types/pagination-and-sorting';
 
 export type BlogQueryInput = PaginationAndSorting<blogsSortFields> &
   Partial<{

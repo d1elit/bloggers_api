@@ -1,12 +1,16 @@
 import 'reflect-metadata';
-import { BlogInput } from '../router/input/blog.input';
-import { PostInput } from '../../posts/router/input/post.input';
-import { BlogsRepository } from '../repositories/blogs.repository';
-import { PostsRepository } from '../../posts/repositories/posts.repository';
+import { BlogInput } from '../router/dto/input/blog.input';
+import { PostInput } from '../../posts/router/dto/input/post.input';
+import { BlogsRepository } from '../infrasturcture/repositories/blogs.repository';
+import { PostsRepository } from '../../posts/infrasturcture/repositories/posts.repository';
 import { injectable } from 'inversify';
 
-import { PostDocument, PostModel } from '../../posts/Schemas/post.schema';
-import { BlogModel } from '../Entity/blogSchema';
+import {
+  PostDocument,
+  PostEntity,
+  PostModel,
+} from '../../posts/domain/postEntity';
+import { BlogEntity, BlogModel } from '../domain/blogEntity';
 
 @injectable()
 export class BlogsService {
@@ -16,34 +20,26 @@ export class BlogsService {
   ) {}
 
   async create(dto: BlogInput): Promise<string> {
-    const blog = new BlogModel();
-    blog.create(dto);
+    const blog = new BlogModel(BlogEntity.createNew(dto));
     return await this.blogsRepository.save(blog);
   }
 
   async delete(id: string): Promise<void> {
-    let blog = await this.blogsRepository.findByIdOrError(id);
+    const blog = await this.blogsRepository.findByIdOrError(id);
     await this.blogsRepository.delete(blog);
   }
 
   async update(id: string, dto: BlogInput): Promise<void> {
-    let blog = await this.blogsRepository.findByIdOrError(id);
-    blog.name = dto.name;
-    blog.description = dto.description;
-    blog.websiteUrl = dto.websiteUrl || blog.websiteUrl;
+    const blog = await this.blogsRepository.findByIdOrError(id);
+    blog.update(dto);
     await this.blogsRepository.update(blog);
     return;
   }
 
-  async createPost(id: string, dto: PostInput): Promise<PostDocument> {
+  async createPost(id: string, postDto: PostInput): Promise<PostDocument> {
     const blog = await this.blogsRepository.findByIdOrError(id);
-    const post = new PostModel();
-    post.title = dto.title;
-    post.shortDescription = dto.shortDescription;
-    post.content = dto.content;
-    post.blogId = id;
-    post.blogName = blog.name;
-    post.createdAt = new Date().toISOString();
+    console.log(blog);
+    const post = new PostModel(PostEntity.createNew(postDto, blog));
     return this.postsRepository.create(post);
   }
 }

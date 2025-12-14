@@ -4,16 +4,16 @@ import { setupApp } from '../../../src/setup-app';
 import { generateBasicAuthToken } from '../../utils/generate-admin-auth-token';
 import { runDB, stopDb } from '../../../src/db/mongo.db';
 import { clearDb } from '../../utils/clear-db';
-import { PostInput } from '../../../src/posts/router/input/post.input';
+import { PostInput } from '../../../src/posts/router/dto/input/post.input';
 import { getPostDto } from '../../utils/posts/get-post-dto';
 import { createPost } from '../../utils/posts/create-post';
 import { createBlog } from '../../utils/blogs/create-blog';
 import { POSTS_PATH } from '../../../src/core/path';
 import request from 'supertest';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
-import { PostOutput } from '../../../src/posts/router/output/post.output';
+import { PostOutput } from '../../../src/posts/router/dto/output/post.output';
 import { getPostById } from '../../utils/posts/get-post-by-id';
-import { BlogOutput } from '../../../src/blogs/router/output/blog.output';
+import { BlogOutput } from '../../../src/blogs/router/dto/output/blog.output';
 import mongoose from 'mongoose';
 
 describe('POSTS_TESTS', () => {

@@ -1,5 +1,8 @@
 import { injectable } from 'inversify';
-import { PostLikeDocument, PostLikesModel } from '../Schemas/postLikes.schema';
+import {
+  PostLikeDocument,
+  PostLikesModel,
+} from '../../Schemas/postLikes.schema';
 
 @injectable()
 export class PostLikesRepository {

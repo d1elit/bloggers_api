@@ -1,9 +1,9 @@
 import { RequestHandler, Router } from 'express';
 import { idValidation } from '../../core/middlewares/validation/params-id.validation-middleware';
 import { inputValidationResultMiddleware } from '../../core/middlewares/validation/input-validtion-result.middleware';
-import { blogInputDtoValidation } from './blog.input-dto.validation-middlewares';
+import { blogInputDtoValidation } from './middlewares/blog.input-dto.validation-middlewares';
 import { superAdminGuardMiddleware } from '../../auth/guards/super-admin.guard-middleware';
-import { blogsPostInputDtoValidation } from '../../posts/router/post.input-dto.validation-middlewares';
+import { blogsPostInputDtoValidation } from '../../posts/router/middleware/post.input-dto.validation-middlewares';
 import { container } from '../../composition-root';
 import { BlogsController } from './blogs.controller';
 import { AccessOptionalMiddleware } from '../../comments/middlewares/accessOptional.middleware';

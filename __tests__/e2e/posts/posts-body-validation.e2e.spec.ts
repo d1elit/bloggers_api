@@ -9,7 +9,7 @@ import { POSTS_PATH } from '../../../src/core/path';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
 import { getPostDto } from '../../utils/posts/get-post-dto';
 import { createBlog } from '../../utils/blogs/create-blog';
-import { BlogOutput } from '../../../src/blogs/router/output/blog.output';
+import { BlogOutput } from '../../../src/blogs/router/dto/output/blog.output';
 import { createPost } from '../../utils/posts/create-post';
 import { getPostById } from '../../utils/posts/get-post-by-id';
 import mongoose from 'mongoose';

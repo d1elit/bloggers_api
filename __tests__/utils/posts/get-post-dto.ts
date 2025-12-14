@@ -1,4 +1,4 @@
-import { PostInput } from '../../../src/posts/router/input/post.input';
+import { PostInput } from '../../../src/posts/router/dto/input/post.input';
 
 export function getPostDto(blodId: string): PostInput {
   return {

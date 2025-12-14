@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { idValidation } from '../../core/middlewares/validation/params-id.validation-middleware';
 import { inputValidationResultMiddleware } from '../../core/middlewares/validation/input-validtion-result.middleware';
-import { postInputDtoValidation } from './post.input-dto.validation-middlewares';
+import { postInputDtoValidation } from './middleware/post.input-dto.validation-middlewares';
 import { superAdminGuardMiddleware } from '../../auth/guards/super-admin.guard-middleware';
 import { AccsessTokenGuardMiddleware } from '../../auth/guards/accsess.token.guard-middleware';
 import {

@@ -3,7 +3,7 @@ import request from 'supertest';
 import { BLOGS_PATH } from '../../../src/core/path';
 import { HttpStatus } from '../../../src/core/types/http-statuses';
 import { generateBasicAuthToken } from '../generate-admin-auth-token';
-import { BlogOutput } from '../../../src/blogs/router/output/blog.output';
+import { BlogOutput } from '../../../src/blogs/router/dto/output/blog.output';
 
 export async function getBlogById(
   app: Express,

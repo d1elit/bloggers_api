@@ -10,14 +10,14 @@ import {
 import { HttpStatus } from '../../core/types/http-statuses';
 import { errorsHandler } from '../../core/errors/errors.handler';
 import { PostsService } from '../application/posts.service';
-import { PostsQueryRepository } from '../repositories/posts.query-repository';
+import { PostsQueryRepository } from '../infrasturcture/repositories/posts.query-repository';
 import { CommentsQueryRepository } from '../../comments/repositories/comments.query-repository';
-import { PostInput } from './input/post.input';
-import { mapToPostViewModel } from './mappers/map-to-post-view-model';
-import { PostOutput } from './output/post.output';
+import { PostInput } from './dto/input/post.input';
+import { mapToPostViewModel } from './dto/mappers/map-to-post-view-model';
+import { PostOutput } from './dto/output/post.output';
 import { setDefaultSortAndPaginationIfNotExist } from '../../core/helpers/set-default-query-params';
-import { PostQueryInput } from './input/post-query.input';
-import { postListPaginatedOutput } from './output/post-list-paginated.output';
+import { PostQueryInput } from './dto/input/post-query.input';
+import { postListPaginatedOutput } from './dto/output/post-list-paginated.output';
 import { CommentQueryInput } from '../../comments/router/input/comment-query.input';
 
 @injectable()
@@ -30,8 +30,9 @@ export class PostsController {
 
   async createPost(req: RequestWithBody<PostInput>, res: Response) {
     try {
-      const createdPost = await this.postsService.create(req.body);
-      const postViewModel = mapToPostViewModel(createdPost);
+      const createdPostId = await this.postsService.create(req.body);
+      const postViewModel =
+        await this.postsQueryRepository.findByIdOrError(createdPostId);
       res.status(HttpStatus.Created).send(postViewModel);
     } catch (e: unknown) {
       errorsHandler(e, res);

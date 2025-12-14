@@ -1,4 +1,4 @@
-import { extendedLikesInfo } from '../../types/post';
+import { ExtendedLikesInfo } from '../../../domain/postEntity';
 
 export type PostOutput = {
   id: string;
@@ -8,5 +8,5 @@ export type PostOutput = {
   blogId: string;
   blogName: string;
   createdAt: string;
-  extendedLikesInfo: extendedLikesInfo;
+  extendedLikesInfo: ExtendedLikesInfo;
 };

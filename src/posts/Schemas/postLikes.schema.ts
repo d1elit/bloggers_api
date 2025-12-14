@@ -1,29 +1,5 @@
 import mongoose, { HydratedDocument, model, Model } from 'mongoose';
-
-export type newestLikes = {
-  addedAt: string;
-  userId: string;
-  login: string;
-};
-
-export type PostLike = {
-  userId: string;
-  postId: string;
-  myStatus: string;
-  userLogin: string;
-  addedAt: string;
-
-  // newestLikes: newestLikes[];
-};
-
-type PostLikesModel = Model<PostLike>;
-
-export type PostLikeDocument = HydratedDocument<PostLike>;
-
-export const PostLikesInfoSchema = new mongoose.Schema({
-  likesCount: { type: Number, required: true },
-  dislikesCount: { type: Number, required: true },
-});
+import { PostEntity, PostSchema } from '../domain/postEntity';
 
 export const PostLikesSchema = new mongoose.Schema({
   userId: { type: String, required: true },
@@ -34,17 +10,45 @@ export const PostLikesSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: ['Like', 'Dislike', 'None'],
-    // newestLikes: [
-    //   {
-    //     addedAt: { type: Date, default: Date.now },
-    //     userId: { type: String, required: true },
-    //     login: { type: String, required: true },
-    //   },
-    // ],
   },
 });
 
-export const PostLikesModel = model<PostLike, PostLikesModel>(
+export type likeDto = {
+  userId: string;
+  postId: string;
+  userLogin: string;
+  likeStatus: string;
+};
+
+export class PostLikeEntity {
+  userId!: string;
+  postId!: string;
+  userLogin!: string;
+  myStatus!: string;
+  addedAt!: string;
+
+  static createNew(likeDto: likeDto) {
+    let like = new PostLikeEntity();
+    like.userId = likeDto.userId;
+    like.postId = likeDto.postId;
+    like.addedAt = new Date().toISOString();
+    like.userLogin = likeDto.userLogin;
+    like.myStatus = likeDto.likeStatus;
+    return like;
+  }
+
+  updateLikeStatus(likeStatus: string) {
+    this.myStatus = likeStatus;
+  }
+}
+
+type PostLikesModel = Model<PostLikeEntity>;
+
+export type PostLikeDocument = HydratedDocument<PostLikeEntity>;
+
+PostLikesSchema.loadClass(PostLikeEntity);
+
+export const PostLikesModel = model<PostLikeEntity, PostLikesModel>(
   'post-likes',
   PostLikesSchema,
 );

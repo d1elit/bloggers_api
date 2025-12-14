@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { injectable } from 'inversify';
 import { BlogsService } from '../application/blogs.service';
-import { BlogsQueryRepository } from '../repositories/blogs.query-repository';
+import { BlogsQueryRepository } from '../infrasturcture/repositories/blogs.query-repository';
 import {
   RequestWithBody,
   RequestWithParams,
@@ -9,21 +9,21 @@ import {
   RequestWithParamsAndQuery,
   RequestWithQuery,
 } from '../../core/types/requestTypes';
-import { BlogInput } from './input/blog.input';
+import { BlogInput } from './dto/input/blog.input';
 import { HttpStatus } from '../../core/types/http-statuses';
-import { mapToBlogView } from './mappers/map-to-blog-view-model';
-import { BlogOutput } from './output/blog.output';
+import { mapToBlogView } from './dto/mappers/map-to-blog-view-model';
+import { BlogOutput } from './dto/output/blog.output';
 import { errorsHandler } from '../../core/errors/errors.handler';
-import { PostOutput } from '../../posts/router/output/post.output';
-import { mapToPostViewModel } from '../../posts/router/mappers/map-to-post-view-model';
+import { PostOutput } from '../../posts/router/dto/output/post.output';
+import { mapToPostViewModel } from '../../posts/router/dto/mappers/map-to-post-view-model';
 import { ErroreType } from '../types/validationError';
 import { setDefaultSortAndPaginationIfNotExist } from '../../core/helpers/set-default-query-params';
-import { BlogListPaginatedOutput } from './output/blog-list-paginated.output';
-import { BlogQueryInput } from './input/blog-query.input';
-import { PostQueryInput } from '../../posts/router/input/post-query.input';
-import { postListPaginatedOutput } from '../../posts/router/output/post-list-paginated.output';
-import { PostsQueryRepository } from '../../posts/repositories/posts.query-repository';
-import { PostsSortFields } from '../../posts/types/postsSortFields';
+import { BlogListPaginatedOutput } from './dto/output/blog-list-paginated.output';
+import { BlogQueryInput } from './dto/input/blog-query.input';
+import { PostQueryInput } from '../../posts/router/dto/input/post-query.input';
+import { postListPaginatedOutput } from '../../posts/router/dto/output/post-list-paginated.output';
+import { PostsQueryRepository } from '../../posts/infrasturcture/repositories/posts.query-repository';
+import { PostsSortFields } from '../../posts/domain/types/postsSortFields';
 
 @injectable()
 export class BlogsController {

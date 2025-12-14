@@ -7,7 +7,7 @@ import request from 'supertest';
 import { BLOGS_PATH } from '../../../src/core/path';
 import { describe } from 'node:test';
 import { getBlogDto } from '../../utils/blogs/get-blog-dto';
-import { BlogOutput } from '../../../src/blogs/router/output/blog.output';
+import { BlogOutput } from '../../../src/blogs/router/dto/output/blog.output';
 import { createBlog } from '../../utils/blogs/create-blog';
 import { getBlogById } from '../../utils/blogs/get-blog-by-id';
 import mongoose from 'mongoose';

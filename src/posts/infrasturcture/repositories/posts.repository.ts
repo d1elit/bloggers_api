@@ -1,13 +1,12 @@
-import { Post } from '../types/post';
-import { PostInput } from '../router/input/post.input';
-import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
+import { PostInput } from '../../router/dto/input/post.input';
+import { RepositoryNotFoundError } from '../../../core/errors/domain.errors';
 import 'reflect-metadata';
 import { injectable } from 'inversify';
-import { PostDocument, PostModel } from '../Schemas/post.schema';
+import { PostDocument, PostEntity, PostModel } from '../../domain/postEntity';
 
 @injectable()
 export class PostsRepository {
-  async create(newPost: Post): Promise<PostDocument> {
+  async create(newPost: PostDocument): Promise<PostDocument> {
     return PostModel.create(newPost);
   }
 
