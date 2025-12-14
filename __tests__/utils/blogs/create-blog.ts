@@ -6,7 +6,6 @@ import { generateBasicAuthToken } from '../generate-admin-auth-token';
 import request from 'supertest';
 import { getBlogDto } from './get-blog-dto';
 import { BlogOutput } from '../../../src/blogs/router/dto/output/blog.output';
-import { BlogDocument } from '../../../src/blogs/domain/blogEntity';
 import { mapToBlogView } from '../../../src/blogs/router/dto/mappers/map-to-blog-view-model';
 
 export async function createBlog(

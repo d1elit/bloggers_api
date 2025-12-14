@@ -2,7 +2,6 @@ import { describe } from 'node:test';
 import express from 'express';
 import { setupApp } from '../../../src/setup-app';
 import { generateBasicAuthToken } from '../../utils/generate-admin-auth-token';
-import { runDB, stopDb } from '../../../src/db/mongo.db';
 import { clearDb } from '../../utils/clear-db';
 import request from 'supertest';
 import { POSTS_PATH } from '../../../src/core/path';

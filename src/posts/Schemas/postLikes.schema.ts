@@ -1,5 +1,4 @@
 import mongoose, { HydratedDocument, model, Model } from 'mongoose';
-import { PostEntity, PostSchema } from '../domain/postEntity';
 
 export const PostLikesSchema = new mongoose.Schema({
   userId: { type: String, required: true },

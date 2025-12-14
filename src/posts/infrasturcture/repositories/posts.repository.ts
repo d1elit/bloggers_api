@@ -2,7 +2,7 @@ import { PostInput } from '../../router/dto/input/post.input';
 import { RepositoryNotFoundError } from '../../../core/errors/domain.errors';
 import 'reflect-metadata';
 import { injectable } from 'inversify';
-import { PostDocument, PostEntity, PostModel } from '../../domain/postEntity';
+import { PostDocument, PostModel } from '../../domain/postEntity';
 
 @injectable()
 export class PostsRepository {

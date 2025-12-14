@@ -13,7 +13,6 @@ import { PostsService } from '../application/posts.service';
 import { PostsQueryRepository } from '../infrasturcture/repositories/posts.query-repository';
 import { CommentsQueryRepository } from '../../comments/repositories/comments.query-repository';
 import { PostInput } from './dto/input/post.input';
-import { mapToPostViewModel } from './dto/mappers/map-to-post-view-model';
 import { PostOutput } from './dto/output/post.output';
 import { setDefaultSortAndPaginationIfNotExist } from '../../core/helpers/set-default-query-params';
 import { PostQueryInput } from './dto/input/post-query.input';

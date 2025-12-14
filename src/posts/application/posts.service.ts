@@ -6,7 +6,7 @@ import { PostsRepository } from '../infrasturcture/repositories/posts.repository
 import { CommentsRepository } from '../../comments/repositories/comments.repository';
 import { UsersRepository } from '../../users/repositories/users.repository';
 import { injectable } from 'inversify';
-import { PostDocument, PostEntity, PostModel } from '../domain/postEntity';
+import { PostEntity, PostModel } from '../domain/postEntity';
 import { CommentModel } from '../../comments/Schemas/comment.schema';
 import { PostLikesRepository } from '../infrasturcture/repositories/post-likes.repository';
 import { PostLikeEntity, PostLikesModel } from '../Schemas/postLikes.schema';

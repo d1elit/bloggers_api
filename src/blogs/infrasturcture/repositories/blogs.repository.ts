@@ -1,6 +1,6 @@
 import { RepositoryNotFoundError } from '../../../core/errors/domain.errors';
 import { injectable } from 'inversify';
-import { BlogDocument, BlogEntity, BlogModel } from '../../domain/blogEntity';
+import { BlogDocument, BlogModel } from '../../domain/blogEntity';
 
 @injectable()
 export class BlogsRepository {
