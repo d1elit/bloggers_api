@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { userInputDtoValidation } from './user.input-dto.validation-middlewares';
+import { userInputDtoValidation } from './middlewares/user.input-dto.validation-middlewares';
 import { superAdminGuardMiddleware } from '../../auth/guards/super-admin.guard-middleware';
 import { inputValidationResultMiddleware } from '../../core/middlewares/validation/input-validtion-result.middleware';
 import { idValidation } from '../../core/middlewares/validation/params-id.validation-middleware';

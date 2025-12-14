@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { LikesInfoSchema } from './commentLikeEntity';
 import { Commentator } from './types/commentator';
 import { LikesInfo } from './types/LikesInfo';
+import { CommentInput } from '../router/dto/input/comment.input';
 
 export type CommentDto = {
   content: string;
@@ -40,6 +41,10 @@ export class CommentEntity {
       myStatus: 'none',
     };
     return comment;
+  }
+
+  update(commentDto: CommentInput) {
+    this.content = commentDto.content;
   }
 
   updateLikeCount(newStatus: string, oldStatus?: string): void {

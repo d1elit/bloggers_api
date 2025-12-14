@@ -1,5 +1,5 @@
 import { UsersPaginatedOutput } from '../output/users-paginated.output';
-import { UserDocument } from '../../Schemas/user.schema';
+import { UserDocument } from '../../../domain/userEntity';
 
 export function mapToPostListPaginated(
   users: UserDocument[],

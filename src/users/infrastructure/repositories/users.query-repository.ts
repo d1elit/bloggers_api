@@ -1,10 +1,12 @@
-import { UsersQueryInput } from '../router/input/user-query.input';
-import { mapToPostListPaginated } from '../router/mappers/map-to-list-paginated';
-import { UsersPaginatedOutput } from '../router/output/users-paginated.output';
+import { UsersQueryInput } from '../../router/dto/input/user-query.input';
+import { mapToPostListPaginated } from '../../router/dto/mappers/map-to-list-paginated';
+import { UsersPaginatedOutput } from '../../router/dto/output/users-paginated.output';
 
-import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
+import { RepositoryNotFoundError } from '../../../core/errors/domain.errors';
 import { injectable } from 'inversify';
-import { UserDocument, UserModel } from '../Schemas/user.schema';
+import { UserDocument, UserModel } from '../../domain/userEntity';
+import { mapToUsers } from '../../router/dto/mappers/map-to-users-view-model';
+import { UserOutput } from '../../router/dto/output/user.output';
 
 @injectable()
 export class UsersQueryRepository {
@@ -45,6 +47,14 @@ export class UsersQueryRepository {
       throw new RepositoryNotFoundError('User not found');
     }
     return user;
+  }
+
+  async find(id: string): Promise<UserOutput | null> {
+    const user = await UserModel.findById(id);
+    if (!user) {
+      throw new RepositoryNotFoundError('User not found');
+    }
+    return mapToUsers(user);
   }
 
   async findByEmail(email: string): Promise<UserDocument | null> {

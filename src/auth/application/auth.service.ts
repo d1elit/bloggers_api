@@ -3,7 +3,7 @@ import {
   LoginError,
   RegistrationConfirmationError,
 } from '../../core/errors/domain.errors';
-import { UsersRepository } from '../../users/repositories/users.repository';
+import { UsersRepository } from '../../users/infrastructure/repositories/users.repository';
 import { JwtService } from '../adapters/jwt.service';
 import { RegistrationInput } from '../router/input/registration.input';
 import { NodemailerService } from '../adapters/nodemailer.service';
@@ -12,12 +12,12 @@ import { jwtDecode } from 'jwt-decode';
 import { SessionsRepository } from '../../sessions/repositories/sessionsRepository';
 import { refreshTokenPayload } from '../types/refreshTokenPayload';
 import { emailExamples } from '../adapters/emailExamples';
-import { UsersQueryRepository } from '../../users/repositories/users.query-repository';
+import { UsersQueryRepository } from '../../users/infrastructure/repositories/users.query-repository';
 import { NewPasswordInput } from '../router/input/new-password.input';
 import { UsersService } from '../../users/application/users.service';
 import { BcryptService } from '../adapters/bcrypt.service';
 import { injectable } from 'inversify';
-import { UserDocument } from '../../users/Schemas/user.schema';
+import { UserDocument } from '../../users/domain/userEntity';
 
 @injectable()
 export class AuthService {

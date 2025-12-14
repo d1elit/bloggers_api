@@ -1,5 +1,5 @@
 import { UserOutput } from '../output/user.output';
-import { UserDocument } from '../../Schemas/user.schema';
+import { UserDocument } from '../../../domain/userEntity';
 
 export function mapToUsers(users: UserDocument): UserOutput {
   return {

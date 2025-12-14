@@ -1,6 +1,6 @@
 import { SessionsRepository } from '../../sessions/repositories/sessionsRepository';
-import { DeviceOutput } from '../router/output/device.output';
-import { mapToDeviceList } from '../router/mappers/map-to-device-list';
+import { DeviceOutput } from '../router/dto/output/device.output';
+import { mapToDeviceList } from '../router/dto/mappers/map-to-device-list';
 import {
   AccessError,
   RepositoryNotFoundError,

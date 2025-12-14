@@ -3,7 +3,7 @@ import { CommentInput } from '../../comments/router/dto/input/comment.input';
 import { BlogsRepository } from '../../blogs/infrasturcture/repositories/blogs.repository';
 import { PostsRepository } from '../infrasturcture/repositories/posts.repository';
 import { CommentsRepository } from '../../comments/infrasctructure/repositories/comments.repository';
-import { UsersRepository } from '../../users/repositories/users.repository';
+import { UsersRepository } from '../../users/infrastructure/repositories/users.repository';
 import { injectable } from 'inversify';
 import { PostEntity, PostModel } from '../domain/postEntity';
 import {

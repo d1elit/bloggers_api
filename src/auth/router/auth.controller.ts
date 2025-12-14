@@ -6,7 +6,7 @@ import { RegistrationInput } from './input/registration.input';
 import { HttpStatus } from '../../core/types/http-statuses';
 import { errorsHandler } from '../../core/errors/errors.handler';
 import { AuthService } from '../application/auth.service';
-import { UsersQueryRepository } from '../../users/repositories/users.query-repository';
+import { UsersQueryRepository } from '../../users/infrastructure/repositories/users.query-repository';
 
 @injectable()
 export class AuthController {

@@ -22,9 +22,10 @@ export class CommentsService {
   }
 
   async update(commentId: string, userId: string, commentDto: CommentInput) {
-    await this.commentsRepository.findByIdOrError(commentId);
+    const comment = await this.commentsRepository.findByIdOrError(commentId);
     await this.isUserOwner(commentId, userId);
-    await this.commentsRepository.update(commentId, commentDto);
+    comment.update(commentDto);
+    await this.commentsRepository.save(comment);
     return;
   }
 

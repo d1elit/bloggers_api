@@ -1,16 +1,19 @@
-import { User } from '../types/user';
-import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
+import { User } from '../../domain/types/user';
+import { RepositoryNotFoundError } from '../../../core/errors/domain.errors';
 import { add } from 'date-fns';
 import { injectable } from 'inversify';
-import { UserDocument, UserModel } from '../Schemas/user.schema';
+import { UserDocument, UserEntity, UserModel } from '../../domain/userEntity';
 
 @injectable()
 export class UsersRepository {
-  async create(newUser: User): Promise<UserDocument> {
+  async create(newUser: UserEntity): Promise<UserDocument> {
     const user = await UserModel.create(newUser);
     console.log('USER CREATED SUCCESS');
     console.log('USER INFO', newUser.confirmationEmail.confirmationCode);
     return user;
+  }
+  async save(user: UserDocument) {
+    return await user.save();
   }
 
   async delete(id: string) {

@@ -1,11 +1,11 @@
-import { UserInput } from '../router/input/user.input';
+import { UserInput } from '../router/dto/input/user.input';
 import { UserCreationError } from '../../core/errors/domain.errors';
-import { User } from '../types/user';
+import { User } from '../domain/types/user';
 import { add } from 'date-fns';
-import { UsersRepository } from '../repositories/users.repository';
+import { UsersRepository } from '../infrastructure/repositories/users.repository';
 import { BcryptService } from '../../auth/adapters/bcrypt.service';
 import { injectable } from 'inversify';
-import { UserDocument } from '../Schemas/user.schema';
+import { UserDocument, UserEntity, UserModel } from '../domain/userEntity';
 
 @injectable()
 export class UsersService {
@@ -18,30 +18,16 @@ export class UsersService {
     userDto: UserInput,
     confirmationCode?: string,
   ): Promise<UserDocument> {
-    console.log('usersService confirmation code', confirmationCode);
     await this.ensureIsUserUnique(userDto.login, userDto.email);
-    const newUser: User = {
-      login: userDto.login,
-      password: await this.bcryptService.hashPassword(userDto.password),
-      email: userDto.email,
-      createdAt: new Date().toISOString(),
-      passwordRecovery: {
-        confirmationCode: confirmationCode || crypto.randomUUID(),
-        isUsed: false,
-        expirationDate: add(new Date(), {
-          hours: 1,
-        }).toISOString(),
-      },
-      confirmationEmail: {
-        confirmationCode: confirmationCode || crypto.randomUUID(),
-        isConfirmed: false,
-        expirationDate: add(new Date(), {
-          hours: 1,
-          minutes: 3,
-        }).toISOString(),
-      },
-    };
-    return await this.usersRepository.create(newUser);
+
+    const hashedPassword = await this.bcryptService.hashPassword(
+      userDto.password,
+    );
+
+    const user = new UserModel(
+      UserEntity.createNew(userDto, hashedPassword, confirmationCode),
+    );
+    return await this.usersRepository.save(user);
   }
 
   async delete(id: string) {
