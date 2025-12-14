@@ -11,13 +11,13 @@ import { HttpStatus } from '../../core/types/http-statuses';
 import { errorsHandler } from '../../core/errors/errors.handler';
 import { PostsService } from '../application/posts.service';
 import { PostsQueryRepository } from '../infrasturcture/repositories/posts.query-repository';
-import { CommentsQueryRepository } from '../../comments/repositories/comments.query-repository';
+import { CommentsQueryRepository } from '../../comments/infrasctructure/repositories/comments.query-repository';
 import { PostInput } from './dto/input/post.input';
 import { PostOutput } from './dto/output/post.output';
 import { setDefaultSortAndPaginationIfNotExist } from '../../core/helpers/set-default-query-params';
 import { PostQueryInput } from './dto/input/post-query.input';
 import { postListPaginatedOutput } from './dto/output/post-list-paginated.output';
-import { CommentQueryInput } from '../../comments/router/input/comment-query.input';
+import { CommentQueryInput } from '../../comments/router/dto/input/comment-query.input';
 
 @injectable()
 export class PostsController {

@@ -1,12 +1,12 @@
-import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
-import { mapToCommentViewModel } from '../router/mappers/map-to-comment-view-model';
-import { CommentQueryInput } from '../router/input/comment-query.input';
-import { mapToCommentListPaginated } from '../router/mappers/map-to-comment-list-paginated';
-import { CommentListPaginatedOutput } from '../router/output/comment-list-paginated.output';
-import { CommentOutput } from '../router/output/comment.output';
+import { RepositoryNotFoundError } from '../../../core/errors/domain.errors';
+import { mapToCommentViewModel } from '../../router/dto/mappers/map-to-comment-view-model';
+import { CommentQueryInput } from '../../router/dto/input/comment-query.input';
+import { mapToCommentListPaginated } from '../../router/dto/mappers/map-to-comment-list-paginated';
+import { CommentListPaginatedOutput } from '../../router/dto/output/comment-list-paginated.output';
+import { CommentOutput } from '../../router/dto/output/comment.output';
 import { injectable } from 'inversify';
-import { CommentModel } from '../Schemas/comment.schema';
-import { container } from '../../composition-root';
+import { CommentModel } from '../../domain/commentEntity';
+import { container } from '../../../composition-root';
 import { LikesRepository } from './likes.repository';
 
 @injectable()

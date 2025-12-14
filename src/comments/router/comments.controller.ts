@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { injectable } from 'inversify';
 import { CommentsService } from '../application/comments.service';
-import { CommentsQueryRepository } from '../repositories/comments.query-repository';
+import { CommentsQueryRepository } from '../infrasctructure/repositories/comments.query-repository';
 import { errorsHandler } from '../../core/errors/errors.handler';
 import { HttpStatus } from '../../core/types/http-statuses';
 import {
@@ -9,7 +9,7 @@ import {
   RequestWithBody,
   RequestWithParamsAndBody,
 } from '../../core/types/requestTypes';
-import { CommentInput } from './input/comment.input';
+import { CommentInput } from './dto/input/comment.input';
 
 @injectable()
 export class CommentsController {

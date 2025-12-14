@@ -3,7 +3,7 @@ import { HttpStatus } from '../../core/types/http-statuses';
 import { BlogModel } from '../../blogs/domain/blogEntity';
 import { PostModel } from '../../posts/domain/postEntity';
 import { UserModel } from '../../users/Schemas/user.schema';
-import { CommentModel } from '../../comments/Schemas/comment.schema';
+import { CommentModel } from '../../comments/domain/commentEntity';
 import { SessionModel } from '../../sessions/Schemas/session.schema';
 import { RevokedTokenModel } from '../../auth/Schemas/revoked-token.schema';
 

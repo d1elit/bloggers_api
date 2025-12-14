@@ -1,10 +1,12 @@
-import { CommentInput } from '../router/input/comment.input';
-import { CommentsRepository } from '../repositories/comments.repository';
+import { CommentInput } from '../router/dto/input/comment.input';
+import { CommentsRepository } from '../infrasctructure/repositories/comments.repository';
 import { AccessError } from '../../core/errors/domain.errors';
 import { injectable } from 'inversify';
-import { LikesRepository } from '../repositories/likes.repository';
-import { LikeDocument, LikesModel } from '../Schemas/likes.schema';
-import { CommentDocument } from '../Schemas/comment.schema';
+import { LikesRepository } from '../infrasctructure/repositories/likes.repository';
+import {
+  CommentLikeModel,
+  CommentLikeEntity,
+} from '../domain/commentLikeEntity';
 
 @injectable()
 export class CommentsService {
@@ -39,59 +41,32 @@ export class CommentsService {
     commentId: string,
     userId?: string,
   ): Promise<void> {
-    // console.log('userId', userId);
     let comment = await this.commentsRepository.findByIdOrError(commentId);
     if (userId) {
-      console.log('YA TYT');
       let like = await this.likesRepository.find(userId, commentId);
-      console.log('Like', like);
+
       if (like === null) {
-        console.log('INSIDE IF 1');
+        const newLike = new CommentLikeModel(
+          CommentLikeEntity.createNew({
+            userId,
+            commentId,
+            myStatus: likeStatus,
+          }),
+        );
 
-        const newLike = new LikesModel();
-        console.log('INSIDE IF 2');
-        newLike.userId = userId.toString();
-        newLike.commentId = commentId.toString();
-        newLike.myStatus = likeStatus;
-        console.log('Like', newLike);
-        likeStatus === 'Like'
-          ? (comment.likesInfo.likesCount += 1)
-          : (comment.likesInfo.dislikesCount += 1);
-        await this.commentsRepository.save(comment);
+        comment.updateLikeCount(likeStatus);
+
         await this.likesRepository.create(newLike);
-        console.log('INSIDE IF 3');
-        return;
+      } else {
+        if (likeStatus === like.myStatus) {
+          return;
+        }
+        const oldStatus = like.myStatus;
+        like.myStatus = likeStatus;
+        comment.updateLikeCount(likeStatus, oldStatus);
+        await this.likesRepository.update(like);
       }
-      if (likeStatus === like.myStatus) {
-        return;
-      }
-
-      like.myStatus = likeStatus;
-      await this.commentsLikeControl(likeStatus, comment, like);
-      await this.likesRepository.update(like);
-      return;
+      await this.commentsRepository.save(comment);
     }
-    // console.log(comment);
-  }
-
-  async commentsLikeControl(
-    likeStatus: string,
-    comment: CommentDocument,
-    like: LikeDocument,
-  ): Promise<void> {
-    if (likeStatus === 'None') {
-      like.myStatus === 'Like'
-        ? (comment.likesInfo.likesCount -= 1)
-        : (comment.likesInfo.dislikesCount -= 1);
-    }
-    if (likeStatus === 'Like') {
-      comment.likesInfo.likesCount += 1;
-      comment.likesInfo.dislikesCount -= 1;
-    }
-    if (likeStatus === 'Dislike') {
-      comment.likesInfo.likesCount -= 1;
-      comment.likesInfo.dislikesCount += 1;
-    }
-    await this.commentsRepository.save(comment);
   }
 }

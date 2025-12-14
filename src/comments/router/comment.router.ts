@@ -3,12 +3,12 @@ import { AccsessTokenGuardMiddleware } from '../../auth/guards/accsess.token.gua
 import {
   commentInputDtoValidation,
   likeInputDtoValidation,
-} from './comment.input-dto.validation-middleware';
+} from './middlewares/comment.input-dto.validation-middleware';
 import { idValidation } from '../../core/middlewares/validation/params-id.validation-middleware';
 import { inputValidationResultMiddleware } from '../../core/middlewares/validation/input-validtion-result.middleware';
 import { container } from '../../composition-root';
 import { CommentsController } from './comments.controller';
-import { AccessOptionalMiddleware } from '../middlewares/accessOptional.middleware';
+import { AccessOptionalMiddleware } from '../../auth/middlewares/accessOptional.middleware';
 
 const commentsController = container.get(CommentsController);
 

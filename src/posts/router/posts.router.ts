@@ -7,10 +7,10 @@ import { AccsessTokenGuardMiddleware } from '../../auth/guards/accsess.token.gua
 import {
   commentInputDtoValidation,
   likeInputDtoValidation,
-} from '../../comments/router/comment.input-dto.validation-middleware';
+} from '../../comments/router/middlewares/comment.input-dto.validation-middleware';
 import { container } from '../../composition-root';
 import { PostsController } from './posts.controller';
-import { AccessOptionalMiddleware } from '../../comments/middlewares/accessOptional.middleware';
+import { AccessOptionalMiddleware } from '../../auth/middlewares/accessOptional.middleware';
 
 const postsController = container.get(PostsController);
 

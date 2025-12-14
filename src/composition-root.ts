@@ -1,7 +1,7 @@
 import 'reflect-metadata';
-import { CommentsQueryRepository } from './comments/repositories/comments.query-repository';
+import { CommentsQueryRepository } from './comments/infrasctructure/repositories/comments.query-repository';
 
-import { CommentsRepository } from './comments/repositories/comments.repository';
+import { CommentsRepository } from './comments/infrasctructure/repositories/comments.repository';
 import { CommentsService } from './comments/application/comments.service';
 import { BlogsRepository } from './blogs/infrasturcture/repositories/blogs.repository';
 import { BlogsQueryRepository } from './blogs/infrasturcture/repositories/blogs.query-repository';
@@ -26,7 +26,7 @@ import { CommentsController } from './comments/router/comments.controller';
 import { PostsController } from './posts/router/posts.controller';
 import { UsersController } from './users/router/users.controller';
 import { DevicesController } from './devices/router/devices.controller';
-import { LikesRepository } from './comments/repositories/likes.repository';
+import { LikesRepository } from './comments/infrasctructure/repositories/likes.repository';
 import { PostLikesRepository } from './posts/infrasturcture/repositories/post-likes.repository';
 
 export const container = new Container();

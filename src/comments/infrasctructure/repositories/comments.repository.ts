@@ -1,8 +1,8 @@
-import { Comment } from '../types/comment';
-import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
-import { CommentInput } from '../router/input/comment.input';
+import { Comment } from '../../domain/types/comment';
+import { RepositoryNotFoundError } from '../../../core/errors/domain.errors';
+import { CommentInput } from '../../router/dto/input/comment.input';
 import { injectable } from 'inversify';
-import { CommentDocument, CommentModel } from '../Schemas/comment.schema';
+import { CommentDocument, CommentModel } from '../../domain/commentEntity';
 
 @injectable()
 export class CommentsRepository {

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { userIdType } from '../../auth/types/userIdType';
+import { userIdType } from '../types/userIdType';
 import { errorsHandler } from '../../core/errors/errors.handler';
 import { container } from '../../composition-root';
-import { JwtService } from '../../auth/adapters/jwt.service';
-import { LikesRepository } from '../repositories/likes.repository';
+import { JwtService } from '../adapters/jwt.service';
+import { LikesRepository } from '../../comments/infrasctructure/repositories/likes.repository';
 import { PostLikesRepository } from '../../posts/infrasturcture/repositories/post-likes.repository';
 
 const jwtService = container.get(JwtService);

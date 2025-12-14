@@ -1,8 +1,8 @@
 import { CommentListPaginatedOutput } from '../output/comment-list-paginated.output';
 
-import { CommentDocument } from '../../Schemas/comment.schema';
+import { CommentDocument } from '../../../domain/commentEntity';
 
-import { LikeDocument } from '../../Schemas/likes.schema';
+import { LikeDocument } from '../../../domain/commentLikeEntity';
 
 export function mapToCommentListPaginated(
   comments: CommentDocument[],

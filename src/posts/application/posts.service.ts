@@ -1,15 +1,17 @@
 import { PostInput } from '../router/dto/input/post.input';
-import { RepositoryNotFoundError } from '../../core/errors/domain.errors';
-import { CommentInput } from '../../comments/router/input/comment.input';
+import { CommentInput } from '../../comments/router/dto/input/comment.input';
 import { BlogsRepository } from '../../blogs/infrasturcture/repositories/blogs.repository';
 import { PostsRepository } from '../infrasturcture/repositories/posts.repository';
-import { CommentsRepository } from '../../comments/repositories/comments.repository';
+import { CommentsRepository } from '../../comments/infrasctructure/repositories/comments.repository';
 import { UsersRepository } from '../../users/repositories/users.repository';
 import { injectable } from 'inversify';
 import { PostEntity, PostModel } from '../domain/postEntity';
-import { CommentModel } from '../../comments/Schemas/comment.schema';
+import {
+  CommentEntity,
+  CommentModel,
+} from '../../comments/domain/commentEntity';
 import { PostLikesRepository } from '../infrasturcture/repositories/post-likes.repository';
-import { PostLikeEntity, PostLikesModel } from '../Schemas/postLikes.schema';
+import { PostLikeEntity, PostLikesModel } from '../domain/postLikeEntity';
 
 @injectable()
 export class PostsService {
@@ -45,25 +47,16 @@ export class PostsService {
     commentDto: CommentInput,
     userId: string,
   ): Promise<string> {
-    const post = await this.postsRepository.findByIdOrError(postId);
+    await this.postsRepository.findByIdOrError(postId); // ensure the post is available
     const user = await this.usersRepository.findByIdOrError(userId);
-    if (!post) {
-      throw new RepositoryNotFoundError('Post not found');
-    }
-    const comment = new CommentModel();
-    comment.content = commentDto.content;
-    comment.commentatorInfo = {
-      userId: userId,
-      userLogin: user.login,
-    };
-    comment.postId = post._id.toString();
-    comment.likesInfo = {
-      likesCount: 0,
-      dislikesCount: 0,
-      myStatus: 'none',
-    };
-    comment.createdAt = new Date().toISOString();
 
+    const comment = new CommentModel(
+      CommentEntity.createNew({
+        content: commentDto.content,
+        postId,
+        commentatorInfo: { userId: userId, userLogin: user.login },
+      }),
+    );
     return await this.commentsRepository.create(comment);
   }
 
@@ -74,7 +67,6 @@ export class PostsService {
   ): Promise<void> {
     let post = await this.postsRepository.findByIdOrError(postId);
     let user = await this.usersRepository.findByIdOrError(userId);
-
     let like = await this.postLikesRepository.find(userId, postId);
 
     if (like === null) {
@@ -88,7 +80,6 @@ export class PostsService {
       );
 
       post.updateLikeCount(likeStatus);
-
       await this.postLikesRepository.create(newLike);
     } else {
       if (likeStatus === like.myStatus) {
@@ -102,7 +93,6 @@ export class PostsService {
     }
     const newestLikes = await this.getNewestLikes(postId);
     post.updateNewestLikes(newestLikes);
-
     await this.postsRepository.save(post);
     return;
   }

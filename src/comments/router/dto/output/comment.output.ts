@@ -1,4 +1,4 @@
-import { Commentator } from '../../types/commentator';
+import { Commentator } from '../../../domain/types/commentator';
 
 export type CommentOutput = {
   id: string;

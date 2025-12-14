@@ -6,7 +6,7 @@ import { superAdminGuardMiddleware } from '../../auth/guards/super-admin.guard-m
 import { blogsPostInputDtoValidation } from '../../posts/router/middleware/post.input-dto.validation-middlewares';
 import { container } from '../../composition-root';
 import { BlogsController } from './blogs.controller';
-import { AccessOptionalMiddleware } from '../../comments/middlewares/accessOptional.middleware';
+import { AccessOptionalMiddleware } from '../../auth/middlewares/accessOptional.middleware';
 
 export const blogsRouter = Router({});
 const blogsController = container.get(BlogsController);
