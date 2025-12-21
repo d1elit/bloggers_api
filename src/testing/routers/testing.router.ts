@@ -4,7 +4,7 @@ import { BlogModel } from '../../blogs/domain/blogEntity';
 import { PostModel } from '../../posts/domain/postEntity';
 import { UserModel } from '../../users/domain/userEntity';
 import { CommentModel } from '../../comments/domain/commentEntity';
-import { SessionModel } from '../../sessions/Schemas/sessionSchema';
+import { SessionModel } from '../../sessions/domain/sessionEntity';
 import { RevokedTokenModel } from '../../auth/Schemas/revoked-token.schema';
 
 export const testingRouter = Router({});

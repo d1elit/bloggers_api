@@ -1,11 +1,14 @@
-import { UserSession } from '../types/userSession';
 import { injectable } from 'inversify';
-import { SessionDocument, SessionModel } from '../Schemas/sessionSchema';
+import {
+  SessionDocument,
+  SessionEntity,
+  SessionModel,
+} from '../domain/sessionEntity';
 
 @injectable()
 export class SessionsRepository {
-  async create(sessionDto: UserSession) {
-    await SessionModel.create(sessionDto);
+  async create(session: SessionEntity) {
+    await SessionModel.create(session);
   }
 
   async find(iat: number, deviceId: string): Promise<SessionDocument | null> {

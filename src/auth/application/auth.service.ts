@@ -18,6 +18,7 @@ import { UsersService } from '../../users/application/users.service';
 import { BcryptService } from '../adapters/bcrypt.service';
 import { injectable } from 'inversify';
 import { UserDocument } from '../../users/domain/userEntity';
+import { SessionEntity } from '../../sessions/domain/sessionEntity';
 
 @injectable()
 export class AuthService {
@@ -48,14 +49,15 @@ export class AuthService {
     );
     const { exp, iat } = jwtDecode(refreshToken);
 
-    const session = {
-      deviceName: deviceName,
-      deviceId: deviceId,
+    const session = SessionEntity.createNew({
+      deviceId,
+      deviceName,
       userId: resultUser._id.toString(),
-      ip: ip,
+      ip,
       iat: iat!,
       exp: exp!,
-    };
+    });
+
     await this.sessionsRepository.create(session);
 
     return [accessToken, refreshToken];

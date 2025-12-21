@@ -15,6 +15,35 @@ export const SessionSchema = new mongoose.Schema<UserSession>({
   exp: { type: Number, required: true },
 });
 
+export type SessionDto = {
+  userId: string;
+  deviceId: string;
+  deviceName: string;
+  ip: string;
+  iat: number;
+  exp: number;
+};
+
+export class SessionEntity {
+  userId!: string;
+  deviceId!: string;
+  deviceName!: string;
+  ip!: string;
+  iat!: number;
+  exp!: number;
+
+  static createNew(sessionDto: SessionDto) {
+    const session = new SessionEntity();
+    session.userId = sessionDto.userId;
+    session.deviceId = sessionDto.deviceId;
+    session.deviceName = sessionDto.deviceName;
+    session.ip = sessionDto.ip;
+    session.iat = sessionDto.iat;
+    session.exp = sessionDto.exp;
+    return session;
+  }
+}
+
 export const SessionModel = model<UserSession, SessionModel>(
   'sessions',
   SessionSchema,
