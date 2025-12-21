@@ -64,6 +64,66 @@ export class UserEntity {
 
     return user;
   }
+
+  confirmEmail() {
+    this.confirmationEmail.isConfirmed = true;
+  }
+  isEmailConfirmed(): boolean {
+    console.log('isEmailConfirmed', this.confirmationEmail.isConfirmed);
+    return this.confirmationEmail.isConfirmed;
+  }
+  isEmailConfirmationExpired(): boolean {
+    return new Date() > new Date(this.confirmationEmail.expirationDate);
+  }
+  updateEmailConfirmationCode(newCode: string): void {
+    this.confirmationEmail.confirmationCode = newCode;
+    this.confirmationEmail.expirationDate = add(new Date(), {
+      hours: 1,
+      minutes: 3,
+    }).toISOString();
+  }
+  canConfirmEmail(code: string): { isValid: boolean; error?: string } {
+    if (this.isEmailConfirmed()) {
+      console.log('YES)');
+      return { isValid: false, error: 'Email already confirmed' };
+    }
+    if (code !== this.confirmationEmail.confirmationCode) {
+      return { isValid: false, error: 'Wrong confirmation code' };
+    }
+    if (this.isEmailConfirmationExpired()) {
+      return { isValid: false, error: 'Confirmation code expired' };
+    }
+    return { isValid: true };
+  }
+  updatePasswordRecoveryCode(newCode: string): void {
+    this.passwordRecovery.confirmationCode = newCode;
+    this.passwordRecovery.isUsed = false;
+    this.passwordRecovery.expirationDate = add(new Date(), {
+      hours: 1,
+    }).toISOString();
+  }
+
+  isPasswordRecoveryExpired(): boolean {
+    return new Date() > new Date(this.passwordRecovery.expirationDate);
+  }
+
+  canRecoverPassword(code: string): { isValid: boolean; error?: string } {
+    if (this.passwordRecovery.isUsed) {
+      return { isValid: false, error: 'Recovery code already used' };
+    }
+    if (code !== this.passwordRecovery.confirmationCode) {
+      return { isValid: false, error: 'Wrong recovery code' };
+    }
+    if (this.isPasswordRecoveryExpired()) {
+      return { isValid: false, error: 'Recovery code expired' };
+    }
+    return { isValid: true };
+  }
+
+  updatePassword(hashedPassword: string): void {
+    this.password = hashedPassword;
+    this.passwordRecovery.isUsed = true;
+  }
 }
 
 type UserModel = Model<UserEntity>;

@@ -1,5 +1,4 @@
 import { RepositoryNotFoundError } from '../../../core/errors/domain.errors';
-import { add } from 'date-fns';
 import { injectable } from 'inversify';
 import { UserDocument, UserEntity, UserModel } from '../../domain/userEntity';
 
@@ -36,45 +35,6 @@ export class UsersRepository {
       throw new RepositoryNotFoundError('User not found', 'user');
     }
     return user;
-  }
-
-  async updateConfirmationStatus(_id: string) {
-    await UserModel.updateOne(
-      { _id },
-      { $set: { 'confirmationEmail.isConfirmed': true } },
-    );
-  }
-
-  async updateRecoveryCode(_id: string, code: string) {
-    await UserModel.updateOne(
-      { _id },
-      {
-        $set: {
-          'passwordRecovery.confirmationCode': code,
-          'passwordRecovery.expirationDate': add(new Date(), {
-            hours: 1,
-          }).toISOString(),
-        },
-      },
-    );
-  }
-
-  async updateRecoveryStatus(_id: string) {
-    await UserModel.updateOne(
-      { _id },
-      { $set: { 'passwordRecovery.confirmationCode': '' } },
-    );
-  }
-
-  async updatePassword(_id: string, password: string) {
-    await UserModel.updateOne({ _id }, { $set: { password: password } });
-  }
-
-  async updateConfirmationCode(_id: string, code: string) {
-    await UserModel.updateOne(
-      { _id },
-      { $set: { 'confirmationEmail.confirmationCode': code } },
-    );
   }
 
   async findByCodeOrError(code: string): Promise<UserDocument> {

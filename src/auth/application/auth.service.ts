@@ -95,34 +95,28 @@ export class AuthService {
 
   async registrationConfirmation(code: string) {
     const user = await this.usersRepository.findByCodeOrError(code);
-    if (user.confirmationEmail.isConfirmed)
-      throw new RegistrationConfirmationError(
-        'Confirm code already used',
-        'code',
-      );
-    if (code !== user.confirmationEmail.confirmationCode)
-      throw new RegistrationConfirmationError(
-        'Wrong confirmation code',
-        'code',
-      );
-    await this.usersRepository.updateConfirmationStatus(user._id.toString());
-    return false;
+    const validation = user.canConfirmEmail(code);
+    if (!validation.isValid) {
+      throw new RegistrationConfirmationError(validation.error!, 'code');
+    }
+    user.confirmEmail();
+    await this.usersRepository.save(user);
   }
 
   async emailResending(email: string) {
     const user = await this.usersRepository.findByLoginOrEmail(email);
     if (!user)
       throw new RegistrationConfirmationError('Email not exist', 'email');
-    if (user.confirmationEmail.isConfirmed)
+    if (user.isEmailConfirmed())
       throw new RegistrationConfirmationError(
         'Email already confirmed',
         'email',
       );
     const confirmationCode = crypto.randomUUID();
-    await this.usersRepository.updateConfirmationCode(
-      user._id.toString(),
-      confirmationCode,
-    );
+
+    user.updateEmailConfirmationCode(confirmationCode);
+    await this.usersRepository.save(user);
+
     await this.nodemailerService.sendEmail(
       email,
       emailExamples.registrationEmail(confirmationCode),
@@ -133,45 +127,38 @@ export class AuthService {
     const user = await this.usersQueryRepository.findByEmail(email);
     if (!user) return;
 
-    const confirmationCode = crypto.randomUUID();
-    await this.usersRepository.updateRecoveryCode(
-      user._id.toString(),
-      confirmationCode,
-    );
+    const recoveryCode = crypto.randomUUID();
+    user.updatePasswordRecoveryCode(recoveryCode);
+    await this.usersRepository.save(user);
+
     this.nodemailerService
-      .sendEmail(email, emailExamples.passwordRecoveryEmail(confirmationCode))
+      .sendEmail(email, emailExamples.passwordRecoveryEmail(recoveryCode))
       .catch((error) => {
         console.log('Email sending failed', error);
       });
-    return confirmationCode;
+    return recoveryCode;
   }
 
   async passwordRecoveryConfirmation({ code, password }: NewPasswordInput) {
     const user = await this.usersRepository.findByRecoveryCodeOrError(code);
-    if (user.passwordRecovery.isUsed)
-      throw new RegistrationConfirmationError(
-        'Confirm code already used',
-        'code',
-      );
-    if (code !== user.passwordRecovery.confirmationCode)
-      throw new RegistrationConfirmationError(
-        'Wrong confirmation code',
-        'code',
-      );
-    await this.usersRepository.updateRecoveryStatus(user._id.toString());
+    const validation = user.canRecoverPassword(code);
+    if (!validation.isValid) {
+      throw new RegistrationConfirmationError(validation.error!, 'code');
+    }
     let newPassword = await this.bcryptService.hashPassword(password);
-    await this.usersRepository.updatePassword(user._id.toString(), newPassword);
+    user.updatePassword(newPassword);
+    await this.usersRepository.save(user);
   }
 
   async refreshToken(token: string, userId: string, deviceId: string) {
     const oldVersion = jwtDecode(token).iat;
-    console.log('refreshToken OLD:', token);
+
     const accessToken = await this.jwtService.createAccessToken(userId);
     const refreshToken = await this.jwtService.createRefreshToken(
       userId,
       deviceId,
     );
-    console.log('REFRESH TOKEN NEW: ', refreshToken);
+
     const { exp, iat } = jwtDecode(refreshToken);
     await this.sessionsRepository.update(iat!, exp!, oldVersion!);
     return [accessToken, refreshToken];
@@ -182,21 +169,17 @@ export class AuthService {
       payload.iat,
       payload.deviceId,
     );
-    console.log('ensureRefreshTokenValid CHECK : ', 'token: ', token);
+
     if (!session) throw new LoginError('Unauthorized (refresh)');
-    console.log('SESSION IS VALID with token:', token);
   }
 
   // async
   async revokeToken(token: string) {
-    // await revokedTokensRepository.insert(token) ;
     const { iat } = jwtDecode(token);
-    console.log('REVOKE TOKEN WITH IAT:', iat, token);
     await this.sessionsRepository.delete(iat!);
   }
 
   async logout(token: string) {
-    console.log('LOGOUT:', token);
     await this.revokeToken(token);
   }
 }
