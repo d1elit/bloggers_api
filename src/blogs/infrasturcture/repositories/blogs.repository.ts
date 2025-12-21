@@ -1,11 +1,12 @@
 import { RepositoryNotFoundError } from '../../../core/errors/domain.errors';
 import { injectable } from 'inversify';
-import { BlogDocument, BlogModel } from '../../domain/blogEntity';
+import { BlogDocument, BlogEntity, BlogModel } from '../../domain/blogEntity';
 
 @injectable()
 export class BlogsRepository {
-  async save(blog: BlogDocument): Promise<string> {
-    const createdBlog = await blog.save();
+  async save(blogEntity: BlogEntity): Promise<string> {
+    const blogDocument = new BlogModel(blogEntity);
+    const createdBlog = await blogDocument.save();
     return createdBlog._id.toString();
   }
 

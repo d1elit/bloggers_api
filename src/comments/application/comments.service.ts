@@ -3,10 +3,7 @@ import { CommentsRepository } from '../infrasctructure/repositories/comments.rep
 import { AccessError } from '../../core/errors/domain.errors';
 import { injectable } from 'inversify';
 import { LikesRepository } from '../infrasctructure/repositories/likes.repository';
-import {
-  CommentLikeModel,
-  CommentLikeEntity,
-} from '../domain/commentLikeEntity';
+import { CommentLikeEntity } from '../domain/commentLikeEntity';
 
 @injectable()
 export class CommentsService {
@@ -47,13 +44,11 @@ export class CommentsService {
       let like = await this.likesRepository.find(userId, commentId);
 
       if (like === null) {
-        const newLike = new CommentLikeModel(
-          CommentLikeEntity.createNew({
-            userId,
-            commentId,
-            myStatus: likeStatus,
-          }),
-        );
+        const newLike = CommentLikeEntity.createNew({
+          userId,
+          commentId,
+          myStatus: likeStatus,
+        });
 
         comment.updateLikeCount(likeStatus);
 

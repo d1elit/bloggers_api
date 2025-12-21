@@ -1,5 +1,9 @@
 import { injectable } from 'inversify';
-import { PostLikeDocument, PostLikesModel } from '../../domain/postLikeEntity';
+import {
+  PostLikeDocument,
+  PostLikeEntity,
+  PostLikesModel,
+} from '../../domain/postLikeEntity';
 
 @injectable()
 export class PostLikesRepository {
@@ -7,7 +11,6 @@ export class PostLikesRepository {
     userId: string | undefined,
     postId: string,
   ): Promise<PostLikeDocument | null> {
-    console.log('IM INSIDE OF POSTLIke FIND METHOD');
     let like = await PostLikesModel.findOne({
       userId: userId,
       postId: postId,
@@ -17,10 +20,8 @@ export class PostLikesRepository {
     return like;
   }
 
-  async create(like: PostLikeDocument) {
-    console.log('IM INSIDE OF POSTLIKE');
-    console.log(like);
-    await like.save();
+  async create(like: PostLikeEntity) {
+    await PostLikesModel.create(like);
     return;
   }
   async update(like: PostLikeDocument) {

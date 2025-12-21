@@ -10,7 +10,7 @@ import {
   PostEntity,
   PostModel,
 } from '../../posts/domain/postEntity';
-import { BlogEntity, BlogModel } from '../domain/blogEntity';
+import { BlogEntity } from '../domain/blogEntity';
 
 @injectable()
 export class BlogsService {
@@ -20,7 +20,7 @@ export class BlogsService {
   ) {}
 
   async create(dto: BlogInput): Promise<string> {
-    const blog = new BlogModel(BlogEntity.createNew(dto));
+    const blog = BlogEntity.createNew(dto);
     return await this.blogsRepository.save(blog);
   }
 

@@ -1,14 +1,17 @@
-import { Comment } from '../../domain/types/comment';
 import { RepositoryNotFoundError } from '../../../core/errors/domain.errors';
 import { CommentInput } from '../../router/dto/input/comment.input';
 import { injectable } from 'inversify';
-import { CommentDocument, CommentModel } from '../../domain/commentEntity';
+import {
+  CommentDocument,
+  CommentEntity,
+  CommentModel,
+} from '../../domain/commentEntity';
 
 @injectable()
 export class CommentsRepository {
-  async create(newComment: Comment): Promise<string> {
-    const comment = await CommentModel.create(newComment);
-    return comment._id.toString();
+  async create(newComment: CommentEntity): Promise<string> {
+    const createdComment = await CommentModel.create(newComment);
+    return createdComment._id.toString();
   }
 
   async delete(commentId: string): Promise<void> {

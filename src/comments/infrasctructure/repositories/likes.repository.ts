@@ -1,5 +1,9 @@
 import { injectable } from 'inversify';
-import { LikeDocument, CommentLikeModel } from '../../domain/commentLikeEntity';
+import {
+  LikeDocument,
+  CommentLikeModel,
+  CommentLikeEntity,
+} from '../../domain/commentLikeEntity';
 
 @injectable()
 export class LikesRepository {
@@ -17,8 +21,8 @@ export class LikesRepository {
     return like;
   }
 
-  async create(like: LikeDocument) {
-    await like.save();
+  async create(like: CommentLikeEntity) {
+    await CommentLikeModel.create(like);
     return;
   }
   async update(like: LikeDocument) {
