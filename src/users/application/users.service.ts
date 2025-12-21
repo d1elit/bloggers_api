@@ -1,11 +1,9 @@
 import { UserInput } from '../router/dto/input/user.input';
 import { UserCreationError } from '../../core/errors/domain.errors';
-import { User } from '../domain/types/user';
-import { add } from 'date-fns';
 import { UsersRepository } from '../infrastructure/repositories/users.repository';
 import { BcryptService } from '../../auth/adapters/bcrypt.service';
 import { injectable } from 'inversify';
-import { UserDocument, UserEntity, UserModel } from '../domain/userEntity';
+import { UserDocument, UserEntity } from '../domain/userEntity';
 
 @injectable()
 export class UsersService {
@@ -24,10 +22,13 @@ export class UsersService {
       userDto.password,
     );
 
-    const user = new UserModel(
-      UserEntity.createNew(userDto, hashedPassword, confirmationCode),
+    const user = UserEntity.createNew(
+      userDto,
+      hashedPassword,
+      confirmationCode,
     );
-    return await this.usersRepository.save(user);
+
+    return await this.usersRepository.create(user);
   }
 
   async delete(id: string) {

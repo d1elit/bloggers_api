@@ -1,6 +1,6 @@
 import { UserSession } from '../types/userSession';
 import { injectable } from 'inversify';
-import { SessionDocument, SessionModel } from '../Schemas/session.schema';
+import { SessionDocument, SessionModel } from '../Schemas/sessionSchema';
 
 @injectable()
 export class SessionsRepository {

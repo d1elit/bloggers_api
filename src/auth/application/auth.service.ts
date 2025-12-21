@@ -57,7 +57,6 @@ export class AuthService {
       exp: exp!,
     };
     await this.sessionsRepository.create(session);
-    console.log(session);
 
     return [accessToken, refreshToken];
   }
