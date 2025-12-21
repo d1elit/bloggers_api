@@ -10,7 +10,6 @@ import { errorsHandler } from '../../core/errors/errors.handler';
 import { UsersService } from '../application/users.service';
 import { UsersQueryRepository } from '../infrastructure/repositories/users.query-repository';
 import { UserInput } from './dto/input/user.input';
-import { mapToUsers } from './dto/mappers/map-to-users-view-model';
 import { setDefaultSortAndPaginationIfNotExist } from '../../core/helpers/set-default-query-params';
 import { UsersQueryInput } from './dto/input/user-query.input';
 import { UsersPaginatedOutput } from './dto/output/users-paginated.output';
@@ -25,7 +24,7 @@ export class UsersController {
   async createUser(req: RequestWithBody<UserInput>, res: Response) {
     try {
       const createdUser = await this.usersService.create(req.body);
-      const userView = await this.usersQueryRepository.find(
+      const userView = await this.usersQueryRepository.findByIdOrError(
         createdUser._id.toString(),
       );
       console.log(userView);

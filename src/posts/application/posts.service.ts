@@ -20,8 +20,9 @@ export class PostsService {
     public readonly postLikesRepository: PostLikesRepository,
   ) {}
 
-  async create(postDto: PostInput): Promise<string> {
-    const blog = await this.blogsRepository.findByIdOrError(postDto.blogId);
+  async create(postDto: PostInput, blogIdDto?: string): Promise<string> {
+    const blogId = blogIdDto ? blogIdDto : postDto.blogId;
+    const blog = await this.blogsRepository.findByIdOrError(blogId);
     const post = PostEntity.createNew(postDto, blog);
     const createdPost = await this.postsRepository.create(post);
     return createdPost._id.toString();

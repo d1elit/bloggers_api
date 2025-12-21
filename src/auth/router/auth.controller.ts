@@ -75,7 +75,7 @@ export class AuthController {
       const meView = {
         email: me?.email,
         login: me?.login,
-        userId: me?._id.toString(),
+        userId: me?.id.toString(),
       };
       return res.status(HttpStatus.Ok).send(meView);
     } catch (e: unknown) {

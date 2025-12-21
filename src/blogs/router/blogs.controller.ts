@@ -14,8 +14,7 @@ import { HttpStatus } from '../../core/types/http-statuses';
 import { mapToBlogView } from './dto/mappers/map-to-blog-view-model';
 import { BlogOutput } from './dto/output/blog.output';
 import { errorsHandler } from '../../core/errors/errors.handler';
-import { PostOutput } from '../../posts/router/dto/output/post.output';
-import { mapToPostViewModel } from '../../posts/router/dto/mappers/map-to-post-view-model';
+
 import { ErroreType } from '../types/validationError';
 import { setDefaultSortAndPaginationIfNotExist } from '../../core/helpers/set-default-query-params';
 import { BlogListPaginatedOutput } from './dto/output/blog-list-paginated.output';
@@ -23,7 +22,7 @@ import { BlogQueryInput } from './dto/input/blog-query.input';
 import { PostQueryInput } from '../../posts/router/dto/input/post-query.input';
 import { postListPaginatedOutput } from '../../posts/router/dto/output/post-list-paginated.output';
 import { PostsQueryRepository } from '../../posts/infrasturcture/repositories/posts.query-repository';
-import { PostsSortFields } from '../../posts/domain/types/postsSortFields';
+import { PostsService } from '../../posts/application/posts.service';
 
 @injectable()
 export class BlogsController {
@@ -31,6 +30,7 @@ export class BlogsController {
     private readonly blogsService: BlogsService,
     private readonly blogsQueryRepository: BlogsQueryRepository,
     private readonly postsQueryRepository: PostsQueryRepository,
+    private readonly postService: PostsService,
   ) {}
 
   async createBlog(req: RequestWithBody<BlogInput>, res: Response) {
@@ -51,12 +51,13 @@ export class BlogsController {
     res: Response,
   ) {
     try {
-      const createdPostInBlog = await this.blogsService.createPost(
-        req.params.id,
+      const createdPost = await this.postService.create(
         req.body,
+        req.params.id,
       );
-      const postViewModel: PostOutput = mapToPostViewModel(createdPostInBlog);
-      res.status(HttpStatus.Created).send(postViewModel);
+      const post = await this.postsQueryRepository.findByIdOrError(createdPost);
+
+      res.status(HttpStatus.Created).send(post);
     } catch (e: unknown) {
       errorsHandler(e, res);
     }

@@ -41,15 +41,15 @@ export class UsersQueryRepository {
     return mapToPostListPaginated(users, { pageNumber, pageSize, totalCount });
   }
 
-  async findByIdOrError(id: string): Promise<UserDocument | null> {
-    let user = UserModel.findById(id);
-    if (!user) {
-      throw new RepositoryNotFoundError('User not found');
-    }
-    return user;
-  }
+  // async findByIdOrError(id: string): Promise<UserOutput | null> {
+  //   let user = UserModel.findById(id);
+  //   if (!user) {
+  //     throw new RepositoryNotFoundError('User not found');
+  //   }
+  //   return mapToUsers(user);
+  // }
 
-  async find(id: string): Promise<UserOutput | null> {
+  async findByIdOrError(id: string): Promise<UserOutput | null> {
     const user = await UserModel.findById(id);
     if (!user) {
       throw new RepositoryNotFoundError('User not found');
